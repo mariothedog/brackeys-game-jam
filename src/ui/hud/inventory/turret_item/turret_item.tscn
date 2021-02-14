@@ -16,3 +16,6 @@ __meta__ = {
 [node name="DragSprite" type="Sprite" parent="."]
 texture = ExtResource( 1 )
 centered = false
+
+[node name="BaseCenter" type="Position2D" parent="."]
+position = Vector2( 6, 6 )

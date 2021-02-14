@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://ui/hud/inventory/turret_item/turret_item.png" type="Texture" id=1]
+[ext_resource path="res://ui/hud/inventory/turret_item/turret_item.gd" type="Script" id=2]
+
+[node name="TurretItem" type="TextureButton"]
+self_modulate = Color( 1, 1, 1, 0 )
+margin_right = 16.0
+margin_bottom = 13.0
+texture_normal = ExtResource( 1 )
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DragSprite" type="Sprite" parent="."]
+texture = ExtResource( 1 )
+centered = false

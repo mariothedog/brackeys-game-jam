@@ -17,4 +17,4 @@ __meta__ = {
 [node name="Inventory" parent="PanelContainer" instance=ExtResource( 1 )]
 margin_left = 215.0
 margin_right = 240.0
-margin_bottom = 135.0
+margin_bottom = 128.0

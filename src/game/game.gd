@@ -7,7 +7,7 @@ onready var tile_set: TileSet = tilemap.tile_set
 onready var turrets: Node = $Turrets
 
 onready var Tiles := {
-	"GROUND": tile_set.find_tile_by_name("tileset.png 0")
+	"GROUND": tile_set.find_tile_by_name("ground")
 }
 
 

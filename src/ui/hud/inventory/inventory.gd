@@ -31,7 +31,7 @@ func _on_item_button_down(item: TextureButton) -> void:
 	_selected_item = item
 
 
-func _on_item_button_up(item: TextureButton) -> void:  # TODO: Placing turrets
+func _on_item_button_up(item: TextureButton) -> void:
 	_selected_item = null
 	item.drag_sprite.position = Vector2.ZERO
 	emit_signal("item_dropped", item, get_global_mouse_position())

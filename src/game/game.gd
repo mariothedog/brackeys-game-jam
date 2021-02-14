@@ -16,6 +16,8 @@ func _on_Inventory_item_dropped(item: TextureButton, global_position: Vector2) -
 	if tilemap.get_cellv(tile_pos) != Tiles.GROUND:
 		return
 	
+	item.queue_free()
+	
 	var global_pos_snapped = tilemap.map_to_world(tile_pos) + tilemap.cell_size/2
 	var turret := TURRET_SCENE.instance()
 	turret.global_position = global_pos_snapped

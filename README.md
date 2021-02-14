@@ -1,2 +1,3 @@
-# Godot-Skeleton
- A skeleton project for all your Godot needs
+# Brackeys Game Jam
+https://itch.io/jam/brackeys-5
+Theme: Stronger Together

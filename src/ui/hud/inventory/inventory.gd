@@ -1,5 +1,7 @@
 extends MarginContainer
 
+signal item_dropped(item, global_position)
+
 const TURRET_ITEM_SCENE := preload("res://ui/hud/inventory/turret_item/turret_item.tscn")
 
 export var num_turrets := 0
@@ -30,5 +32,6 @@ func _on_item_button_down(item: TextureButton) -> void:
 
 
 func _on_item_button_up(item: TextureButton) -> void:  # TODO: Placing turrets
-	_selected_item.drag_sprite.position = Vector2.ZERO
 	_selected_item = null
+	item.drag_sprite.position = Vector2.ZERO
+	emit_signal("item_dropped", item, get_global_mouse_position())

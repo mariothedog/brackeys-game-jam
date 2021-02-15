@@ -38,14 +38,15 @@ margin_left = 1.0
 margin_top = 1.0
 margin_right = 24.0
 margin_bottom = 112.0
+custom_constants/margin_right = 2
 custom_constants/margin_top = 4
-custom_constants/margin_left = 2
 custom_constants/margin_bottom = 4
 
 [node name="Items" type="VBoxContainer" parent="MarginContainer"]
-margin_left = 12.0
+margin_left = 10.0
 margin_top = 4.0
-margin_right = 12.0
+margin_right = 10.0
 margin_bottom = 107.0
 size_flags_horizontal = 4
 custom_constants/separation = 5
+[connection signal="sort_children" from="MarginContainer/Items" to="." method="_on_Items_sort_children"]

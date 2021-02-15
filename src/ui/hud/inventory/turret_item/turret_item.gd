@@ -1,4 +1,6 @@
 extends TextureButton
 
-onready var drag_sprite: Sprite = $DragSprite
-onready var base_center: Position2D = $BaseCenter
+var original_position: Vector2
+
+onready var base: Sprite = $Base
+onready var gun: Sprite = $Gun

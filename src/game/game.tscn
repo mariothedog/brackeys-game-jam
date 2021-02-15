@@ -4,7 +4,7 @@
 [ext_resource path="res://levels/tileset.tres" type="TileSet" id=2]
 [ext_resource path="res://game/game.gd" type="Script" id=3]
 
-[node name="Game" type="Node"]
+[node name="Game" type="Node2D"]
 script = ExtResource( 3 )
 
 [node name="TileMap" type="TileMap" parent="."]

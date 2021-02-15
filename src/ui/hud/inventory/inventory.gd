@@ -7,6 +7,7 @@ const TURRET_ITEM_SCENE := preload("res://ui/hud/inventory/turret_item/turret_it
 export var num_turrets := 0
 
 var _selected_item: TextureButton = null
+var _selected_item_original_position: Vector2
 var _drag_offset: Vector2
 
 onready var items: VBoxContainer = $MarginContainer/Items
@@ -23,15 +24,19 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if _selected_item:
 		var pos := get_global_mouse_position() + _drag_offset
-		_selected_item.drag_sprite.global_position = pos
+		_selected_item.rect_global_position = pos
+
+
+func _on_Items_sort_children() -> void:
+	for item in items.get_children():
+		item.original_position = item.rect_position
 
 
 func _on_item_button_down(item: TextureButton) -> void:
-	_drag_offset = -item.base_center.position
+	_drag_offset = -item.base.position
 	_selected_item = item
 
 
 func _on_item_button_up(item: TextureButton) -> void:
 	_selected_item = null
-	item.drag_sprite.position = Vector2.ZERO
 	emit_signal("item_dropped", item, get_global_mouse_position())

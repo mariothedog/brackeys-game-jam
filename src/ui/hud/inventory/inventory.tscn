@@ -4,13 +4,9 @@
 [ext_resource path="res://ui/hud/inventory/inventory.gd" type="Script" id=3]
 
 [node name="Inventory" type="MarginContainer"]
-margin_right = 25.0
-margin_bottom = 113.0
+margin_right = 22.0
+margin_bottom = 8.0
 size_flags_horizontal = 8
-custom_constants/margin_right = 1
-custom_constants/margin_top = 1
-custom_constants/margin_left = 1
-custom_constants/margin_bottom = 1
 script = ExtResource( 3 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -18,10 +14,8 @@ __meta__ = {
 num_turrets = 5
 
 [node name="Background" type="NinePatchRect" parent="."]
-margin_left = 2.0
-margin_top = 1.0
-margin_right = 24.0
-margin_bottom = 112.0
+margin_right = 22.0
+margin_bottom = 8.0
 rect_min_size = Vector2( 22, 0 )
 size_flags_horizontal = 8
 texture = ExtResource( 1 )
@@ -34,10 +28,8 @@ __meta__ = {
 }
 
 [node name="MarginContainer" type="MarginContainer" parent="."]
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 24.0
-margin_bottom = 112.0
+margin_right = 22.0
+margin_bottom = 8.0
 custom_constants/margin_right = 2
 custom_constants/margin_top = 4
 custom_constants/margin_bottom = 4
@@ -46,7 +38,7 @@ custom_constants/margin_bottom = 4
 margin_left = 10.0
 margin_top = 4.0
 margin_right = 10.0
-margin_bottom = 107.0
+margin_bottom = 4.0
 size_flags_horizontal = 4
 custom_constants/separation = 5
 [connection signal="sort_children" from="MarginContainer/Items" to="." method="_on_Items_sort_children"]

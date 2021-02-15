@@ -16,6 +16,5 @@ tile_data = PoolIntArray( 0, 0, 0, 1, 0, 0, 2, 0, 0, 3, 0, 0, 4, 0, 0, 5, 0, 0, 
 [node name="Turrets" type="Node" parent="."]
 
 [node name="HUD" parent="." instance=ExtResource( 1 )]
-[connection signal="item_dropped" from="HUD/PanelContainer/Inventory" to="." method="_on_Inventory_item_dropped"]
-
-[editable path="HUD"]
+[connection signal="item_dropped" from="HUD" to="." method="_on_HUD_item_dropped"]
+[connection signal="start_pressed" from="HUD" to="." method="_on_HUD_start_pressed"]

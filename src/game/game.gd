@@ -27,7 +27,7 @@ func _input(event: InputEvent) -> void:
 		_currently_aiming_item = null
 
 
-func _on_Inventory_item_dropped(item: TextureButton, global_position: Vector2) -> void:
+func _on_HUD_item_dropped(item: TextureButton, global_position: Vector2) -> void:
 	var tile_pos := tilemap.world_to_map(global_position)
 	if tilemap.get_cellv(tile_pos) != Tiles.GROUND:
 		item.rect_position = item.original_position
@@ -36,3 +36,7 @@ func _on_Inventory_item_dropped(item: TextureButton, global_position: Vector2) -
 	var global_pos_snapped = tilemap.map_to_world(tile_pos) + tilemap.cell_size / 2
 	item.rect_global_position = global_pos_snapped - item.base.position
 	_currently_aiming_item = item
+
+
+func _on_HUD_start_pressed() -> void:
+	print("TODO: Start game")

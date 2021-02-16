@@ -46,7 +46,6 @@ func _input(event: InputEvent) -> void:
 		and event.is_pressed()
 		and _currently_aiming_draggable_item
 	):
-		_currently_aiming_draggable_item.sight_line.is_casting = false
 		_currently_aiming_draggable_item = null
 
 
@@ -92,6 +91,7 @@ func _update_draggable_items() -> void:
 func _on_HUD_item_draggable_button_down(draggable: TextureButton) -> void:
 	draggable.raise()
 	draggable.turret_item.visible = false
+	draggable.sight_line.is_casting = false
 
 	_drag_offset = -draggable.base.position
 	_selected_draggable_item = draggable

@@ -28,8 +28,9 @@ func _process(_delta: float) -> void:
 		var pos := get_global_mouse_position() + _drag_offset
 		_selected_draggable_item.rect_global_position = pos
 	elif _currently_aiming_draggable_item:
+		var gun_pos: Vector2 = _currently_aiming_draggable_item.gun.global_position
 		var mouse_pos := get_global_mouse_position()
-		var angle_to_mouse: float = (mouse_pos - _currently_aiming_draggable_item.gun.global_position).angle()
+		var angle_to_mouse: float = (mouse_pos - gun_pos).angle()
 		var angle_snapped := stepify(angle_to_mouse, deg2rad(TURRET_AIMING_SNAP_DEG))
 		_currently_aiming_draggable_item.gun.rotation = angle_snapped
 
@@ -41,6 +42,7 @@ func _input(event: InputEvent) -> void:
 		and event.is_pressed()
 		and _currently_aiming_draggable_item
 	):
+		_currently_aiming_draggable_item.sight_line.is_casting = false
 		_currently_aiming_draggable_item = null
 
 
@@ -111,7 +113,10 @@ func _on_HUD_item_draggable_button_up(draggable: TextureButton) -> void:
 
 	draggable.rect_global_position = global_pos_snapped
 	draggable.add_to_group("placed_draggable_items")
+
 	_currently_aiming_draggable_item = draggable
+	draggable.sight_line.is_casting = true
+
 	_update_draggable_items()
 
 

@@ -2,6 +2,7 @@ extends TextureButton
 
 onready var gun: Sprite = $Gun
 onready var base: Position2D = $Base
+onready var sight_line: RayCast2D = $Gun/TurretSightLine
 
 var turret_item: TextureRect
 

@@ -128,6 +128,7 @@ func _on_HUD_start_pressed() -> void:
 	hud.hide()
 	for item in get_tree().get_nodes_in_group("placed_draggable_items"):
 		if not item.visible:
+			item.reset()
 			continue
 		var pos: Vector2 = item.rect_global_position + item.base.position
 		_place_turret(pos, item.gun.rotation, item.num_overlapping_turrets)

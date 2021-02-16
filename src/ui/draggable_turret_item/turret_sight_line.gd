@@ -12,12 +12,12 @@ func _ready() -> void:
 	set_physics_process(false)
 
 
-func _physics_process(_delta: float) -> void:
+func update() -> void:
 	force_raycast_update()
 	var cast_point := cast_to
 	if is_colliding():
 		cast_point = to_local(get_collision_point())
-	line.points[1] = cast_point
+	line.points[1] = cast_point - line.position
 
 
 func _set_is_casting(value: bool) -> void:

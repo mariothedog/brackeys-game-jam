@@ -3,8 +3,8 @@ extends MarginContainer
 signal item_draggable_button_down(draggable)
 signal item_draggable_button_up(draggable)
 
-const TURRET_ITEM_SCENE := preload("res://ui/turret_item/turret_item.tscn")
-const DRAGGABLE_ITEM_SCENE := preload("res://ui/turret_item/draggable_turret_item.tscn")
+const TURRET_ITEM_SCENE := preload("res://ui/hud/inventory/turret_item.tscn")
+const DRAGGABLE_ITEM_SCENE := preload("res://ui/draggable_turret_item/draggable_turret_item.tscn")
 
 export var num_turrets := 0
 

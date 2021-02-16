@@ -19,10 +19,6 @@ config/name="Brackeys Game Jam"
 run/main_scene="res://game/game.tscn"
 config/icon="res://icon.png"
 
-[autoload]
-
-Util="*res://autoload/utility.gd"
-
 [display]
 
 window/size/width=240

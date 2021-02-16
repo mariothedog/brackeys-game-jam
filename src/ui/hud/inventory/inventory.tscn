@@ -6,6 +6,7 @@
 [node name="Inventory" type="MarginContainer"]
 margin_right = 22.0
 margin_bottom = 8.0
+mouse_filter = 2
 size_flags_horizontal = 8
 script = ExtResource( 3 )
 __meta__ = {
@@ -30,15 +31,19 @@ __meta__ = {
 [node name="MarginContainer" type="MarginContainer" parent="."]
 margin_right = 22.0
 margin_bottom = 8.0
-custom_constants/margin_right = 2
+mouse_filter = 2
 custom_constants/margin_top = 4
+custom_constants/margin_left = 1
 custom_constants/margin_bottom = 4
 
-[node name="Items" type="VBoxContainer" parent="MarginContainer"]
-margin_left = 10.0
+[node name="TurretItems" type="VBoxContainer" parent="MarginContainer"]
+margin_left = 11.0
 margin_top = 4.0
-margin_right = 10.0
+margin_right = 11.0
 margin_bottom = 4.0
+mouse_filter = 2
 size_flags_horizontal = 4
 custom_constants/separation = 5
-[connection signal="sort_children" from="MarginContainer/Items" to="." method="_on_Items_sort_children"]
+
+[node name="DraggableItems" type="Node2D" parent="."]
+[connection signal="sort_children" from="MarginContainer/TurretItems" to="." method="_on_TurretItems_sort_children"]

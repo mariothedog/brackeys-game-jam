@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/turret_item_gun.png-de70e76200336658e6b5976f61a39e3d.stex"
+path="res://.import/turret_item.png-4ecbfe70b2db084f4ed721a848a01490.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://ui/hud/inventory/turret_item/turret_item_gun.png"
-dest_files=[ "res://.import/turret_item_gun.png-de70e76200336658e6b5976f61a39e3d.stex" ]
+source_file="res://ui/hud/inventory/turret_item/turret_item.png"
+dest_files=[ "res://.import/turret_item.png-4ecbfe70b2db084f4ed721a848a01490.stex" ]
 
 [params]
 

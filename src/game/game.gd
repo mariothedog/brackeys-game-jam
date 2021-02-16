@@ -6,7 +6,9 @@ var _currently_aiming_item: TextureButton
 
 onready var tilemap: TileMap = $TileMap
 onready var tile_set: TileSet = tilemap.tile_set
+onready var draggable_turrets: Node = $DraggableTurrets
 onready var turrets: Node = $Turrets
+onready var hud: CanvasLayer = $HUD
 
 onready var Tiles := {"GROUND": tile_set.find_tile_by_name("ground")}
 
@@ -30,10 +32,13 @@ func _input(event: InputEvent) -> void:
 func _on_HUD_item_dropped(item: TextureButton, global_position: Vector2) -> void:
 	var tile_pos := tilemap.world_to_map(global_position)
 	if tilemap.get_cellv(tile_pos) != Tiles.GROUND:
+		if item.get_parent() == draggable_turrets:
+			Util.reparent(item, hud.inventory.items)
 		item.rect_position = item.original_position
 		item.gun.rotation = 0
 		return
 	var global_pos_snapped = tilemap.map_to_world(tile_pos) + tilemap.cell_size / 2
+	Util.reparent(item, draggable_turrets)
 	item.rect_global_position = global_pos_snapped - item.base.position
 	_currently_aiming_item = item
 

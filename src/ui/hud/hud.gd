@@ -5,8 +5,7 @@ signal item_draggable_button_up(draggable)
 signal start_pressed
 
 onready var margin: MarginContainer = $MarginContainer
-onready var inventory: MarginContainer = $MarginContainer/Inventory
-onready var start: Button = $MarginContainer/Start
+onready var inventory: MarginContainer = $MarginContainer/VBoxContainer/Inventory
 
 
 func show() -> void:

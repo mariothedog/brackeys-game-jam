@@ -11,7 +11,7 @@ var _currently_aiming_draggable_item: TextureButton
 onready var tilemap: TileMap = $TileMap
 onready var tile_set: TileSet = tilemap.tile_set
 onready var bullets: Node = $Bullets
-onready var turrets: Node = $Turrets
+onready var turrets: Node2D = $Turrets
 onready var hud: CanvasLayer = $HUD
 
 onready var Tiles := {

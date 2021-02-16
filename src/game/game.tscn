@@ -16,7 +16,8 @@ tile_data = PoolIntArray( 0, 1, 0, 1, 1, 0, 2, 1, 0, 3, 1, 0, 4, 1, 0, 5, 1, 0, 
 
 [node name="Bullets" type="Node" parent="."]
 
-[node name="Turrets" type="Node" parent="."]
+[node name="Turrets" type="Node2D" parent="."]
+z_index = 1
 
 [node name="HUD" parent="." instance=ExtResource( 1 )]
 [connection signal="item_draggable_button_down" from="HUD" to="." method="_on_HUD_item_draggable_button_down"]

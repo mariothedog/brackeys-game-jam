@@ -44,9 +44,14 @@ func _input(event: InputEvent) -> void:
 		_currently_aiming_draggable_item = null
 
 
-func _place_turret(pos: Vector2, rotation: float) -> void:
+func _place_turret(pos: Vector2, rotation: float, level: int) -> void:
+	if level < 1:
+		push_error("Turret level must be greater than or equal to 1")
+		return
+
 	var turret := TURRET_SCENE.instance()
 	turret.global_position = pos
+	turret.level = level
 	assert(turret.connect("bullet_spawned", self, "_on_bullet_spawned") == OK)
 	turrets.add_child(turret)
 	turret.gun.rotation = rotation
@@ -111,11 +116,13 @@ func _on_HUD_item_draggable_button_up(draggable: TextureButton) -> void:
 
 
 func _on_HUD_start_pressed() -> void:
+	hud.hide()
 	for item in get_tree().get_nodes_in_group("placed_draggable_items"):
+		if not item.visible:
+			continue
 		var pos: Vector2 = item.rect_global_position + item.base.position
-		_place_turret(pos, item.gun.rotation)
+		_place_turret(pos, item.gun.rotation, item.num_overlapping_turrets)
 		item.reset()
-		hud.hide()
 
 
 func _on_bullet_spawned(bullet: Area2D) -> void:

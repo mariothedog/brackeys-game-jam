@@ -32,5 +32,6 @@ margin_bottom = 127.0
 size_flags_horizontal = 0
 size_flags_vertical = 8
 text = "Start"
+[connection signal="item_button_down" from="MarginContainer/Inventory" to="." method="_on_Inventory_item_button_down"]
 [connection signal="item_dropped" from="MarginContainer/Inventory" to="." method="_on_Inventory_item_dropped"]
 [connection signal="pressed" from="MarginContainer/Start" to="." method="_on_Start_pressed"]

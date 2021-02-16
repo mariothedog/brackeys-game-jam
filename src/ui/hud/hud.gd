@@ -1,5 +1,6 @@
 extends CanvasLayer
 
+signal item_button_down(item)
 signal item_dropped(item, position)
 signal start_pressed
 
@@ -17,6 +18,10 @@ func hide() -> void:
 
 func _on_Inventory_item_dropped(item, global_position) -> void:
 	emit_signal("item_dropped", item, global_position)
+
+
+func _on_Inventory_item_button_down(item) -> void:
+	emit_signal("item_button_down", item)
 
 
 func _on_Start_pressed() -> void:

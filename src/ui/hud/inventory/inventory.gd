@@ -1,5 +1,6 @@
 extends MarginContainer
 
+signal item_button_down(item)
 signal item_dropped(item, global_position)
 
 const TURRET_ITEM_SCENE := preload("res://ui/hud/inventory/turret_item/turret_item.tscn")
@@ -35,6 +36,7 @@ func _on_Items_sort_children() -> void:
 func _on_item_button_down(item: TextureButton) -> void:
 	_drag_offset = -item.base.position
 	_selected_item = item
+	emit_signal("item_button_down", item)
 
 
 func _on_item_button_up(item: TextureButton) -> void:

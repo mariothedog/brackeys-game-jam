@@ -1,4 +1,4 @@
-extends Sprite
+extends Area2D
 
 signal bullet_spawned(bullet)
 
@@ -24,6 +24,10 @@ func shoot(global_pos: Vector2, dir: Vector2) -> void:
 	bullet.velocity = dir * BULLET_SPEED
 	bullet.rotation = dir.angle()
 	emit_signal("bullet_spawned", bullet)
+
+
+func explode() -> void:
+	queue_free()
 
 
 func _on_Shoot_timeout() -> void:

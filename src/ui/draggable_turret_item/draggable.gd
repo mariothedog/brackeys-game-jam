@@ -16,6 +16,10 @@ func reset() -> void:
 	turret_item.visible = true
 
 
+func update_sight_line() -> void:
+	sight_line.update()
+
+
 func _set_num_overlapping_turrets(value) -> void:
 	num_overlapping_turrets = value
 	gun.scale = Vector2.ONE * num_overlapping_turrets

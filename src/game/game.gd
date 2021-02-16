@@ -36,7 +36,7 @@ func _process(_delta: float) -> void:
 		var angle_to_mouse: float = (mouse_pos - gun_pos).angle()
 		var angle_snapped := stepify(angle_to_mouse, deg2rad(TURRET_AIMING_SNAP_DEG))
 		_currently_aiming_draggable_item.gun.rotation = angle_snapped
-		_currently_aiming_draggable_item.sight_line.update()
+		get_tree().call_group("placed_draggable_items", "update_sight_line")
 
 
 func _input(event: InputEvent) -> void:

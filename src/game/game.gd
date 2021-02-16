@@ -16,6 +16,12 @@ onready var hud: CanvasLayer = $HUD
 onready var Tiles := {"GROUND": tile_set.find_tile_by_name("ground")}
 
 
+func _ready() -> void:
+	for tile in Tiles:
+		if Tiles[tile] == -1:
+			push_error("The %s tile was not found!" % tile)
+
+
 func _process(_delta: float) -> void:
 	if _currently_aiming_item:
 		var mouse_pos := get_global_mouse_position()

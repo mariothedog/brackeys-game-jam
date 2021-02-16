@@ -9,6 +9,7 @@ var _currently_aiming_item: TextureButton
 onready var tilemap: TileMap = $TileMap
 onready var tile_set: TileSet = tilemap.tile_set
 onready var draggable_turrets: Node = $DraggableTurrets
+onready var bullets: Node = $Bullets
 onready var turrets: Node = $Turrets
 onready var hud: CanvasLayer = $HUD
 
@@ -36,6 +37,7 @@ func _input(event: InputEvent) -> void:
 func place_turret(pos: Vector2, rotation: float) -> void:
 	var turret := TURRET_SCENE.instance()
 	turret.global_position = pos
+	assert(turret.connect("bullet_spawned", self, "_on_bullet_spawned") == OK)
 	turrets.add_child(turret)
 	turret.gun.rotation = rotation
 
@@ -60,3 +62,7 @@ func _on_HUD_start_pressed() -> void:
 		place_turret(pos, turret.gun.rotation)
 		turret.queue_free()
 	hud.hide()
+
+
+func _on_bullet_spawned(bullet: Area2D) -> void:
+	bullets.add_child(bullet)

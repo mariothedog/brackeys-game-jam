@@ -11,3 +11,10 @@ script = ExtResource( 3 )
 [node name="Gun" type="Sprite" parent="."]
 texture = ExtResource( 1 )
 offset = Vector2( 2.5, 0 )
+
+[node name="Barrel" type="Position2D" parent="Gun"]
+position = Vector2( 8, 0 )
+
+[node name="Shoot" type="Timer" parent="."]
+autostart = true
+[connection signal="timeout" from="Shoot" to="." method="_on_Shoot_timeout"]

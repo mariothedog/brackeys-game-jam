@@ -14,7 +14,10 @@ onready var bullets: Node = $Bullets
 onready var turrets: Node = $Turrets
 onready var hud: CanvasLayer = $HUD
 
-onready var Tiles := {"GROUND": tile_set.find_tile_by_name("ground")}
+onready var Tiles := {
+	"GROUND": tile_set.find_tile_by_name("ground"),
+	"WALL": tile_set.find_tile_by_name("wall")
+}
 
 
 func _ready() -> void:

@@ -33,6 +33,13 @@ func _input(event: InputEvent) -> void:
 		_currently_aiming_item = null
 
 
+func place_turret(pos: Vector2, rotation: float) -> void:
+	var turret := TURRET_SCENE.instance()
+	turret.global_position = pos
+	turrets.add_child(turret)
+	turret.gun.rotation = rotation
+
+
 func _on_HUD_item_dropped(item: TextureButton, global_position: Vector2) -> void:
 	var tile_pos := tilemap.world_to_map(global_position)
 	if tilemap.get_cellv(tile_pos) != Tiles.GROUND:
@@ -48,4 +55,8 @@ func _on_HUD_item_dropped(item: TextureButton, global_position: Vector2) -> void
 
 
 func _on_HUD_start_pressed() -> void:
-	print("TODO: Start game")
+	for turret in draggable_turrets.get_children():
+		var pos: Vector2 = turret.rect_global_position + turret.base.position
+		place_turret(pos, turret.gun.rotation)
+		turret.queue_free()
+	hud.hide()

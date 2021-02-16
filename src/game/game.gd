@@ -2,6 +2,8 @@ extends Node2D
 
 const TURRET_SCENE := preload("res://turret/turret.tscn")
 
+const TURRET_AIMING_SNAP_DEG := 45
+
 var _currently_aiming_item: TextureButton
 
 onready var tilemap: TileMap = $TileMap
@@ -16,7 +18,9 @@ onready var Tiles := {"GROUND": tile_set.find_tile_by_name("ground")}
 func _process(_delta: float) -> void:
 	if _currently_aiming_item:
 		var mouse_pos := get_global_mouse_position()
-		_currently_aiming_item.gun.look_at(mouse_pos)
+		var angle_to_mouse: float = (mouse_pos - _currently_aiming_item.gun.global_position).angle()
+		var angle_snapped := stepify(angle_to_mouse, deg2rad(TURRET_AIMING_SNAP_DEG))
+		_currently_aiming_item.gun.rotation = angle_snapped
 
 
 func _input(event: InputEvent) -> void:

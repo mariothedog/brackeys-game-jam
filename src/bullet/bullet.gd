@@ -1,5 +1,7 @@
 extends Area2D
 
+var friendly_turrets := []  # List of turrets the bullet will phase through
+
 var velocity := Vector2.ZERO
 
 
@@ -12,6 +14,8 @@ func explode() -> void:
 
 
 func _on_Bullet_area_entered(area: Area2D) -> void:
+	if area in friendly_turrets:
+		return
 	area.explode()
 	explode()
 

@@ -12,6 +12,7 @@ onready var tilemap: TileMap = $TileMap
 onready var tile_set: TileSet = tilemap.tile_set
 onready var bullets: Node = $Bullets
 onready var turrets: Node2D = $Turrets
+onready var inventory: Node2D = $Inventory
 onready var hud: CanvasLayer = $HUD
 
 onready var Tiles := {
@@ -36,7 +37,7 @@ func _process(_delta: float) -> void:
 		var angle_to_mouse: float = (mouse_pos - gun_pos).angle()
 		var angle_snapped := stepify(angle_to_mouse, deg2rad(TURRET_AIMING_SNAP_DEG))
 		_currently_aiming_draggable_item.gun.rotation = angle_snapped
-		get_tree().call_group("placed_draggable_items", "update_sight_line")
+		get_tree().call_group("placed_draggable_turrets", "update_sight_line")
 
 
 func _input(event: InputEvent) -> void:
@@ -64,7 +65,7 @@ func _place_turret(pos: Vector2, rotation: float, level: int) -> void:
 
 func _get_draggable_items_at_pos(global_pos: Vector2) -> Array:
 	var items := []
-	for item in get_tree().get_nodes_in_group("placed_draggable_items"):
+	for item in get_tree().get_nodes_in_group("placed_draggable_turrets"):
 		if item.draggable.global_position == global_pos:
 			items.append(item)
 	return items
@@ -72,7 +73,7 @@ func _get_draggable_items_at_pos(global_pos: Vector2) -> Array:
 
 func _update_draggable_items() -> void:
 	var draggable_items_at_pos := {}
-	for draggable_item in get_tree().get_nodes_in_group("placed_draggable_items"):
+	for draggable_item in get_tree().get_nodes_in_group("placed_draggable_turrets"):
 		if draggable_item == _selected_draggable_item:
 			continue
 		if not draggable_items_at_pos.has(draggable_item.rect_global_position):
@@ -92,45 +93,49 @@ func _update_draggable_items() -> void:
 				item.level = 0
 
 
-func _on_HUD_item_draggable_button_down(draggable: TextureButton) -> void:
-	draggable.raise()
-	draggable.turret_item.visible = false
-	draggable.stop_sight_lines()
+func _on_Inventory_draggable_turret_button_down(turret: TextureButton) -> void:
+	turret.raise()
+#	turret.turret_item.visible = false
+	turret.disable_sight_lines()
 
-	_drag_offset = -draggable.base.position
-	_selected_draggable_item = draggable
-	if _selected_draggable_item.is_in_group("placed_draggable_items"):
-		_selected_draggable_item.remove_from_group("placed_draggable_items")
+	_drag_offset = -turret.base.position
+	_selected_draggable_item = turret
+	if _selected_draggable_item.is_in_group("placed_draggable_turrets"):
+		_selected_draggable_item.remove_from_group("placed_draggable_turrets")
+		turret.disable_sight_blocker()
 	_update_draggable_items()
 	_selected_draggable_item.level = 1
+	get_tree().call_group("placed_draggable_turrets", "update_sight_line")
 
 
-func _on_HUD_item_draggable_button_up(draggable: TextureButton) -> void:
+func _on_Inventory_draggable_turret_button_up(turret: TextureButton) -> void:
 	_selected_draggable_item = null
 
 	var tile_pos := tilemap.world_to_map(get_global_mouse_position())
 	if tilemap.get_cellv(tile_pos) != Tiles.GROUND:
-		draggable.reset()
+		turret.reset()
 		return
 
 	var global_pos_snapped = (
 		tilemap.map_to_world(tile_pos)
 		+ tilemap.cell_size / 2
-		- draggable.base.position
+		- turret.base.position
 	)
 
-	draggable.rect_global_position = global_pos_snapped
-	draggable.add_to_group("placed_draggable_items")
+	turret.rect_global_position = global_pos_snapped
+	turret.add_to_group("placed_draggable_turrets")
+	turret.enable_sight_blocker()
 
-	_currently_aiming_draggable_item = draggable
+	_currently_aiming_draggable_item = turret
 
 	_update_draggable_items()
-	draggable.enable_sight_lines()
+	turret.enable_sight_lines()
 
 
 func _on_HUD_start_pressed() -> void:
 	hud.hide()
-	for item in get_tree().get_nodes_in_group("placed_draggable_items"):
+	inventory.visible = false
+	for item in get_tree().get_nodes_in_group("placed_draggable_turrets"):
 		if not item.visible:
 			item.reset()
 			continue

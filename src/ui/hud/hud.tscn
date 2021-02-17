@@ -1,6 +1,5 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=5 format=2]
 
-[ext_resource path="res://ui/hud/inventory/inventory.tscn" type="PackedScene" id=1]
 [ext_resource path="res://ui/hud/hud.gd" type="Script" id=2]
 [ext_resource path="res://ui/hud/start/start_normal.png" type="Texture" id=3]
 [ext_resource path="res://ui/hud/start/start_hover.png" type="Texture" id=4]
@@ -9,43 +8,24 @@
 [node name="HUD" type="CanvasLayer"]
 script = ExtResource( 2 )
 
-[node name="MarginContainer" type="MarginContainer" parent="."]
+[node name="Control" type="Control" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-custom_constants/margin_right = 1
-custom_constants/margin_top = 1
-custom_constants/margin_left = 1
-custom_constants/margin_bottom = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
-margin_left = 1.0
-margin_top = 1.0
-margin_right = 239.0
-margin_bottom = 119.0
 mouse_filter = 2
-custom_constants/separation = 2
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Inventory" parent="MarginContainer/VBoxContainer" instance=ExtResource( 1 )]
-margin_left = 216.0
-margin_right = 238.0
-margin_bottom = 105.0
-
-[node name="Start" type="TextureButton" parent="MarginContainer/VBoxContainer"]
-margin_left = 213.0
-margin_top = 107.0
-margin_right = 238.0
-margin_bottom = 118.0
-size_flags_horizontal = 8
-size_flags_vertical = 0
+[node name="Start" type="TextureButton" parent="Control"]
+margin_top = 109.0
+margin_right = 25.0
+margin_bottom = 120.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
 texture_normal = ExtResource( 3 )
 texture_pressed = ExtResource( 5 )
 texture_hover = ExtResource( 4 )
-[connection signal="item_draggable_button_down" from="MarginContainer/VBoxContainer/Inventory" to="." method="_on_Inventory_item_draggable_button_down"]
-[connection signal="item_draggable_button_up" from="MarginContainer/VBoxContainer/Inventory" to="." method="_on_Inventory_item_draggable_button_up"]
-[connection signal="pressed" from="MarginContainer/VBoxContainer/Start" to="." method="_on_Start_pressed"]
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="Control/Start" to="." method="_on_Start_pressed"]

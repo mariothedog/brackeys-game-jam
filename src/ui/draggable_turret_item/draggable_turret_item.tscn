@@ -21,7 +21,8 @@ __meta__ = {
 position = Vector2( 6, 6 )
 texture = ExtResource( 4 )
 centered = false
-offset = Vector2( -4, -4 )
+offset = Vector2( -9, -9 )
+hframes = 8
 
 [node name="TurretSightLine" type="RayCast2D" parent="Gun"]
 enabled = true

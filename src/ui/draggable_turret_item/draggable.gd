@@ -22,4 +22,4 @@ func update_sight_line() -> void:
 
 func _set_num_overlapping_turrets(value) -> void:
 	num_overlapping_turrets = value
-	gun.scale = Vector2.ONE * num_overlapping_turrets
+	gun.frame = value - 1

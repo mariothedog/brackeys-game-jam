@@ -17,7 +17,7 @@ texture = ExtResource( 2 )
 
 [node name="Gun" type="Sprite" parent="."]
 texture = ExtResource( 1 )
-offset = Vector2( 2.5, 0 )
+hframes = 8
 
 [node name="Barrel" type="Position2D" parent="Gun"]
 position = Vector2( 8, 0 )

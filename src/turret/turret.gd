@@ -14,6 +14,9 @@ onready var shoot_timer: Timer = $Shoot
 
 
 func _ready() -> void:
+	if level > gun.hframes:
+		push_error("Turret level is greater than the number of gun frames available")
+		return
 	gun.frame = level - 1
 
 

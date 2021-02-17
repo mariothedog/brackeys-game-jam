@@ -84,21 +84,25 @@ func _update_draggable_items() -> void:
 		var num := len(items)
 		for i in num:
 			var item: TextureButton = items[i]
-			item.num_overlapping_turrets = num
-			item.visible = i == num - 1
+			if i == num - 1:
+				item.level = num
+				item.visible = true
+			else:
+				item.visible = false
+				item.level = 0
 
 
 func _on_HUD_item_draggable_button_down(draggable: TextureButton) -> void:
 	draggable.raise()
 	draggable.turret_item.visible = false
-	draggable.sight_line.is_casting = false
+	draggable.stop_sight_lines()
 
 	_drag_offset = -draggable.base.position
 	_selected_draggable_item = draggable
 	if _selected_draggable_item.is_in_group("placed_draggable_items"):
 		_selected_draggable_item.remove_from_group("placed_draggable_items")
 	_update_draggable_items()
-	_selected_draggable_item.num_overlapping_turrets = 1
+	_selected_draggable_item.level = 1
 
 
 func _on_HUD_item_draggable_button_up(draggable: TextureButton) -> void:
@@ -119,9 +123,9 @@ func _on_HUD_item_draggable_button_up(draggable: TextureButton) -> void:
 	draggable.add_to_group("placed_draggable_items")
 
 	_currently_aiming_draggable_item = draggable
-	draggable.sight_line.is_casting = true
 
 	_update_draggable_items()
+	draggable.enable_sight_lines()
 
 
 func _on_HUD_start_pressed() -> void:
@@ -131,7 +135,7 @@ func _on_HUD_start_pressed() -> void:
 			item.reset()
 			continue
 		var pos: Vector2 = item.rect_global_position + item.base.position
-		_place_turret(pos, item.gun.rotation, item.num_overlapping_turrets)
+		_place_turret(pos, item.gun.rotation, item.level)
 		item.reset()
 
 

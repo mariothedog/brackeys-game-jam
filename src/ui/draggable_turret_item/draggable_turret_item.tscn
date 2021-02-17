@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://ui/draggable_turret_item/turret_sight_line.gd" type="Script" id=1]
+[ext_resource path="res://ui/draggable_turret_item/sight_line.tscn" type="PackedScene" id=1]
 [ext_resource path="res://ui/draggable_turret_item/draggable.gd" type="Script" id=2]
 [ext_resource path="res://turret/turret_base.png" type="Texture" id=3]
 [ext_resource path="res://turret/turret_gun.png" type="Texture" id=4]
@@ -24,18 +24,37 @@ centered = false
 offset = Vector2( -9, -9 )
 hframes = 8
 
-[node name="TurretSightLine" type="RayCast2D" parent="Gun"]
-enabled = true
-cast_to = Vector2( 1000, 0 )
-collision_mask = 3
-script = ExtResource( 1 )
+[node name="SightLines" type="Node2D" parent="Gun"]
 
-[node name="Line2D" type="Line2D" parent="Gun/TurretSightLine"]
-position = Vector2( 9, 0 )
-z_index = -1
-points = PoolVector2Array( 0, 0, 0, 0 )
-width = 2.0
-default_color = Color( 1, 0, 0, 0.5 )
+[node name="SightLine" parent="Gun/SightLines" instance=ExtResource( 1 )]
+
+[node name="SightLine2" parent="Gun/SightLines" instance=ExtResource( 1 )]
+visible = false
+rotation = 3.14159
+
+[node name="SightLine3" parent="Gun/SightLines" instance=ExtResource( 1 )]
+visible = false
+rotation = 1.5708
+
+[node name="SightLine4" parent="Gun/SightLines" instance=ExtResource( 1 )]
+visible = false
+rotation = 4.71239
+
+[node name="SightLine5" parent="Gun/SightLines" instance=ExtResource( 1 )]
+visible = false
+rotation = 5.49779
+
+[node name="SightLine6" parent="Gun/SightLines" instance=ExtResource( 1 )]
+visible = false
+rotation = 0.785398
+
+[node name="SightLine7" parent="Gun/SightLines" instance=ExtResource( 1 )]
+visible = false
+rotation = 2.35619
+
+[node name="SightLine8" parent="Gun/SightLines" instance=ExtResource( 1 )]
+visible = false
+rotation = 3.92699
 
 [node name="Base" type="Position2D" parent="."]
 position = Vector2( 6, 6 )

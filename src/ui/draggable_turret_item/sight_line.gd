@@ -17,7 +17,7 @@ func update() -> void:
 	var cast_point := cast_to
 	if is_colliding():
 		cast_point = to_local(get_collision_point())
-	line.points[1] = cast_point - line.position
+	line.points[1] = cast_point
 
 
 func _set_is_casting(value: bool) -> void:

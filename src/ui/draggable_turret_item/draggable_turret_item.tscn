@@ -35,7 +35,7 @@ position = Vector2( 9, 0 )
 z_index = -1
 points = PoolVector2Array( 0, 0, 0, 0 )
 width = 2.0
-default_color = Color( 1, 0, 0.266667, 1 )
+default_color = Color( 1, 0, 0, 0.5 )
 
 [node name="Base" type="Position2D" parent="."]
 position = Vector2( 6, 6 )

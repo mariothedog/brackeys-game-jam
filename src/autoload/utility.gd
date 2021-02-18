@@ -1,4 +1,5 @@
 class_name Util
+extends Object
 
 static func queue_free_children(node: Node) -> void:
 	for child in node.get_children():

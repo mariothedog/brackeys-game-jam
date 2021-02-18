@@ -2,16 +2,7 @@ extends TextureButton
 
 signal reset
 
-const ROTATION_OFFSETS = [
-	0,
-	0,
-	deg2rad(-90),
-	0,
-	0,
-	0,
-	0,
-	0
-]
+const ROTATION_OFFSETS = [0, 0, deg2rad(-90), 0, 0, 0, 0, 0]
 const MAX_ROTATION_WEIGHT := 20.0
 const MIN_ROTATION_WEIGHT := 5.0
 # If distance is greater than this threshold then MAX_ROTATION_WEIGHT will always be used
@@ -46,14 +37,16 @@ func _physics_process(delta: float) -> void:
 
 
 func rotate_to(radians: float, dist_from_pivot: float) -> void:
-	_target_rotation = radians + ROTATION_OFFSETS[level-1]
+	_target_rotation = radians + ROTATION_OFFSETS[level - 1]
 	if _target_rotation < 0:
 		_target_rotation += FULL_ROTATION
 	if abs(gun.rotation - _target_rotation) <= ROTATION_THRESHOLD:
 		gun.rotation = _target_rotation
 		return
 	if dist_from_pivot <= DIST_FROM_PIVOT_THRESHOLD:
-		_rotation_weight = range_lerp(dist_from_pivot, 0, DIST_FROM_PIVOT_THRESHOLD, MIN_ROTATION_WEIGHT, MAX_ROTATION_WEIGHT)
+		_rotation_weight = range_lerp(
+			dist_from_pivot, 0, DIST_FROM_PIVOT_THRESHOLD, MIN_ROTATION_WEIGHT, MAX_ROTATION_WEIGHT
+		)
 	else:
 		_rotation_weight = MAX_ROTATION_WEIGHT
 	set_physics_process(true)
@@ -63,7 +56,7 @@ func reset() -> void:
 	rect_global_position = default_global_pos
 	self.level = 1
 	set_physics_process(false)
-	gun.rotation = ROTATION_OFFSETS[level-1]
+	gun.rotation = ROTATION_OFFSETS[level - 1]
 	visible = true
 	if is_in_group("placed_draggable_turrets"):
 		remove_from_group("placed_draggable_turrets")

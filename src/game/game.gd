@@ -134,18 +134,18 @@ func _on_Inventory_draggable_turret_button_up(turret: TextureButton) -> void:
 func _on_HUD_start_pressed() -> void:
 	inventory.visible = false
 	for turret in get_tree().get_nodes_in_group("placed_draggable_turrets"):
+		turret.disable_sight_blocker()
 		if not turret.visible:
-			turret.reset()
 			continue
 		var pos: Vector2 = turret.rect_global_position + turret.base.position
 		_place_turret(pos, turret.gun.rotation, turret.level)
-		turret.reset()
 
 
 func _on_HUD_stop_pressed() -> void:
 	inventory.visible = true
 	Util.queue_free_children(turrets)
 	Util.queue_free_children(bullets)
+	get_tree().call_group("placed_draggable_turrets", "enable_sight_blocker")
 
 
 func _on_bullet_spawned(bullet: Area2D) -> void:

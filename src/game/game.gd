@@ -35,8 +35,7 @@ func _process(_delta: float) -> void:
 		var mouse_local_pos: Vector2 = _currently_aiming_draggable_item.base.get_local_mouse_position()
 		var angle_to_mouse: float = mouse_local_pos.angle()
 		var angle_snapped := stepify(angle_to_mouse, TURRET_AIMING_ANGLE_SNAP)
-		var dist := mouse_local_pos.length()
-		_currently_aiming_draggable_item.rotate_to(angle_snapped, dist)
+		_currently_aiming_draggable_item.rotate_to(angle_snapped)
 		get_tree().call_group("placed_draggable_turrets", "update_sight_line")
 
 

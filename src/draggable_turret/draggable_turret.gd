@@ -1,11 +1,11 @@
 extends TextureButton
 
+signal reset
+
 onready var gun: Sprite = $Gun
 onready var base: Position2D = $Base
 onready var sight_lines: Node2D = $Gun/SightLines
 onready var sight_blocker_collider: CollisionShape2D = $SightBlocker/CollisionShape2D
-
-var turret_item: TextureRect
 
 var default_global_pos: Vector2
 var level := 1 setget _set_level
@@ -14,6 +14,11 @@ var level := 1 setget _set_level
 func reset() -> void:
 	rect_global_position = default_global_pos
 	gun.rotation = 0
+	self.level = 1
+	visible = true
+	if is_in_group("placed_draggable_turrets"):
+		remove_from_group("placed_draggable_turrets")
+	emit_signal("reset")
 
 
 func enable_sight_lines() -> void:

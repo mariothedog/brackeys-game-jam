@@ -20,6 +20,7 @@ func _ready() -> void:
 		turret.rect_position = pos
 		assert(turret.connect("button_down", self, "_on_draggable_turret_button_down", [turret]) == OK)
 		assert(turret.connect("button_up", self, "_on_draggable_turret_button_up", [turret]) == OK)
+		assert(turret.connect("reset", self, "_on_draggable_turret_reset") == OK)
 		draggable_turrets.add_child(turret)
 
 
@@ -42,3 +43,7 @@ func _on_draggable_turret_button_down(turret: TextureButton) -> void:
 func _on_draggable_turret_button_up(turret: TextureButton) -> void:
 	_update_inventory()
 	emit_signal("draggable_turret_button_up", turret)
+
+
+func _on_draggable_turret_reset() -> void:
+	_update_inventory()

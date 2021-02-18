@@ -8,7 +8,7 @@ _data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), -2.61672, 0.0, 0, 0 
 [sub_resource type="Curve" id=2]
 _data = [ Vector2( 0, 1 ), 0.0, -0.175427, 0, 0, Vector2( 1, 0.481818 ), -1.53535, 0.0, 0, 0 ]
 
-[node name="Explosion" type="CPUParticles2D"]
+[node name="BulletExplosion" type="CPUParticles2D"]
 emitting = false
 amount = 10
 lifetime = 0.12

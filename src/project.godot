@@ -9,12 +9,18 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "CPUParticles2D",
+"class": "ParticleSystem",
+"language": "GDScript",
+"path": "res://scripts/particle_system.gd"
+}, {
 "base": "Object",
 "class": "Util",
 "language": "GDScript",
 "path": "res://scripts/utility.gd"
 } ]
 _global_script_class_icons={
+"ParticleSystem": "",
 "Util": ""
 }
 
@@ -23,6 +29,10 @@ _global_script_class_icons={
 config/name="Brackeys Game Jam"
 run/main_scene="res://game/game.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+VFX="*res://autoload/vfx.gd"
 
 [display]
 

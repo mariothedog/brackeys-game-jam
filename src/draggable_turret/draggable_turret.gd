@@ -12,6 +12,16 @@ const ROTATION_OFFSETS = [
 	0,
 	0
 ]
+const MAX_ROTATION_WEIGHT := 20.0
+const MIN_ROTATION_WEIGHT := 5.0
+# If distance is greater than this threshold then MAX_ROTATION_WEIGHT will always be used
+const DIST_FROM_PIVOT_THRESHOLD := 20.0
+const ROTATION_THRESHOLD := deg2rad(1)
+const FULL_ROTATION_SNAP_THRESHOLD := deg2rad(1)
+const FULL_ROTATION := deg2rad(360)
+
+var _target_rotation: float
+var _rotation_weight := MAX_ROTATION_WEIGHT
 
 onready var gun: Sprite = $Gun
 onready var base: Position2D = $Base
@@ -22,18 +32,42 @@ var default_global_pos: Vector2
 var level := 1 setget _set_level
 
 
+func _ready() -> void:
+	set_physics_process(false)
+
+
+func _physics_process(delta: float) -> void:
+	if abs(gun.rotation - _target_rotation) <= ROTATION_THRESHOLD:
+		gun.rotation = _target_rotation
+		set_physics_process(false)
+		return
+	gun.rotation = lerp_angle(gun.rotation, _target_rotation, _rotation_weight * delta)
+	gun.rotation = Util.fposmod_snap(gun.rotation, FULL_ROTATION, FULL_ROTATION_SNAP_THRESHOLD)
+
+
+func rotate_to(radians: float, dist_from_pivot: float) -> void:
+	_target_rotation = radians + ROTATION_OFFSETS[level-1]
+	if _target_rotation < 0:
+		_target_rotation += FULL_ROTATION
+	if abs(gun.rotation - _target_rotation) <= ROTATION_THRESHOLD:
+		gun.rotation = _target_rotation
+		return
+	if dist_from_pivot <= DIST_FROM_PIVOT_THRESHOLD:
+		_rotation_weight = range_lerp(dist_from_pivot, 0, DIST_FROM_PIVOT_THRESHOLD, MIN_ROTATION_WEIGHT, MAX_ROTATION_WEIGHT)
+	else:
+		_rotation_weight = MAX_ROTATION_WEIGHT
+	set_physics_process(true)
+
+
 func reset() -> void:
 	rect_global_position = default_global_pos
 	self.level = 1
+	set_physics_process(false)
 	gun.rotation = ROTATION_OFFSETS[level-1]
 	visible = true
 	if is_in_group("placed_draggable_turrets"):
 		remove_from_group("placed_draggable_turrets")
 	emit_signal("reset")
-
-
-func rotate_to(radians: float) -> void:
-	gun.rotation = radians + ROTATION_OFFSETS[level-1]
 
 
 func enable_sight_lines() -> void:

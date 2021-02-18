@@ -2,7 +2,7 @@ extends Node2D
 
 const TURRET_SCENE := preload("res://turret/turret.tscn")
 
-const TURRET_AIMING_SNAP_DEG := 45
+const TURRET_AIMING_ANGLE_SNAP := deg2rad(45)
 
 var _selected_draggable_item: TextureButton
 var _drag_offset: Vector2
@@ -32,11 +32,11 @@ func _process(_delta: float) -> void:
 		var pos := get_global_mouse_position() + _drag_offset
 		_selected_draggable_item.rect_global_position = pos
 	elif _currently_aiming_draggable_item:
-		var gun_pos: Vector2 = _currently_aiming_draggable_item.gun.global_position
-		var mouse_pos := get_global_mouse_position()
-		var angle_to_mouse: float = (mouse_pos - gun_pos).angle()
-		var angle_snapped := stepify(angle_to_mouse, deg2rad(TURRET_AIMING_SNAP_DEG))
-		_currently_aiming_draggable_item.rotate_to(angle_snapped)
+		var mouse_local_pos: Vector2 = _currently_aiming_draggable_item.base.get_local_mouse_position()
+		var angle_to_mouse: float = mouse_local_pos.angle()
+		var angle_snapped := stepify(angle_to_mouse, TURRET_AIMING_ANGLE_SNAP)
+		var dist := mouse_local_pos.length()
+		_currently_aiming_draggable_item.rotate_to(angle_snapped, dist)
 		get_tree().call_group("placed_draggable_turrets", "update_sight_line")
 
 
@@ -104,6 +104,7 @@ func _on_Inventory_draggable_turret_button_down(turret: TextureButton) -> void:
 		turret.disable_sight_blocker()
 	_update_draggable_items()
 	_selected_draggable_item.level = 1
+	_selected_draggable_item.set_physics_process(false)
 	get_tree().call_group("placed_draggable_turrets", "update_sight_line")
 
 

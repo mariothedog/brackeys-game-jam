@@ -25,7 +25,7 @@ z_index = 1
 position = Vector2( 217, 1 )
 z_index = 1
 script = ExtResource( 4 )
-num_turrets = 2
+num_turrets = 8
 
 [node name="Background" type="NinePatchRect" parent="Inventory"]
 margin_right = 22.0

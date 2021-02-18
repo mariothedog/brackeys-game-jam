@@ -2,6 +2,17 @@ extends TextureButton
 
 signal reset
 
+const ROTATION_OFFSETS = [
+	0,
+	0,
+	deg2rad(-90),
+	0,
+	0,
+	0,
+	0,
+	0
+]
+
 onready var gun: Sprite = $Gun
 onready var base: Position2D = $Base
 onready var sight_lines: Node2D = $Gun/SightLines
@@ -13,12 +24,16 @@ var level := 1 setget _set_level
 
 func reset() -> void:
 	rect_global_position = default_global_pos
-	gun.rotation = 0
 	self.level = 1
+	gun.rotation = ROTATION_OFFSETS[level-1]
 	visible = true
 	if is_in_group("placed_draggable_turrets"):
 		remove_from_group("placed_draggable_turrets")
 	emit_signal("reset")
+
+
+func rotate_to(radians: float) -> void:
+	gun.rotation = radians + ROTATION_OFFSETS[level-1]
 
 
 func enable_sight_lines() -> void:

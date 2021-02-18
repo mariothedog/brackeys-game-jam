@@ -12,7 +12,7 @@ _global_script_classes=[ {
 "base": "Object",
 "class": "Util",
 "language": "GDScript",
-"path": "res://autoload/utility.gd"
+"path": "res://scripts/utility.gd"
 } ]
 _global_script_class_icons={
 "Util": ""

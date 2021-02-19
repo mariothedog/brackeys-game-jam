@@ -71,6 +71,7 @@ texture={
 2d_physics/layer_1="tiles"
 2d_physics/layer_2="turrets"
 2d_physics/layer_3="bullets"
+2d_physics/layer_4="enemies"
 
 [rendering]
 

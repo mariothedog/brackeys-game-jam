@@ -1,30 +1,48 @@
 extends Node2D
 
 const TURRET_SCENE := preload("res://turret/turret.tscn")
-
+const ENEMY_SCENE := preload("res://enemies/enemy.tscn")
 const TURRET_AIMING_ANGLE_SNAP := deg2rad(45)
+
+export var num_enemies := 5
+export var enemy_spawn_delay := 0.5
+export var enemy_speed := 30.0
 
 var _selected_draggable_item: TextureButton
 var _drag_offset: Vector2
 var _currently_aiming_draggable_item: TextureButton
+var _enemy_path: PoolVector2Array
 
-onready var tilemap: TileMap = $TileMap
+onready var nav_2d: Navigation2D = $Navigation2D
+onready var tilemap: TileMap = $Navigation2D/TileMap
 onready var tile_set: TileSet = tilemap.tile_set
+onready var enemy_start: Position2D = $EnemyStart
+onready var enemy_end: Position2D = $EnemyEnd
 onready var bullets: Node = $Bullets
+onready var enemies: Node2D = $Enemies
 onready var turrets: Node2D = $Turrets
 onready var inventory: Node2D = $Inventory
 onready var hud: CanvasLayer = $HUD
 
-onready var Tiles := {
-	"GROUND": tile_set.find_tile_by_name("ground"),
-	"WALL": tile_set.find_tile_by_name("wall")
-}
-
 
 func _ready() -> void:
-	for tile in Tiles:
-		if Tiles[tile] == -1:
-			push_error("The %s tile was not found!" % tile)
+	var start_pos := enemy_start.global_position
+	var end_pos := enemy_end.global_position
+	_enemy_path = nav_2d.get_simple_path(start_pos, end_pos, false)
+	# Make path take sharp turns around corners
+	# TODO: Unhackify this entire path calculation (good luck)
+	for i in range(1, _enemy_path.size() - 1):
+		var point := _enemy_path[i]
+		var next_point := _enemy_path[i + 1]
+		var change := next_point - point
+		if change.x == 0 or change.y == 0:
+			continue
+		var prev_point := _enemy_path[i - 1]
+		if point.x == prev_point.x:
+			point.y = next_point.y
+		elif point.y == prev_point.y:
+			point.x = next_point.x
+		_enemy_path[i] = point
 
 
 func _process(_delta: float) -> void:
@@ -92,6 +110,36 @@ func _update_draggable_items() -> void:
 				item.level = 0
 
 
+func _spawn_enemies() -> void:
+	for i in num_enemies:
+		var enemy := ENEMY_SCENE.instance()
+		enemy.global_position = enemy_start.global_position
+		enemy.speed = enemy_speed
+		enemies.add_child(enemy)
+		enemy.path = _enemy_path
+		yield(get_tree().create_timer(enemy_spawn_delay), "timeout")
+
+
+func _start() -> void:
+	inventory.visible = false
+	print("Start")
+	for turret in get_tree().get_nodes_in_group("placed_draggable_turrets"):
+		turret.disable_sight_blocker()
+		if not turret.visible:
+			continue
+		var pos: Vector2 = turret.rect_global_position + turret.base.position
+		_place_turret(pos, turret.gun.rotation, turret.level)
+	_spawn_enemies()
+
+
+func _restart() -> void:
+	inventory.visible = true
+	Util.queue_free_children(turrets)
+	Util.queue_free_children(bullets)
+	Util.queue_free_children(enemies)
+	get_tree().call_group("placed_draggable_turrets", "enable_sight_blocker")
+
+
 func _on_Inventory_draggable_turret_button_down(turret: TextureButton) -> void:
 	turret.raise()
 	turret.disable_sight_lines()
@@ -100,6 +148,7 @@ func _on_Inventory_draggable_turret_button_down(turret: TextureButton) -> void:
 	_selected_draggable_item = turret
 	if _selected_draggable_item.is_in_group("placed_draggable_turrets"):
 		_selected_draggable_item.remove_from_group("placed_draggable_turrets")
+		print("Disable via button down")
 		turret.disable_sight_blocker()
 	_update_draggable_items()
 	_selected_draggable_item.level = 1
@@ -111,7 +160,7 @@ func _on_Inventory_draggable_turret_button_up(turret: TextureButton) -> void:
 	_selected_draggable_item = null
 
 	var tile_pos := tilemap.world_to_map(get_global_mouse_position())
-	if tilemap.get_cellv(tile_pos) != Tiles.GROUND:
+	if tilemap.get_cellv(tile_pos) != tilemap.Tiles.GROUND:
 		turret.reset()
 		return
 
@@ -132,21 +181,18 @@ func _on_Inventory_draggable_turret_button_up(turret: TextureButton) -> void:
 
 
 func _on_HUD_start_pressed() -> void:
-	inventory.visible = false
-	for turret in get_tree().get_nodes_in_group("placed_draggable_turrets"):
-		turret.disable_sight_blocker()
-		if not turret.visible:
-			continue
-		var pos: Vector2 = turret.rect_global_position + turret.base.position
-		_place_turret(pos, turret.gun.rotation, turret.level)
+	_start()
 
 
 func _on_HUD_stop_pressed() -> void:
-	inventory.visible = true
-	Util.queue_free_children(turrets)
-	Util.queue_free_children(bullets)
-	get_tree().call_group("placed_draggable_turrets", "enable_sight_blocker")
+	_restart()
 
 
 func _on_bullet_spawned(bullet: Area2D) -> void:
 	bullets.add_child(bullet)
+
+
+func _on_Base_hit() -> void:
+	hud.start.disabled = false
+	hud.stop.disabled = true
+	_restart()

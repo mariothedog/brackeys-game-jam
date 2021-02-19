@@ -19,12 +19,14 @@ __meta__ = {
 
 [node name="Gun" type="Sprite" parent="."]
 position = Vector2( 6, 6 )
+z_index = 2
 texture = ExtResource( 2 )
 centered = false
 offset = Vector2( -9, -9 )
 hframes = 8
 
 [node name="SightLines" type="Node2D" parent="Gun"]
+z_index = -1
 
 [node name="SightLine" parent="Gun/SightLines" instance=ExtResource( 1 )]
 

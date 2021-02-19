@@ -33,6 +33,7 @@ func shoot() -> void:
 
 
 func explode() -> void:
+	VFX.spawn_particles(VFX.ParticleSystems.TURRET_EXPLOSION, global_position)
 	queue_free()
 
 

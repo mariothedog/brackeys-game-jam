@@ -1,16 +1,13 @@
 extends Node2D
 
 const ParticleSystems := {
-	BULLET_EXPLOSION = preload("res://bullet/bullet_explosion.tscn")
+	BULLET_EXPLOSION = preload("res://bullet/bullet_explosion.tscn"),
+	TURRET_EXPLOSION = preload("res://turret/turret_explosion.tscn")
 }
 
 
-func _ready() -> void:
-	z_index = 1
-
-
 func spawn_particles(particles_scene: Resource, global_pos: Vector2):
-	var particles: CPUParticles2D = particles_scene.instance()
-	particles.global_position = global_pos
-	add_child(particles)
-	particles.start()
+	var particle_system: Node2D = particles_scene.instance()
+	particle_system.global_position = global_pos
+	add_child(particle_system)
+	particle_system.start()

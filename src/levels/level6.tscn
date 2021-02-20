@@ -24,7 +24,7 @@ adjustment_contrast = 1.06
 
 [node name="Level6" type="Node2D"]
 script = ExtResource( 6 )
-num_enemies = 40
+num_enemies = 30
 enemy_spawn_delay = 0.1
 enemy_speed = 100.0
 

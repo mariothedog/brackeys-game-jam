@@ -63,8 +63,12 @@ __meta__ = {
 [node name="DraggableTurrets" type="Node2D" parent="Inventory"]
 
 [node name="HUD" parent="." instance=ExtResource( 1 )]
+
+[node name="EnemySpawn" type="Timer" parent="."]
+one_shot = true
 [connection signal="hit" from="Base" to="." method="_on_Base_hit"]
 [connection signal="draggable_turret_button_down" from="Inventory" to="." method="_on_Inventory_draggable_turret_button_down"]
 [connection signal="draggable_turret_button_up" from="Inventory" to="." method="_on_Inventory_draggable_turret_button_up"]
 [connection signal="start_pressed" from="HUD" to="." method="_on_HUD_start_pressed"]
 [connection signal="stop_pressed" from="HUD" to="." method="_on_HUD_stop_pressed"]
+[connection signal="timeout" from="EnemySpawn" to="." method="_on_EnemySpawn_timeout"]

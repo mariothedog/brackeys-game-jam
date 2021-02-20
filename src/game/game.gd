@@ -12,6 +12,7 @@ var _selected_draggable_item: TextureButton
 var _drag_offset: Vector2
 var _currently_aiming_draggable_item: TextureButton
 var _enemy_path: PoolVector2Array
+var _num_enemies_spawned := 0
 
 onready var nav_2d: Navigation2D = $Navigation2D
 onready var tilemap: TileMap = $Navigation2D/TileMap
@@ -24,9 +25,12 @@ onready var enemies: Node2D = $Enemies
 onready var turrets: Node2D = $Turrets
 onready var inventory: Node2D = $Inventory
 onready var hud: CanvasLayer = $HUD
+onready var enemy_spawn_timer: Timer = $EnemySpawn
 
 
 func _ready() -> void:
+	enemy_spawn_timer.wait_time = enemy_spawn_delay
+	
 	var start_pos := enemy_start.global_position
 	var end_pos := enemy_end.global_position
 	_enemy_path = nav_2d.get_simple_path(start_pos, end_pos, false)
@@ -112,13 +116,25 @@ func _update_draggable_items() -> void:
 
 
 func _spawn_enemies() -> void:
-	for i in num_enemies:
-		var enemy := ENEMY_SCENE.instance()
-		enemy.global_position = enemy_start.global_position
-		enemy.speed = enemy_speed
-		enemies.add_child(enemy)
-		enemy.path = _enemy_path
-		yield(get_tree().create_timer(enemy_spawn_delay), "timeout")
+#	for i in num_enemies:
+	_num_enemies_spawned = 0
+	_spawn_enemy()
+	enemy_spawn_timer.start()
+
+
+func _spawn_enemy() -> void:
+	_num_enemies_spawned += 1
+	var enemy := ENEMY_SCENE.instance()
+	enemy.global_position = enemy_start.global_position
+	enemy.speed = enemy_speed
+	enemies.add_child(enemy)
+	enemy.path = _enemy_path
+
+
+func _on_EnemySpawn_timeout() -> void:
+	_spawn_enemy()
+	if _num_enemies_spawned < num_enemies:
+		enemy_spawn_timer.start()
 
 
 func _start() -> void:
@@ -135,6 +151,7 @@ func _start() -> void:
 
 
 func _restart() -> void:
+	enemy_spawn_timer.stop()
 	inventory.visible = true
 	enemy_spawn_indicator.visible = true
 	Util.queue_free_children(turrets)

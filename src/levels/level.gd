@@ -121,7 +121,6 @@ func _update_draggable_items() -> void:
 
 
 func _spawn_enemies() -> void:
-#	for i in num_enemies:
 	_num_enemies_spawned = 0
 	_spawn_enemy()
 	enemy_spawn_timer.start()
@@ -146,6 +145,7 @@ func _on_EnemySpawn_timeout() -> void:
 func _start() -> void:
 	inventory.visible = false
 	enemy_spawn_indicator.visible = false
+	_num_enemies_killed = 0
 	print("Start")
 	for turret in get_tree().get_nodes_in_group("placed_draggable_turrets"):
 		turret.disable_sight_blocker()

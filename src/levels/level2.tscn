@@ -53,7 +53,7 @@ position = Vector2( 198, 15 )
 position = Vector2( 210, 18 )
 
 [node name="EnemyEnd" type="Position2D" parent="."]
-position = Vector2( 204, 102 )
+position = Vector2( 198, 108 )
 
 [node name="Bullets" type="Node" parent="."]
 

@@ -22,6 +22,7 @@ var level := 1 setget _set_level
 
 func _ready() -> void:
 	set_physics_process(false)
+	disable_sight_blocker()
 
 
 func _physics_process(delta: float) -> void:

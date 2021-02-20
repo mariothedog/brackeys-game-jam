@@ -121,8 +121,8 @@ func _update_draggable_items() -> void:
 
 func _spawn_enemies() -> void:
 	_num_enemies_spawned = 0
-	_spawn_enemy()
 	enemy_spawn_timer.start()
+	_spawn_enemy()
 
 
 func _spawn_enemy() -> void:
@@ -136,9 +136,9 @@ func _spawn_enemy() -> void:
 
 
 func _on_EnemySpawn_timeout() -> void:
-	_spawn_enemy()
-	if _num_enemies_spawned < num_enemies:
+	if _num_enemies_spawned + 1 < num_enemies:
 		enemy_spawn_timer.start()
+	_spawn_enemy()
 
 
 func _start() -> void:

@@ -131,7 +131,7 @@ func _spawn_enemy() -> void:
 	var enemy := ENEMY_SCENE.instance()
 	enemy.global_position = enemy_start.global_position
 	enemy.speed = enemy_speed
-	enemy.connect("died", self, "_on_enemy_death")
+	assert(enemy.connect("died", self, "_on_enemy_death") == OK)
 	enemies.add_child(enemy)
 	enemy.path = _enemy_path
 

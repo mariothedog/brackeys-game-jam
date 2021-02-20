@@ -39,11 +39,6 @@ func explode() -> void:
 	emit_signal("died")
 
 
-func _on_AnimationPlayer_animation_finished(anim_name: String) -> void:
-	if anim_name == "vanish":
-		queue_free()
-
-
 func _set_path(value) -> void:
 	path = value
 	if not path:

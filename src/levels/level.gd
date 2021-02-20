@@ -16,6 +16,7 @@ var _drag_offset: Vector2
 var _currently_aiming_draggable_item: TextureButton
 var _enemy_path: PoolVector2Array
 var _num_enemies_spawned := 0
+var _num_enemies_killed := 0
 
 onready var camera: Camera2D = $Camera2D
 onready var nav_2d: Navigation2D = $Navigation2D
@@ -224,4 +225,7 @@ func _on_Base_hit() -> void:
 
 
 func _on_enemy_death() -> void:
+	_num_enemies_killed += 1
 	camera.shake(ENEMY_DEATH_AMP, ENEMY_DEATH_FREQ, ENEMY_DEATH_DUR)
+	if _num_enemies_killed == num_enemies:
+		Global.level += 1

@@ -3,11 +3,13 @@ extends CanvasLayer
 signal start_pressed
 signal stop_pressed
 
+onready var label_level: Label = $Control/LevelMargin/Level
 onready var start: TextureButton = $Control/Buttons/Start
 onready var stop: TextureButton = $Control/Buttons/Stop
 
 
 func _ready() -> void:
+	label_level.text = "Level: %s" % Global.level
 	start.disabled = false
 	stop.disabled = true
 

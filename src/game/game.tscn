@@ -18,6 +18,8 @@ glow_strength = 0.95
 glow_bloom = 0.3
 glow_blend_mode = 0
 glow_hdr_threshold = 0.0
+adjustment_enabled = true
+adjustment_contrast = 1.06
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 3 )

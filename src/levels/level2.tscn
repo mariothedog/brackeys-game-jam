@@ -63,7 +63,7 @@ position = Vector2( 198, 102 )
 position = Vector2( 198, 102 )
 
 [node name="Turrets" type="Node2D" parent="."]
-z_index = 3
+z_index = 1
 
 [node name="Inventory" type="Node2D" parent="."]
 position = Vector2( 217, 1 )

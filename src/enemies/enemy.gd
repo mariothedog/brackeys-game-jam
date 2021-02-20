@@ -14,8 +14,6 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	var displacement := speed * delta
 	move_along_path(displacement)
-	if path.size() == 1:
-		queue_free()
 
 
 func move_along_path(dist: float) -> void:

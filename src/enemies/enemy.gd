@@ -14,6 +14,8 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	var displacement := speed * delta
 	move_along_path(displacement)
+	if not path:
+		explode()
 
 
 func move_along_path(dist: float) -> void:

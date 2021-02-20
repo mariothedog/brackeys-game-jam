@@ -21,6 +21,8 @@ func _ready() -> void:
 		assert(turret.connect("button_down", self, "_on_draggable_turret_button_down", [turret]) == OK)
 		assert(turret.connect("button_up", self, "_on_draggable_turret_button_up", [turret]) == OK)
 		assert(turret.connect("reset", self, "_on_draggable_turret_reset") == OK)
+		if i >= 8:
+			turret.visible = false
 		draggable_turrets.add_child(turret)
 
 
@@ -32,6 +34,7 @@ func _update_inventory() -> void:
 		var pos: Vector2 = PADDING + SPACING * i
 		turret.default_global_pos = to_global(pos)
 		turret.rect_position = pos
+		turret.visible = i < 8
 		i += 1
 
 

@@ -26,7 +26,6 @@ adjustment_contrast = 1.06
 script = ExtResource( 6 )
 num_enemies = 100
 enemy_spawn_delay = 0.15
-enemy_speed = 30.0
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource( 1 )

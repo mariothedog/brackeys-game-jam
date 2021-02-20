@@ -2,7 +2,8 @@ extends Node2D
 
 const ParticleSystems := {
 	BULLET_EXPLOSION = preload("res://bullet/bullet_explosion.tscn"),
-	TURRET_EXPLOSION = preload("res://turret/turret_explosion.tscn")
+	TURRET_EXPLOSION = preload("res://turret/turret_explosion.tscn"),
+	ENEMY_EXPLOSION = preload("res://enemies/enemy_explosion.tscn")
 }
 
 

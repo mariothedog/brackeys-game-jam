@@ -32,6 +32,7 @@ func move_along_path(dist: float) -> void:
 
 
 func explode() -> void:
+	VFX.spawn_particles(VFX.ParticleSystems.ENEMY_EXPLOSION, global_position)
 	queue_free()
 
 

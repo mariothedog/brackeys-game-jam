@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://scripts/particles_system.gd" type="Script" id=1]
+
+[sub_resource type="Curve" id=1]
+_data = [ Vector2( 0, 1 ), 0.0, 0.0, 0, 0, Vector2( 1, 0 ), -2.61672, 0.0, 0, 0 ]
+
+[sub_resource type="Curve" id=2]
+min_value = 0.5
+_data = [ Vector2( 0, 1 ), 0.0, -0.175427, 0, 0, Vector2( 1, 0.5 ), -1.53535, 0.0, 0, 0 ]
+
+[sub_resource type="Gradient" id=3]
+offsets = PoolRealArray( 0.925333, 1 )
+colors = PoolColorArray( 0.635294, 0.14902, 0.2, 1, 0.635294, 0.14902, 0.2, 0 )
+
+[node name="EnemyExplosion" type="CPUParticles2D"]
+z_index = 1
+emitting = false
+amount = 13
+lifetime = 0.15
+one_shot = true
+emission_shape = 1
+emission_sphere_radius = 1.0
+spread = 180.0
+gravity = Vector2( 0, 0 )
+initial_velocity = 70.0
+initial_velocity_random = 0.5
+linear_accel = 220.0
+linear_accel_random = 0.2
+linear_accel_curve = SubResource( 1 )
+scale_amount = 2.5
+scale_amount_random = 0.2
+scale_amount_curve = SubResource( 2 )
+color_ramp = SubResource( 3 )
+script = ExtResource( 1 )

@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://levels/tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://enemies/enemy_spawn_indicator.tscn" type="PackedScene" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://levels/tilemap.gd" type="Script" id=7]
 [ext_resource path="res://scripts/screen_shake.gd" type="Script" id=8]
 [ext_resource path="res://ui/hud/inventory/background.png" type="Texture" id=9]
+[ext_resource path="res://ui/fonts/wendy.tres" type="DynamicFont" id=10]
 
 [sub_resource type="Environment" id=1]
 background_mode = 4
@@ -89,6 +90,20 @@ __meta__ = {
 
 [node name="EnemySpawn" type="Timer" parent="."]
 one_shot = true
+
+[node name="Tutorial" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="Tutorial"]
+margin_left = 65.0
+margin_top = 66.0
+margin_right = 191.0
+margin_bottom = 99.0
+custom_fonts/font = ExtResource( 10 )
+text = "Place turrets on top of each other
+to create an even stronger turret"
+__meta__ = {
+"_edit_use_anchors_": false
+}
 [connection signal="hit" from="Base" to="." method="_on_Base_hit"]
 [connection signal="draggable_turret_button_down" from="Inventory" to="." method="_on_Inventory_draggable_turret_button_down"]
 [connection signal="draggable_turret_button_up" from="Inventory" to="." method="_on_Inventory_draggable_turret_button_up"]

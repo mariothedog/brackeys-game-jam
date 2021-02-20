@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://levels/tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://enemies/enemy_spawn_indicator.tscn" type="PackedScene" id=2]
@@ -9,7 +9,7 @@
 [ext_resource path="res://levels/tilemap.gd" type="Script" id=7]
 [ext_resource path="res://scripts/screen_shake.gd" type="Script" id=8]
 [ext_resource path="res://ui/hud/inventory/background.png" type="Texture" id=9]
-[ext_resource path="res://ui/fonts/wendy.ttf" type="DynamicFontData" id=10]
+[ext_resource path="res://ui/fonts/wendy.tres" type="DynamicFont" id=10]
 
 [sub_resource type="Environment" id=1]
 background_mode = 4
@@ -22,10 +22,6 @@ glow_blend_mode = 0
 glow_hdr_threshold = 0.0
 adjustment_enabled = true
 adjustment_contrast = 1.06
-
-[sub_resource type="DynamicFont" id=2]
-size = 10
-font_data = ExtResource( 10 )
 
 [node name="Level1" type="Node2D"]
 script = ExtResource( 6 )
@@ -100,7 +96,7 @@ margin_left = 48.0
 margin_top = 54.0
 margin_right = 178.0
 margin_bottom = 68.0
-custom_fonts/font = SubResource( 2 )
+custom_fonts/font = ExtResource( 10 )
 text = "Drag and drop turrets to place them"
 __meta__ = {
 "_edit_use_anchors_": false

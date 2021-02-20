@@ -16,6 +16,7 @@ var _enemy_path: PoolVector2Array
 onready var nav_2d: Navigation2D = $Navigation2D
 onready var tilemap: TileMap = $Navigation2D/TileMap
 onready var tile_set: TileSet = tilemap.tile_set
+onready var enemy_spawn_indicator: Sprite = $EnemySpawnIndicator
 onready var enemy_start: Position2D = $EnemyStart
 onready var enemy_end: Position2D = $EnemyEnd
 onready var bullets: Node = $Bullets
@@ -122,6 +123,7 @@ func _spawn_enemies() -> void:
 
 func _start() -> void:
 	inventory.visible = false
+	enemy_spawn_indicator.visible = false
 	print("Start")
 	for turret in get_tree().get_nodes_in_group("placed_draggable_turrets"):
 		turret.disable_sight_blocker()
@@ -134,6 +136,7 @@ func _start() -> void:
 
 func _restart() -> void:
 	inventory.visible = true
+	enemy_spawn_indicator.visible = true
 	Util.queue_free_children(turrets)
 	Util.queue_free_children(bullets)
 	Util.queue_free_children(enemies)

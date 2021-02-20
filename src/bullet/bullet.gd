@@ -4,15 +4,13 @@ var friendly_turrets := []  # List of turrets the bullet will phase through
 
 var velocity := Vector2.ZERO
 
-onready var front = $Front
-
 
 func _physics_process(delta: float) -> void:
 	position += velocity * delta
 
 
 func explode() -> void:
-	VFX.spawn_particles(VFX.ParticleSystems.BULLET_EXPLOSION, front.global_position)
+	VFX.spawn_particles(VFX.ParticleSystems.BULLET_EXPLOSION, global_position)
 	queue_free()
 
 

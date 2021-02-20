@@ -2,6 +2,7 @@ extends Area2D
 
 signal died
 
+var dead := false
 var speed: float
 var path: PoolVector2Array setget _set_path
 
@@ -34,6 +35,9 @@ func move_along_path(dist: float) -> void:
 
 
 func explode() -> void:
+	if dead:
+		return
+	dead = true
 	VFX.spawn_particles(VFX.ParticleSystems.ENEMY_EXPLOSION, global_position)
 	queue_free()
 	emit_signal("died")

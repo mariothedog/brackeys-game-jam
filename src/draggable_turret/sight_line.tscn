@@ -2,8 +2,6 @@
 
 [ext_resource path="res://draggable_turret/sight_line.gd" type="Script" id=1]
 
-
-
 [node name="SightLine" type="RayCast2D"]
 enabled = true
 cast_to = Vector2( 1000, 0 )

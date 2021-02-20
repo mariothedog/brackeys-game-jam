@@ -64,7 +64,6 @@ func _process(_delta: float) -> void:
 		var angle_to_mouse: float = mouse_local_pos.angle()
 		var angle_snapped := stepify(angle_to_mouse, TURRET_AIMING_ANGLE_SNAP)
 		_currently_aiming_draggable_item.rotate_to(angle_snapped)
-		get_tree().call_group("placed_draggable_turrets", "update_sight_line")
 
 
 func _input(event: InputEvent) -> void:
@@ -146,7 +145,6 @@ func _start() -> void:
 	inventory.visible = false
 	enemy_spawn_indicator.visible = false
 	_num_enemies_killed = 0
-	print("Start")
 	for turret in get_tree().get_nodes_in_group("placed_draggable_turrets"):
 		turret.disable_sight_blocker()
 		if not turret.visible:
@@ -174,12 +172,10 @@ func _on_Inventory_draggable_turret_button_down(turret: TextureButton) -> void:
 	_selected_draggable_item = turret
 	if _selected_draggable_item.is_in_group("placed_draggable_turrets"):
 		_selected_draggable_item.remove_from_group("placed_draggable_turrets")
-		print("Disable via button down")
 		turret.disable_sight_blocker()
 	_update_draggable_items()
 	_selected_draggable_item.level = 1
 	_selected_draggable_item.set_physics_process(false)
-	get_tree().call_group("placed_draggable_turrets", "update_sight_line")
 
 
 func _on_Inventory_draggable_turret_button_up(turret: TextureButton) -> void:

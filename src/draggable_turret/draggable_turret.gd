@@ -73,12 +73,10 @@ func update_sight_line() -> void:
 
 
 func enable_sight_blocker() -> void:
-	print("Sight blocker enabled")
 	sight_blocker_collider.set_deferred("disabled", false)
 
 
 func disable_sight_blocker() -> void:
-	print("Sight blocker disabled")
 	sight_blocker_collider.set_deferred("disabled", true)
 
 

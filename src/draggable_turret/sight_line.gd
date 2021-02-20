@@ -12,7 +12,11 @@ func _ready() -> void:
 	set_physics_process(false)
 
 
-func update() -> void:
+func _physics_process(_delta: float) -> void:
+	_update()
+
+
+func _update() -> void:
 	force_raycast_update()
 	var cast_point := cast_to
 	if is_colliding():

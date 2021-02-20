@@ -93,9 +93,9 @@ one_shot = true
 
 [node name="Label" type="Label" parent="Tutorial"]
 margin_left = 48.0
-margin_top = 54.0
+margin_top = 56.0
 margin_right = 178.0
-margin_bottom = 68.0
+margin_bottom = 70.0
 custom_fonts/font = ExtResource( 10 )
 text = "Drag and drop turrets to place them"
 __meta__ = {

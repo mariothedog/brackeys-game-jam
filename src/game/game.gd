@@ -3,6 +3,9 @@ extends Node2D
 const TURRET_SCENE := preload("res://turret/turret.tscn")
 const ENEMY_SCENE := preload("res://enemies/enemy.tscn")
 const TURRET_AIMING_ANGLE_SNAP := deg2rad(45)
+const ENEMY_DEATH_AMP := 0.2
+const ENEMY_DEATH_FREQ := 15.0
+const ENEMY_DEATH_DUR := 3.0
 
 export var num_enemies := 5
 export var enemy_spawn_delay := 0.5
@@ -14,6 +17,7 @@ var _currently_aiming_draggable_item: TextureButton
 var _enemy_path: PoolVector2Array
 var _num_enemies_spawned := 0
 
+onready var camera: Camera2D = $Camera2D
 onready var nav_2d: Navigation2D = $Navigation2D
 onready var tilemap: TileMap = $Navigation2D/TileMap
 onready var tile_set: TileSet = tilemap.tile_set
@@ -127,6 +131,7 @@ func _spawn_enemy() -> void:
 	var enemy := ENEMY_SCENE.instance()
 	enemy.global_position = enemy_start.global_position
 	enemy.speed = enemy_speed
+	enemy.connect("died", self, "_on_enemy_death")
 	enemies.add_child(enemy)
 	enemy.path = _enemy_path
 
@@ -216,3 +221,7 @@ func _on_Base_hit() -> void:
 	hud.start.disabled = false
 	hud.stop.disabled = true
 	_restart()
+
+
+func _on_enemy_death() -> void:
+	camera.shake(ENEMY_DEATH_AMP, ENEMY_DEATH_FREQ, ENEMY_DEATH_DUR)

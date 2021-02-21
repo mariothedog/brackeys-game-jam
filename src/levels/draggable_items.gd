@@ -18,9 +18,9 @@ func _ready() -> void:
 		var pos: Vector2 = PADDING + SPACING * i
 		turret.default_global_pos = to_global(pos)
 		turret.rect_position = pos
-		assert(turret.connect("button_down", self, "_on_draggable_turret_button_down", [turret]) == OK)
-		assert(turret.connect("button_up", self, "_on_draggable_turret_button_up", [turret]) == OK)
-		assert(turret.connect("reset", self, "_on_draggable_turret_reset") == OK)
+		turret.connect("button_down", self, "_on_draggable_turret_button_down", [turret])
+		turret.connect("button_up", self, "_on_draggable_turret_button_up", [turret])
+		turret.connect("reset", self, "_on_draggable_turret_reset")
 		if i >= 8:
 			turret.visible = false
 		draggable_turrets.add_child(turret)

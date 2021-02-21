@@ -81,7 +81,7 @@ func _place_turret(pos: Vector2, rotation: float, level: int) -> void:
 	var turret := TURRET_SCENE.instance()
 	turret.global_position = pos
 	turret.level = level
-	assert(turret.connect("bullet_spawned", self, "_on_bullet_spawned") == OK)
+	turret.connect("bullet_spawned", self, "_on_bullet_spawned")
 	turrets.add_child(turret)
 	turret.gun.rotation = rotation
 
@@ -125,7 +125,7 @@ func _spawn_enemy() -> void:
 	var enemy := ENEMY_SCENE.instance()
 	enemy.global_position = enemy_start.global_position
 	enemy.speed = enemy_speed
-	assert(enemy.connect("died", self, "_on_enemy_death") == OK)
+	enemy.connect("died", self, "_on_enemy_death")
 	enemies.add_child(enemy)
 	enemy.path = _enemy_path
 

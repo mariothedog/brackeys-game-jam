@@ -13,7 +13,8 @@ class Sound:
 		self.max_pitch_scale = _max_pitch_scale
 
 var Sounds := {
-	BULLET_HIT_TILE = Sound.new(preload("res://bullet/hit_tile.wav"), -20, 0.95, 1.05)
+	BULLET_HIT_TILE = Sound.new(preload("res://bullet/hit_tile.wav"), -20, 0.95, 1.05),
+	TURRET_EXPLODE = Sound.new(preload("res://turret/explode.wav"), -15, 0.95, 1.05)
 }
 
 

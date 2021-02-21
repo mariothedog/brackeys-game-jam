@@ -39,6 +39,7 @@ func explode() -> void:
 		return
 	dead = true
 	VFX.spawn_particles(VFX.ParticleSystems.ENEMY_EXPLOSION, global_position)
+	SFX.play_sfx(SFX.Sounds.ENEMY_EXPLODE)
 	queue_free()
 	emit_signal("died")
 

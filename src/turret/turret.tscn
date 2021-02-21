@@ -48,9 +48,9 @@ position = Vector2( -6, -6 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
-[node name="ShootSFX" type="AudioStreamPlayer2D" parent="."]
+[node name="ShootSFX" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 4 )
-volume_db = -15.0
+volume_db = -20.0
 
 [node name="Shoot" type="Timer" parent="."]
 autostart = true

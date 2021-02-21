@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://levels/tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://enemies/enemy_spawn_indicator.tscn" type="PackedScene" id=2]
@@ -10,6 +10,7 @@
 [ext_resource path="res://scripts/screen_shake.gd" type="Script" id=8]
 [ext_resource path="res://ui/hud/inventory/background.png" type="Texture" id=9]
 [ext_resource path="res://ui/fonts/wendy.tres" type="DynamicFont" id=10]
+[ext_resource path="res://draggable_turret/turret_placed.wav" type="AudioStream" id=11]
 
 [sub_resource type="Environment" id=1]
 background_mode = 4
@@ -83,6 +84,10 @@ __meta__ = {
 }
 
 [node name="DraggableTurrets" type="Node2D" parent="Inventory"]
+
+[node name="TurretPlacedSFX" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 11 )
+volume_db = -10.0
 
 [node name="HUD" parent="." instance=ExtResource( 4 )]
 

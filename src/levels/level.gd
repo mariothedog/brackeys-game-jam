@@ -29,6 +29,7 @@ onready var bullets: Node = $Bullets
 onready var enemies: Node2D = $Enemies
 onready var turrets: Node2D = $Turrets
 onready var inventory: Node2D = $Inventory
+onready var turret_placed_sfx: AudioStreamPlayer = $TurretPlacedSFX
 onready var hud: CanvasLayer = $HUD
 onready var enemy_spawn_timer: Timer = $EnemySpawn
 
@@ -195,6 +196,8 @@ func _on_Inventory_draggable_turret_button_up(turret: TextureButton) -> void:
 	turret.rect_global_position = global_pos_snapped
 	turret.add_to_group("placed_draggable_turrets")
 	turret.enable_sight_blocker()
+	turret_placed_sfx.pitch_scale = rand_range(0.97, 1.02)
+	turret_placed_sfx.play()
 
 	_currently_aiming_draggable_item = turret
 

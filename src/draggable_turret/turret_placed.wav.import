@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/turret_placed.wav-2cd1fc6cb95b5d671cf05ce01e929246.sample"
+
+[deps]
+
+source_file="res://draggable_turret/turret_placed.wav"
+dest_files=[ "res://.import/turret_placed.wav-2cd1fc6cb95b5d671cf05ce01e929246.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop=false
+compress/mode=0

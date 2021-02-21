@@ -24,7 +24,8 @@ func _on_Bullet_area_entered(area: Area2D) -> void:
 	explode()
 
 
-func _on_Bullet_body_entered(_body: Node) -> void:
+func _on_Bullet_body_entered(_body: TileMap) -> void:
 	if dead:
 		return
+	SFX.play_sfx(SFX.Sounds.BULLET_HIT_TILE)
 	explode()

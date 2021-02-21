@@ -15,7 +15,8 @@ class Sound:
 var Sounds := {
 	BULLET_HIT_TILE = Sound.new(preload("res://bullet/hit_tile.wav"), -20, 0.95, 1.05),
 	TURRET_EXPLODE = Sound.new(preload("res://turret/explode.wav"), -15, 0.95, 1.05),
-	ENEMY_EXPLODE = Sound.new(preload("res://enemies/explode.wav"), -20, 0.95, 1.05)
+	ENEMY_EXPLODE = Sound.new(preload("res://enemies/explode.wav"), -20, 0.95, 1.05),
+	BASE_HURT = Sound.new(preload("res://levels/base_hurt.wav"), -10, 0.95, 1.05)
 }
 
 

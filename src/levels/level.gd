@@ -215,6 +215,7 @@ func _on_bullet_spawned(bullet: Area2D) -> void:
 
 
 func _on_Base_hit() -> void:
+	SFX.play_sfx(SFX.Sounds.BASE_HURT)
 	hud.start.disabled = false
 	hud.stop.disabled = true
 	_restart()

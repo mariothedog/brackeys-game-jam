@@ -26,7 +26,7 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Brackeys Game Jam"
+config/name="Simultaneous Turrets"
 run/main_scene="res://levels/level1.tscn"
 config/icon="res://icon.png"
 config/windows_native_icon="res://icon.ico"

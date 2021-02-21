@@ -8,6 +8,7 @@ const BULLET_SPEED := 300.0
 var level := 1
 
 onready var gun: Sprite = $Gun
+onready var shoot_sfx: AudioStreamPlayer2D = $ShootSFX
 onready var shoot_timer: Timer = $Shoot
 
 
@@ -30,6 +31,8 @@ func shoot() -> void:
 		bullet.rotation = dir.angle()
 		bullet.friendly_turrets.append(self)
 		emit_signal("bullet_spawned", bullet)
+	shoot_sfx.pitch_scale = rand_range(0.95, 1.05)
+	shoot_sfx.play()
 
 
 func explode() -> void:

@@ -78,6 +78,6 @@ __meta__ = {
 
 [node name="ButtonPressSFX" type="AudioStreamPlayer" parent="."]
 stream = ExtResource( 9 )
-volume_db = -30.0
+volume_db = -20.0
 [connection signal="pressed" from="Control/Buttons/Start" to="." method="_on_Start_pressed"]
 [connection signal="pressed" from="Control/Buttons/Stop" to="." method="_on_Stop_pressed"]

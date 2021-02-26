@@ -12,7 +12,7 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "LevelData",
 "language": "GDScript",
-"path": "res://levels/level_data.gd"
+"path": "res://levels/level_editor/level_data.gd"
 } ]
 _global_script_class_icons={
 "LevelData": ""

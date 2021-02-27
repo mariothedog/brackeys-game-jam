@@ -11,7 +11,7 @@ var enemy_path_end_points: PoolVector2Array
 var enemy_path_points: PoolVector2Array
 
 
-func _create_level(value) -> void:
+func _create_level(value: bool) -> void:
 	if not value:
 		# Return if setter is called automatically
 		return
@@ -63,14 +63,14 @@ func _create_level(value) -> void:
 	ResourceSaver.save("res://levels/resources//level_debug.tres", data)
 
 
-func _clear_level(value) -> void:
+func _clear_level(value: bool) -> void:
 	if not value:
 		# Return if setter is called automatically
 		return
 	clear()
 
 
-func get_all_astar_paths(start_points, end_points) -> Array:
+func get_all_astar_paths(start_points: PoolVector2Array, end_points: PoolVector2Array) -> Array:
 	var paths := []
 	for start_point in start_points:
 		for end_point in end_points:
@@ -87,7 +87,7 @@ func get_astar_path(start_point: Vector2, end_point: Vector2) -> PoolVector2Arra
 	return Util.get_PoolVector2Array(path)
 
 
-func connect_enemy_path_points(points: Array) -> void:
+func connect_enemy_path_points(points: PoolVector2Array) -> void:
 	for point in points:
 		var point_index := get_point_index(point)
 		var points_relative := PoolVector2Array(

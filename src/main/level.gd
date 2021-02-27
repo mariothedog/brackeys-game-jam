@@ -1,5 +1,7 @@
 extends TileMap
 
+var Tiles := preload("res://levels/tiles.gd").new()
+
 
 func build_level(level_data: LevelData) -> void:
 	for type in level_data.tiles:

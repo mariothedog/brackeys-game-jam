@@ -24,10 +24,6 @@ config/name="Simultaneous Turrets"
 run/main_scene="res://main/main.tscn"
 config/icon="res://icon.png"
 
-[autoload]
-
-Tiles="*res://levels/tiles.gd"
-
 [importer_defaults]
 
 texture={

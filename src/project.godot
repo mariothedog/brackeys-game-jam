@@ -12,10 +12,16 @@ _global_script_classes=[ {
 "base": "Resource",
 "class": "LevelData",
 "language": "GDScript",
-"path": "res://levels/level_data.gd"
+"path": "res://levels/level_editor/level_data.gd"
+}, {
+"base": "Object",
+"class": "Util",
+"language": "GDScript",
+"path": "res://utility/utility.gd"
 } ]
 _global_script_class_icons={
-"LevelData": ""
+"LevelData": "",
+"Util": ""
 }
 
 [application]
@@ -23,6 +29,15 @@ _global_script_class_icons={
 config/name="Simultaneous Turrets"
 run/main_scene="res://main/main.tscn"
 config/icon="res://icon.png"
+
+[display]
+
+window/size/width=240
+window/size/height=120
+window/size/test_width=960
+window/size/test_height=480
+window/stretch/mode="2d"
+window/stretch/aspect="keep"
 
 [importer_defaults]
 

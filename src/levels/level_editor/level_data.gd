@@ -1,4 +1,4 @@
-extends Resource
 class_name LevelData
+extends Resource
 
 export var tiles := {}

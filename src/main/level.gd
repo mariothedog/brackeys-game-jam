@@ -1,6 +1,6 @@
 extends TileMap
 
-var Tiles := preload("res://levels/tiles.gd").new()
+var Tiles := TilesManager.new()
 
 
 func build_level(level_data: LevelData) -> void:

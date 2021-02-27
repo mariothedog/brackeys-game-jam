@@ -1,3 +1,4 @@
+class_name TilesManager
 extends Object
 # The class responsible for keeping track of every tile type.
 # This class is used in editor scripts as well which do not support autoloaded

@@ -4,8 +4,6 @@ extends TileMap
 export var create_level := false setget _create_level
 export var clear_level := false setget _clear_level
 
-var Tiles: Object
-
 var astar := AStar.new()
 var level_size: Vector2
 var enemy_path_start_points: PoolVector2Array
@@ -21,7 +19,7 @@ func _create_level(value) -> void:
 		push_warning("Attempting to create a level resource when not in the editor")
 		return
 
-	Tiles = preload("res://levels/tiles.gd").new()
+	var Tiles := TilesManager.new()
 	var enemy_path_tiles := [
 		Tiles.LevelEditor.ENEMY_PATH_START,
 		Tiles.LevelEditor.ENEMY_PATH_END,

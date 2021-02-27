@@ -7,6 +7,9 @@
 [node name="Main" type="Node"]
 script = ExtResource( 3 )
 
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+
 [node name="Level" type="TileMap" parent="."]
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 12, 12 )

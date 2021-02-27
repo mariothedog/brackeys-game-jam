@@ -1,4 +1,7 @@
 extends Object
+# The class responsible for keeping track of every tile type.
+# This class is used in editor scripts as well which do not support autoloaded
+# singletons.
 
 const LEVEL_EDITOR_TILE_SET = preload("res://levels/level_editor/level_editor_tileset.tres")
 const MAIN_TILE_SET = preload("res://levels/tileset.tres")

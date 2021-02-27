@@ -26,8 +26,9 @@ func _set_paths(value: Array) -> void:
 
 
 func _on_StepDelay_timeout() -> void:
-	# It's important that the enemy positions are updated before an enemy is spawned
+	# It's important that the enemy positions are updated before an enemy is
+	# spawned.
 	# If an enemy spawns and then a step occurs immediately after then the enemy
-	# will go straight to the path's second tile
+	# will go straight to the path's second tile.
 	update_enemy_positions()
 	spawn_enemy()

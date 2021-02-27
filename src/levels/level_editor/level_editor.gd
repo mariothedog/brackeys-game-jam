@@ -4,16 +4,14 @@ extends TileMap
 export var create_level := false setget _create_level
 export var clear_level := false setget _clear_level
 
-var Tiles: Object
-
-var astar := AStar.new()
+var astar: AStar
 var level_size: Vector2
 var enemy_path_start_points: PoolVector2Array
 var enemy_path_end_points: PoolVector2Array
 var enemy_path_points: PoolVector2Array
 
 
-func _create_level(value) -> void:
+func _create_level(value: bool) -> void:
 	if not value:
 		# Return if setter is called automatically
 		return
@@ -21,13 +19,14 @@ func _create_level(value) -> void:
 		push_warning("Attempting to create a level resource when not in the editor")
 		return
 
-	Tiles = preload("res://levels/tiles.gd").new()
+	var Tiles := TilesManager.new()
 	var enemy_path_tiles := [
 		Tiles.LevelEditor.ENEMY_PATH_START,
 		Tiles.LevelEditor.ENEMY_PATH_END,
 		Tiles.LevelEditor.ENEMY_PATH,
 	]
 
+	astar = AStar.new()
 	var used_rect := get_used_rect()
 	level_size = used_rect.position + used_rect.size
 	enemy_path_start_points = PoolVector2Array()
@@ -64,14 +63,14 @@ func _create_level(value) -> void:
 	ResourceSaver.save("res://levels/resources//level_debug.tres", data)
 
 
-func _clear_level(value) -> void:
+func _clear_level(value: bool) -> void:
 	if not value:
 		# Return if setter is called automatically
 		return
 	clear()
 
 
-func get_all_astar_paths(start_points, end_points) -> Array:
+func get_all_astar_paths(start_points: PoolVector2Array, end_points: PoolVector2Array) -> Array:
 	var paths := []
 	for start_point in start_points:
 		for end_point in end_points:
@@ -88,7 +87,7 @@ func get_astar_path(start_point: Vector2, end_point: Vector2) -> PoolVector2Arra
 	return Util.get_PoolVector2Array(path)
 
 
-func connect_enemy_path_points(points: Array) -> void:
+func connect_enemy_path_points(points: PoolVector2Array) -> void:
 	for point in points:
 		var point_index := get_point_index(point)
 		var points_relative := PoolVector2Array(

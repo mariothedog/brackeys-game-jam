@@ -15,12 +15,18 @@ _global_script_classes=[ {
 "path": "res://levels/level_editor/level_data.gd"
 }, {
 "base": "Object",
+"class": "TilesManager",
+"language": "GDScript",
+"path": "res://levels/tiles_manager.gd"
+}, {
+"base": "Object",
 "class": "Util",
 "language": "GDScript",
 "path": "res://utility/utility.gd"
 } ]
 _global_script_class_icons={
 "LevelData": "",
+"TilesManager": "",
 "Util": ""
 }
 
@@ -29,6 +35,10 @@ _global_script_class_icons={
 config/name="Simultaneous Turrets"
 run/main_scene="res://main/main.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Constants="*res://autoload/constants.gd"
 
 [display]
 

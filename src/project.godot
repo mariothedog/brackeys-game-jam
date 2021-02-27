@@ -13,9 +13,15 @@ _global_script_classes=[ {
 "class": "LevelData",
 "language": "GDScript",
 "path": "res://levels/level_editor/level_data.gd"
+}, {
+"base": "Object",
+"class": "Util",
+"language": "GDScript",
+"path": "res://utility/utility.gd"
 } ]
 _global_script_class_icons={
-"LevelData": ""
+"LevelData": "",
+"Util": ""
 }
 
 [application]

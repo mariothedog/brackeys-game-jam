@@ -7,4 +7,5 @@
 tile_set = ExtResource( 2 )
 cell_size = Vector2( 12, 12 )
 format = 1
+tile_data = PoolIntArray( -65534, 4, 0, 0, 3, 0, 1, 2, 0, 2, 2, 0, 4, 4, 0, 65538, 2, 0, 65539, 2, 0, 65540, 2, 0, 131076, 4, 0 )
 script = ExtResource( 1 )

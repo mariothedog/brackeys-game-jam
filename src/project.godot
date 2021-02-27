@@ -36,6 +36,10 @@ config/name="Simultaneous Turrets"
 run/main_scene="res://main/main.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Constants="*res://autoload/constants.gd"
+
 [display]
 
 window/size/width=240

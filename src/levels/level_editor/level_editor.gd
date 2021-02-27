@@ -4,7 +4,7 @@ extends TileMap
 export var create_level := false setget _create_level
 export var clear_level := false setget _clear_level
 
-var astar := AStar.new()
+var astar: AStar
 var level_size: Vector2
 var enemy_path_start_points: PoolVector2Array
 var enemy_path_end_points: PoolVector2Array
@@ -26,6 +26,7 @@ func _create_level(value) -> void:
 		Tiles.LevelEditor.ENEMY_PATH,
 	]
 
+	astar = AStar.new()
 	var used_rect := get_used_rect()
 	level_size = used_rect.position + used_rect.size
 	enemy_path_start_points = PoolVector2Array()

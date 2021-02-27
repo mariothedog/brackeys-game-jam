@@ -27,3 +27,12 @@ var level_editor_to_main := {
 	LevelEditor.ENEMY_PATH_START: Main.ENEMY_PATH,
 	LevelEditor.ENEMY_PATH_END: Main.ENEMY_PATH,
 }
+
+
+func _init() -> void:
+	for tile in LevelEditor:
+		if LevelEditor[tile] == -1:
+			push_warning("The LevelEditor.%s tile was not found!" % tile)
+	for tile in Main:
+		if Main[tile] == -1:
+			push_warning("The Main.%s tile was not found!" % tile)

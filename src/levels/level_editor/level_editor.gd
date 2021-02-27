@@ -76,7 +76,8 @@ func get_all_astar_paths(start_points, end_points) -> Array:
 	for start_point in start_points:
 		for end_point in end_points:
 			var path := get_astar_path(start_point, end_point)
-			paths.append(path)
+			if path:
+				paths.append(path)
 	return paths
 
 

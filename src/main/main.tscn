@@ -8,6 +8,7 @@
 script = ExtResource( 3 )
 
 [node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 40, 40 )
 current = true
 
 [node name="Level" type="TileMap" parent="."]

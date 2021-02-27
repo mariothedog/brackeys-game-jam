@@ -20,7 +20,7 @@ func build_level(level_data: LevelData) -> void:
 	for path in data.enemy_paths:
 		var world_path := Util.map(funcref(self, "point_to_world"), path)
 		world_paths.append(world_path)
-		var line2d = Line2D.new()
+		var line2d := Line2D.new()
 		line2d.width = 1
 		line2d.default_color = rand_color(0.5)
 		line2d.points = world_path

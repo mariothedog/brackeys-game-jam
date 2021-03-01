@@ -19,6 +19,8 @@ func _physics_process(delta: float) -> void:
 		set_physics_process(false)
 		if _path_current_index + 1 == _path_length:
 			queue_free()
+		else:
+			position = position.round()
 		return
 	global_position = global_position.linear_interpolate(_target_pos, MOVEMENT_RATE * delta)
 

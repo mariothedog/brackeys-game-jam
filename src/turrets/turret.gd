@@ -24,7 +24,7 @@ func _physics_process(delta: float) -> void:
 		return
 	var rot := lerp_angle(gun.rotation, _target_rotation, ROTATION_RATE * delta)
 	# wrapf alone will restrict it to a positive range
-	# However, the angle may be slightly less than 360 degrees but still
+	# However, the rotation may be slightly less than 360 degrees but still
 	# close enough that it should be considered as 0 degrees
 	rot = Util.wrapf_with_threshold(rot, 0, FULL_ROTATION, ROTATION_THRESHOLD)
 	gun.rotation = rot

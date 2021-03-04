@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "HBoxContainer",
+"class": "Item",
+"language": "GDScript",
+"path": "res://ui/hud/inventory/item.gd"
+}, {
 "base": "Resource",
 "class": "LevelData",
 "language": "GDScript",
@@ -19,14 +24,21 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://levels/tiles_manager.gd"
 }, {
+"base": "Area2D",
+"class": "Turret",
+"language": "GDScript",
+"path": "res://turrets/turret.gd"
+}, {
 "base": "Object",
 "class": "Util",
 "language": "GDScript",
 "path": "res://utility/utility.gd"
 } ]
 _global_script_class_icons={
+"Item": "",
 "LevelData": "",
 "TilesManager": "",
+"Turret": "",
 "Util": ""
 }
 
@@ -39,6 +51,7 @@ config/icon="res://icon.png"
 [autoload]
 
 Constants="*res://autoload/constants.gd"
+Signals="*res://autoload/signals.gd"
 
 [display]
 

@@ -21,3 +21,13 @@ static func map(function: FuncRef, arr: Array) -> Array:
 	for elem in arr:
 		new_arr.append(function.call_func(elem))
 	return new_arr
+
+static func is_equal_with_threshold(a: float, b: float, threshold: float) -> bool:
+	return abs(a - b) <= threshold
+
+static func wrapf_with_threshold(value: float, minimum: float, maximum: float, threshold: float) -> float:
+	if is_equal_with_threshold(value, minimum, threshold):
+		return maximum
+	elif is_equal_with_threshold(value, maximum, threshold):
+		return minimum
+	return wrapf(value, minimum, maximum)

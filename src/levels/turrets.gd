@@ -2,11 +2,14 @@ extends Node2D
 
 const TURRET_SCENE = preload("res://turrets/turret.tscn")
 
+const TURRET_AIMING_ANGLE_SNAP := deg2rad(45)
+
 export (NodePath) var level_path
 
 var Tiles := TilesManager.new()
 
 var _selected_turret: Turret
+var _is_aiming := false
 
 onready var level: TileMap = get_node(level_path)
 
@@ -24,7 +27,25 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	_selected_turret.position = get_local_mouse_position()
+	if _is_aiming:
+		var mouse_pos := _selected_turret.get_local_mouse_position()
+		var angle_to_mouse := mouse_pos.angle()
+		var angle_snapped := stepify(angle_to_mouse, TURRET_AIMING_ANGLE_SNAP)
+		_selected_turret.rotate_gun_to(angle_snapped)
+	else:
+		_selected_turret.position = get_local_mouse_position()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if (
+		event is InputEventMouseButton
+		and event.button_index == BUTTON_LEFT
+		and event.is_pressed()
+		and _is_aiming
+	):
+		set_process(false)
+		_selected_turret = null
+		_is_aiming = false
 
 
 func _select_turret(turret: Turret) -> void:
@@ -35,8 +56,7 @@ func _select_turret(turret: Turret) -> void:
 
 func _release_turret(turret: Turret) -> void:
 	turret.z_index = 0
-	set_process(false)
-	_selected_turret = null
+	_is_aiming = true
 
 	var tile_pos := _get_tile_pos_at_mouse()
 	if level.get_cellv(tile_pos) != Tiles.Main.GROUND:

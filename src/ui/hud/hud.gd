@@ -17,17 +17,29 @@ func _ready() -> void:
 
 func _on_Inventory_mouse_entered_background() -> void:
 # warning-ignore:return_value_discarded
-	tween.interpolate_property(inventory, "rect_position:x",
-		inventory.rect_position.x, _inv_end_pos_x,
-		inv_slide_dur, Tween.TRANS_SINE, Tween.EASE_OUT)
+	tween.interpolate_property(
+		inventory,
+		"rect_position:x",
+		inventory.rect_position.x,
+		_inv_end_pos_x,
+		inv_slide_dur,
+		Tween.TRANS_SINE,
+		Tween.EASE_OUT
+	)
 # warning-ignore:return_value_discarded
 	tween.start()
 
 
 func _on_Inventory_mouse_exited_background() -> void:
 # warning-ignore:return_value_discarded
-	tween.interpolate_property(inventory, "rect_position:x",
-		inventory.rect_position.x, _inv_start_pos_x,
-		inv_slide_dur, Tween.TRANS_SINE, Tween.EASE_OUT)
+	tween.interpolate_property(
+		inventory,
+		"rect_position:x",
+		inventory.rect_position.x,
+		_inv_start_pos_x,
+		inv_slide_dur,
+		Tween.TRANS_SINE,
+		Tween.EASE_OUT
+	)
 # warning-ignore:return_value_discarded
 	tween.start()

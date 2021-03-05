@@ -55,14 +55,14 @@ func _select_turret(turret: Turret) -> void:
 
 
 func _release_turret(turret: Turret) -> void:
-	turret.z_index = 0
-	_is_aiming = true
-
 	var tile_pos := _get_tile_pos_at_mouse()
 	if level.get_cellv(tile_pos) != Tiles.Main.GROUND:
 		turret.queue_free()
+		set_process(false)
 		return
 	_snap_turret_to_tile(turret, tile_pos)
+	turret.z_index = 0
+	_is_aiming = true
 
 
 func _get_tile_pos_at_mouse() -> Vector2:

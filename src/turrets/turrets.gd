@@ -10,9 +10,6 @@ export (NodePath) var level_path
 
 var Tiles := TilesManager.new()
 
-var _selected_turret: Turret
-var _is_aiming := false
-
 onready var level: TileMap = get_node(level_path)
 
 
@@ -29,13 +26,13 @@ func _ready() -> void:
 
 
 func _process(_delta: float) -> void:
-	if _is_aiming:
-		var mouse_pos := _selected_turret.get_local_mouse_position()
+	if Global.is_aiming:
+		var mouse_pos := Global.selected_turret.get_local_mouse_position()
 		var angle_to_mouse := mouse_pos.angle()
 		var angle_snapped := stepify(angle_to_mouse, TURRET_AIMING_ANGLE_SNAP)
-		_selected_turret.rotate_gun_to(angle_snapped)
+		Global.selected_turret.rotate_gun_to(angle_snapped)
 	else:
-		_selected_turret.position = get_local_mouse_position()
+		Global.selected_turret.position = get_local_mouse_position()
 
 
 func _input(event: InputEvent) -> void:
@@ -43,12 +40,12 @@ func _input(event: InputEvent) -> void:
 		event is InputEventMouseButton
 		and event.button_index == BUTTON_LEFT
 		and event.is_pressed()
-		and _is_aiming
+		and Global.is_aiming
 	):
 		set_process(false)
-		_selected_turret.disconnect("dead", self, "_on_selected_turret_dead")
-		_selected_turret = null
-		_is_aiming = false
+		Global.selected_turret.disconnect("dead", self, "_on_selected_turret_dead")
+		Global.selected_turret = null
+		Global.is_aiming = false
 
 
 func _select_turret(turret: Turret) -> void:
@@ -57,7 +54,7 @@ func _select_turret(turret: Turret) -> void:
 	turret.can_be_shot = false
 # warning-ignore:return_value_discarded
 	turret.connect("dead", self, "_on_selected_turret_dead")
-	_selected_turret = turret
+	Global.selected_turret = turret
 	set_process(true)
 
 
@@ -71,7 +68,7 @@ func _release_turret(turret: Turret) -> void:
 	turret.z_index = 0
 	turret.can_shoot = true
 	turret.can_be_shot = true
-	_is_aiming = true
+	Global.is_aiming = true
 
 
 func _get_tile_pos_at_mouse() -> Vector2:
@@ -105,9 +102,9 @@ func _on_item_button_down(_item: Item) -> void:
 
 
 func _on_item_button_up(_item: Item) -> void:
-	if not _selected_turret:
+	if not Global.selected_turret:
 		return
-	_release_turret(_selected_turret)
+	_release_turret(Global.selected_turret)
 
 
 func _on_draggable_turret_button_down(turret: Turret) -> void:
@@ -122,6 +119,6 @@ func _on_draggable_turret_button_up(turret: Turret) -> void:
 
 
 func _on_selected_turret_dead() -> void:
-	_selected_turret = null
-	_is_aiming = false
+	Global.selected_turret = null
+	Global.is_aiming = false
 	set_process(false)

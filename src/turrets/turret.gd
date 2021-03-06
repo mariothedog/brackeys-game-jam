@@ -1,16 +1,24 @@
 class_name Turret
 extends Area2D
 
+const BULLET_SCENE := preload("res://projectiles/bullet/bullet.tscn")
+
 const FULL_ROTATION := TAU
 const ROTATION_THRESHOLD := deg2rad(1)
 const ROTATION_WEIGHT := 0.4
 var ROTATION_RATE: float = ROTATION_WEIGHT * Constants.PHYSICS_FPS
 
-var is_draggable := true
+export var bullet_speed := 300.0
 
+var is_draggable := true
+var can_shoot := false
+
+var _has_bullets_node := false
 var _target_rotation: float
 
+var bullets_node: Node
 onready var gun: Sprite = $Gun
+onready var barrel: Position2D = $Gun/Barrel
 
 
 func _ready() -> void:
@@ -36,6 +44,20 @@ func rotate_gun_to(radians: float) -> void:
 		return
 	_target_rotation = radians
 	set_physics_process(true)
+
+
+func shoot() -> void:
+	if not bullets_node:
+		push_error("Attempting to shoot without a bullets node")
+		return
+	if not can_shoot:
+		return
+	var dir := barrel.position.normalized().rotated(gun.rotation)
+	var bullet: Bullet = BULLET_SCENE.instance()
+	bullet.global_position = barrel.global_position
+	bullet.velocity = dir * bullet_speed
+	bullet.rotation = dir.angle()
+	bullets_node.add_child(bullet)
 
 
 func _on_Turret_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:

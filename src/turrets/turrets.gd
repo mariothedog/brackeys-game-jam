@@ -1,5 +1,7 @@
 extends Node2D
 
+signal turret_added(turret)
+
 const TURRET_SCENE = preload("res://turrets/turret.tscn")
 
 const TURRET_AIMING_ANGLE_SNAP := deg2rad(45)
@@ -50,6 +52,7 @@ func _input(event: InputEvent) -> void:
 
 func _select_turret(turret: Turret) -> void:
 	turret.z_index = 2
+	turret.can_shoot = false
 	_selected_turret = turret
 	set_process(true)
 
@@ -62,6 +65,7 @@ func _release_turret(turret: Turret) -> void:
 		return
 	_snap_turret_to_tile(turret, tile_pos)
 	turret.z_index = 0
+	turret.can_shoot = true
 	_is_aiming = true
 
 
@@ -91,6 +95,7 @@ func _is_top_overlapping_turret(turret: Turret) -> bool:
 func _on_item_button_down(_item: Item) -> void:
 	var turret: Turret = TURRET_SCENE.instance()
 	add_child(turret)
+	emit_signal("turret_added", turret)
 	_select_turret(turret)
 
 

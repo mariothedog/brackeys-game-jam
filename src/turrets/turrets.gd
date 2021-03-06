@@ -36,7 +36,7 @@ func _process(_delta: float) -> void:
 		_selected_turret.position = get_local_mouse_position()
 
 
-func _unhandled_input(event: InputEvent) -> void:
+func _input(event: InputEvent) -> void:
 	if (
 		event is InputEventMouseButton
 		and event.button_index == BUTTON_LEFT

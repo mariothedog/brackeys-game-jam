@@ -1,6 +1,8 @@
 class_name Turret
 extends Area2D
 
+signal dead
+
 const BULLET_SCENE := preload("res://projectiles/bullet/bullet.tscn")
 
 const FULL_ROTATION := TAU
@@ -57,7 +59,15 @@ func shoot() -> void:
 	bullet.global_position = barrel.global_position
 	bullet.velocity = dir * bullet_speed
 	bullet.rotation = dir.angle()
+	bullet.friendly_turrets.append(self)
 	bullets_node.add_child(bullet)
+
+
+func explode() -> void:
+	if is_queued_for_deletion():
+		return
+	queue_free()
+	emit_signal("dead")
 
 
 func _on_Turret_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:

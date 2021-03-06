@@ -46,6 +46,7 @@ func _input(event: InputEvent) -> void:
 		and _is_aiming
 	):
 		set_process(false)
+		_selected_turret.disconnect("dead", self, "_on_selected_turret_dead")
 		_selected_turret = null
 		_is_aiming = false
 
@@ -53,6 +54,8 @@ func _input(event: InputEvent) -> void:
 func _select_turret(turret: Turret) -> void:
 	turret.z_index = 2
 	turret.can_shoot = false
+# warning-ignore:return_value_discarded
+	turret.connect("dead", self, "_on_selected_turret_dead")
 	_selected_turret = turret
 	set_process(true)
 
@@ -100,6 +103,8 @@ func _on_item_button_down(_item: Item) -> void:
 
 
 func _on_item_button_up(_item: Item) -> void:
+	if not _selected_turret:
+		return
 	_release_turret(_selected_turret)
 
 
@@ -112,3 +117,9 @@ func _on_draggable_turret_button_down(turret: Turret) -> void:
 
 func _on_draggable_turret_button_up(turret: Turret) -> void:
 	_release_turret(turret)
+
+
+func _on_selected_turret_dead() -> void:
+	_selected_turret = null
+	_is_aiming = false
+	set_process(false)

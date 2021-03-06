@@ -1,3 +1,4 @@
+class_name Enemy
 extends Area2D
 
 const MOVEMENT_WEIGHT = 0.4
@@ -31,6 +32,12 @@ func update_position_along_path() -> void:
 	_path_current_index += 1
 	_target_pos = path[_path_current_index]
 	set_physics_process(true)
+
+
+func explode() -> void:
+	if is_queued_for_deletion():
+		return
+	queue_free()
 
 
 func _set_path(value: PoolVector2Array) -> void:

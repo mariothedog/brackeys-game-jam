@@ -3,7 +3,7 @@ extends TileMap
 var Tiles := TilesManager.new()
 var data: LevelData
 
-onready var enemies: Node = $Enemies
+onready var enemies: Node2D = $Enemies
 
 
 func build_level(level_data: LevelData) -> void:

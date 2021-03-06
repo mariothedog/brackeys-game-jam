@@ -18,10 +18,12 @@ current = true
 [node name="Level" type="TileMap" parent="."]
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 12, 12 )
+collision_mask = 0
 format = 1
 script = ExtResource( 2 )
 
-[node name="Enemies" type="Node" parent="Level"]
+[node name="Enemies" type="Node2D" parent="Level"]
+z_index = 2
 script = ExtResource( 4 )
 
 [node name="TurretsAndBullets" type="Node" parent="."]
@@ -34,7 +36,7 @@ z_index = 1
 script = ExtResource( 6 )
 level_path = NodePath("../../Level")
 
-[node name="HUD" parent="." instance=ExtResource( 5 )]
+[node name="HUDCanvasLayer" parent="." instance=ExtResource( 5 )]
 
 [node name="StepDelay" type="Timer" parent="."]
 autostart = true

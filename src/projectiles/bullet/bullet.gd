@@ -3,6 +3,7 @@ extends Area2D
 
 var friendly_turrets := []  # Turrets the bullet won't hurt
 var velocity := Vector2.ZERO
+var can_be_shot := true
 
 
 func _physics_process(delta: float) -> void:

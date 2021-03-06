@@ -41,5 +41,5 @@ level_path = NodePath("../../Level")
 [node name="StepDelay" type="Timer" parent="."]
 autostart = true
 [connection signal="turret_added" from="TurretsAndBullets/Turrets" to="TurretsAndBullets" method="_on_Turrets_turret_added"]
-[connection signal="timeout" from="StepDelay" to="Level/Enemies" method="_on_StepDelay_timeout"]
 [connection signal="timeout" from="StepDelay" to="TurretsAndBullets" method="_on_StepDelay_timeout"]
+[connection signal="timeout" from="StepDelay" to="Level/Enemies" method="_on_StepDelay_timeout"]

@@ -54,6 +54,7 @@ func _input(event: InputEvent) -> void:
 func _select_turret(turret: Turret) -> void:
 	turret.z_index = 2
 	turret.can_shoot = false
+	turret.can_be_shot = false
 # warning-ignore:return_value_discarded
 	turret.connect("dead", self, "_on_selected_turret_dead")
 	_selected_turret = turret
@@ -69,6 +70,7 @@ func _release_turret(turret: Turret) -> void:
 	_snap_turret_to_tile(turret, tile_pos)
 	turret.z_index = 0
 	turret.can_shoot = true
+	turret.can_be_shot = true
 	_is_aiming = true
 
 

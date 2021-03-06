@@ -14,6 +14,7 @@ export var bullet_speed := 300.0
 
 var is_draggable := true
 var can_shoot := false
+var can_be_shot := false
 
 var _has_bullets_node := false
 var _target_rotation: float

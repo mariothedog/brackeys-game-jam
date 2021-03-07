@@ -57,7 +57,8 @@ func _select_turret(turret: Turret) -> void:
 	Util.reparent(turret, dragging_turret_layer)
 	turret.z_index = 2
 	turret.can_shoot = false
-	turret.can_be_shot = false
+	turret.set_deferred("can_be_shot", false)
+	turret.disable_sight_lines()
 # warning-ignore:return_value_discarded
 	turret.connect("dead", self, "_on_selected_turret_dead")
 	Global.selected_turret = turret
@@ -74,8 +75,9 @@ func _release_turret(turret: Turret) -> void:
 	Util.reparent(turret, placed_turrets)
 	turret.z_index = 0
 	turret.can_shoot = true
-	turret.can_be_shot = true
+	turret.set_deferred("can_be_shot", true)
 	Global.is_aiming = true
+	turret.enable_sight_lines()
 
 
 func _get_tile_pos_at_mouse() -> Vector2:

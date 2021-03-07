@@ -104,6 +104,7 @@ texture={
 2d_physics/layer_2="turrets"
 2d_physics/layer_3="projectiles"
 2d_physics/layer_4="enemies"
+2d_physics/layer_5="sight_blockers"
 
 [rendering]
 

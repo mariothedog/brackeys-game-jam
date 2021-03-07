@@ -5,7 +5,6 @@ signal dead
 
 const BULLET_SCENE := preload("res://projectiles/bullet/bullet.tscn")
 
-const FULL_ROTATION := TAU
 const ROTATION_THRESHOLD := deg2rad(1)
 const ROTATION_WEIGHT := 0.4
 var ROTATION_RATE: float = ROTATION_WEIGHT * Constants.PHYSICS_FPS
@@ -14,18 +13,23 @@ export var bullet_speed := 300.0
 
 var is_draggable := true
 var can_shoot := false
-var can_be_shot := false
+var can_be_shot := false setget _set_can_be_shot
 
 var _has_bullets_node := false
 var _target_rotation: float
 
 var bullets_node: Node
-onready var gun: Sprite = $Gun
-onready var barrel: Position2D = $Gun/Barrel
+var barrels := []
+var sight_lines := []
+onready var gun: Node2D = $Gun
+onready var sight_blocker_collider: CollisionShape2D = $SightBlocker/CollisionShape2D
 
 
 func _ready() -> void:
 	set_physics_process(false)
+	for barrel in gun.get_children():
+		barrels.append(barrel)
+		sight_lines.append(barrel.get_node("SightLine"))
 
 
 func _physics_process(delta: float) -> void:
@@ -37,12 +41,12 @@ func _physics_process(delta: float) -> void:
 	# wrapf alone will restrict it to a positive range
 	# However, the rotation may be slightly less than 360 degrees but still
 	# close enough that it should be considered as 0 degrees
-	rot = Util.wrapf_with_threshold(rot, 0, FULL_ROTATION, ROTATION_THRESHOLD)
+	rot = Util.wrapf_with_threshold(rot, 0, Constants.FULL_ROTATION, ROTATION_THRESHOLD)
 	gun.rotation = rot
 
 
 func rotate_gun_to(radians: float) -> void:
-	radians = wrapf(radians, 0, FULL_ROTATION)  # Restrict to a positive range
+	radians = wrapf(radians, 0, Constants.FULL_ROTATION)  # Restrict to a positive range
 	if is_equal_approx(gun.rotation, radians):
 		return
 	_target_rotation = radians
@@ -55,6 +59,7 @@ func shoot() -> void:
 		return
 	if not can_shoot:
 		return
+	var barrel: Position2D = barrels[0]
 	var dir := barrel.position.normalized().rotated(gun.rotation)
 	var bullet: Bullet = BULLET_SCENE.instance()
 	bullet.global_position = barrel.global_position
@@ -71,6 +76,16 @@ func explode() -> void:
 	emit_signal("dead")
 
 
+func enable_sight_lines() -> void:
+	for sight_line in sight_lines:
+		sight_line.is_casting = true
+
+
+func disable_sight_lines() -> void:
+	for sight_line in sight_lines:
+		sight_line.is_casting = false
+
+
 func _on_Turret_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
 	if not event is InputEventMouseButton or event.button_index != BUTTON_LEFT or not is_draggable:
 		return
@@ -78,3 +93,8 @@ func _on_Turret_input_event(_viewport: Node, event: InputEvent, _shape_idx: int)
 		Signals.emit_signal("draggable_turret_button_down", self)
 	else:
 		Signals.emit_signal("draggable_turret_button_up", self)
+
+
+func _set_can_be_shot(value: bool) -> void:
+	can_be_shot = value
+	sight_blocker_collider.set_deferred("disabled", not value)

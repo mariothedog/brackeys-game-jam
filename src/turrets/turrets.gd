@@ -8,6 +8,8 @@ export (NodePath) var level_path
 
 var Tiles := TilesManager.new()
 
+var _prev_angle_snapped := 0.0
+
 onready var level: TileMap = get_node(level_path)
 onready var bullets: Node2D = $Bullets
 onready var placed_turrets: Node2D = $PlacedTurrets
@@ -31,7 +33,9 @@ func _process(_delta: float) -> void:
 		var mouse_pos := Global.selected_turret.get_local_mouse_position()
 		var angle_to_mouse := mouse_pos.angle()
 		var angle_snapped := stepify(angle_to_mouse, TURRET_AIMING_ANGLE_SNAP)
-		Global.selected_turret.rotate_gun_to(angle_snapped)
+		if angle_snapped != _prev_angle_snapped:
+			_prev_angle_snapped = angle_snapped
+			Global.selected_turret.rotate_gun_to(angle_snapped)
 	else:
 		Global.selected_turret.position = get_local_mouse_position()
 

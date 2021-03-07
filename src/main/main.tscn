@@ -41,5 +41,5 @@ layer = 0
 
 [node name="StepDelay" type="Timer" parent="."]
 autostart = true
-[connection signal="timeout" from="StepDelay" to="Turrets" method="_on_StepDelay_timeout"]
 [connection signal="timeout" from="StepDelay" to="Level/Enemies" method="_on_StepDelay_timeout"]
+[connection signal="timeout" from="StepDelay" to="Turrets" method="_on_StepDelay_timeout"]

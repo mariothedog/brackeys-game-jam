@@ -31,3 +31,9 @@ static func wrapf_with_threshold(value: float, minimum: float, maximum: float, t
 	elif is_equal_with_threshold(value, maximum, threshold):
 		return minimum
 	return wrapf(value, minimum, maximum)
+
+static func reparent(node: Node, new_parent: Node) -> void:
+	var old_parent = node.get_parent()
+	if old_parent:
+		old_parent.call_deferred("remove_child", node)
+	new_parent.call_deferred("add_child", node)

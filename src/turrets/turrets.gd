@@ -1,7 +1,5 @@
 extends Node2D
 
-signal turret_added(turret)
-
 const TURRET_SCENE = preload("res://turrets/turret.tscn")
 
 const TURRET_AIMING_ANGLE_SNAP := deg2rad(45)
@@ -11,6 +9,9 @@ export (NodePath) var level_path
 var Tiles := TilesManager.new()
 
 onready var level: TileMap = get_node(level_path)
+onready var bullets: Node2D = $Bullets
+onready var placed_turrets: Node2D = $PlacedTurrets
+onready var dragging_turret_layer: CanvasLayer = $DraggingTurretLayer
 
 
 func _ready() -> void:
@@ -49,6 +50,7 @@ func _input(event: InputEvent) -> void:
 
 
 func _select_turret(turret: Turret) -> void:
+	Util.reparent(turret, dragging_turret_layer)
 	turret.z_index = 2
 	turret.can_shoot = false
 	turret.can_be_shot = false
@@ -65,6 +67,7 @@ func _release_turret(turret: Turret) -> void:
 		set_process(false)
 		return
 	_snap_turret_to_tile(turret, tile_pos)
+	Util.reparent(turret, placed_turrets)
 	turret.z_index = 0
 	turret.can_shoot = true
 	turret.can_be_shot = true
@@ -84,7 +87,7 @@ func _snap_turret_to_tile(turret: Turret, tile_pos: Vector2) -> void:
 
 func _is_top_overlapping_turret(turret: Turret) -> bool:
 	var pos_in_parent := turret.get_position_in_parent()
-	for child in get_children():
+	for child in placed_turrets.get_children():
 		if (
 			child.position == turret.position
 			and child != turret
@@ -96,8 +99,7 @@ func _is_top_overlapping_turret(turret: Turret) -> bool:
 
 func _on_item_button_down(_item: Item) -> void:
 	var turret: Turret = TURRET_SCENE.instance()
-	add_child(turret)
-	emit_signal("turret_added", turret)
+	turret.bullets_node = bullets
 	_select_turret(turret)
 
 
@@ -122,3 +124,8 @@ func _on_selected_turret_dead() -> void:
 	Global.selected_turret = null
 	Global.is_aiming = false
 	set_process(false)
+
+
+func _on_StepDelay_timeout() -> void:
+	for turret in placed_turrets.get_children():
+		turret.shoot()

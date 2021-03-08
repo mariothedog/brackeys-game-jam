@@ -1,0 +1,27 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://ui/hud/inventory/inventory.tscn" type="PackedScene" id=1]
+[ext_resource path="res://ui/hud/hud.gd" type="Script" id=2]
+
+[node name="HUDLayer" type="CanvasLayer"]
+
+[node name="HUD" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+inv_pixels_visible_def = 6
+inv_slide_dur = 0.15
+
+[node name="Tween" type="Tween" parent="HUD"]
+
+[node name="Inventory" parent="HUD" instance=ExtResource( 1 )]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -28.0
+margin_right = 0.0
+[connection signal="mouse_entered_background" from="HUD/Inventory" to="HUD" method="_on_Inventory_mouse_entered_background"]
+[connection signal="mouse_exited_background" from="HUD/Inventory" to="HUD" method="_on_Inventory_mouse_exited_background"]

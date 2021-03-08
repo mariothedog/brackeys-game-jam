@@ -9,6 +9,21 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Area2D",
+"class": "Bullet",
+"language": "GDScript",
+"path": "res://projectiles/bullet/bullet.gd"
+}, {
+"base": "Area2D",
+"class": "Enemy",
+"language": "GDScript",
+"path": "res://enemies/enemy.gd"
+}, {
+"base": "HBoxContainer",
+"class": "Item",
+"language": "GDScript",
+"path": "res://ui/hud/inventory/item.gd"
+}, {
 "base": "Resource",
 "class": "LevelData",
 "language": "GDScript",
@@ -19,14 +34,23 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://levels/tiles_manager.gd"
 }, {
+"base": "Area2D",
+"class": "Turret",
+"language": "GDScript",
+"path": "res://turrets/turret.gd"
+}, {
 "base": "Object",
 "class": "Util",
 "language": "GDScript",
-"path": "res://utility/utility.gd"
+"path": "res://misc-scripts/utility.gd"
 } ]
 _global_script_class_icons={
+"Bullet": "",
+"Enemy": "",
+"Item": "",
 "LevelData": "",
 "TilesManager": "",
+"Turret": "",
 "Util": ""
 }
 
@@ -39,6 +63,8 @@ config/icon="res://icon.png"
 [autoload]
 
 Constants="*res://autoload/constants.gd"
+Signals="*res://autoload/signals.gd"
+Global="*res://autoload/global.gd"
 
 [display]
 
@@ -71,6 +97,14 @@ texture={
 "stream": false,
 "svg/scale": 1.0
 }
+
+[layer_names]
+
+2d_physics/layer_1="level"
+2d_physics/layer_2="turrets"
+2d_physics/layer_3="projectiles"
+2d_physics/layer_4="enemies"
+2d_physics/layer_5="sight_blockers"
 
 [rendering]
 

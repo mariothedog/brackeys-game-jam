@@ -1,9 +1,12 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://levels/tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://main/level.gd" type="Script" id=2]
 [ext_resource path="res://main/main.gd" type="Script" id=3]
 [ext_resource path="res://main/enemies.gd" type="Script" id=4]
+[ext_resource path="res://ui/hud/hud.tscn" type="PackedScene" id=5]
+[ext_resource path="res://turrets/turrets.gd" type="Script" id=6]
+[ext_resource path="res://ui/hud/inventory/item_turret.png" type="Texture" id=7]
 
 [node name="Main" type="Node"]
 script = ExtResource( 3 )
@@ -15,12 +18,34 @@ current = true
 [node name="Level" type="TileMap" parent="."]
 tile_set = ExtResource( 1 )
 cell_size = Vector2( 12, 12 )
+collision_layer = 17
+collision_mask = 0
 format = 1
 script = ExtResource( 2 )
 
-[node name="Enemies" type="Node" parent="Level"]
+[node name="Enemies" type="Node2D" parent="Level"]
+z_index = 2
 script = ExtResource( 4 )
 
-[node name="StepDelay" type="Timer" parent="Level"]
+[node name="Turrets" type="Node2D" parent="."]
+script = ExtResource( 6 )
+level_path = NodePath("../Level")
+
+[node name="Bullets" type="Node2D" parent="Turrets"]
+z_index = 1
+
+[node name="PlacedTurrets" type="Node2D" parent="Turrets"]
+
+[node name="DraggingTurretLayer" type="CanvasLayer" parent="Turrets"]
+
+[node name="DraggingTurret" type="Sprite" parent="Turrets/DraggingTurretLayer"]
+texture = ExtResource( 7 )
+offset = Vector2( 1.5, 0 )
+
+[node name="HUDLayer" parent="." instance=ExtResource( 5 )]
+layer = 0
+
+[node name="StepDelay" type="Timer" parent="."]
 autostart = true
-[connection signal="timeout" from="Level/StepDelay" to="Level/Enemies" method="_on_StepDelay_timeout"]
+[connection signal="timeout" from="StepDelay" to="Level/Enemies" method="_on_StepDelay_timeout"]
+[connection signal="timeout" from="StepDelay" to="Turrets" method="_on_StepDelay_timeout"]

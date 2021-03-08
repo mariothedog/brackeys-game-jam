@@ -1,6 +1,6 @@
 extends Node2D
 
-const TURRET_SCENE = preload("res://turrets/turret.tscn")
+const TURRET_SCENE := preload("res://turrets/turret.tscn")
 
 const TURRET_AIMING_ANGLE_SNAP := deg2rad(45)
 

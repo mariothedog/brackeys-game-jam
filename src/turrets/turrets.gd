@@ -3,6 +3,7 @@ extends Node2D
 const TURRET_SCENE := preload("res://turrets/turret.tscn")
 
 const TURRET_AIMING_ANGLE_SNAP := deg2rad(45)
+const TURRET_AIMING_MOUSE_DIST_THRESHOLD := 3.0
 
 export (NodePath) var level_path
 
@@ -28,6 +29,8 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if Global.is_aiming:
 		var mouse_pos := Global.selected_turret.get_local_mouse_position()
+		if mouse_pos.length() < TURRET_AIMING_MOUSE_DIST_THRESHOLD:
+			return
 		var angle_to_mouse := mouse_pos.angle()
 		var angle_snapped := stepify(angle_to_mouse, TURRET_AIMING_ANGLE_SNAP)
 		if angle_snapped != _prev_angle_snapped:

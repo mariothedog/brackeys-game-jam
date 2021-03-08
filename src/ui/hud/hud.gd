@@ -3,6 +3,8 @@ extends Control
 export var inv_pixels_visible_def := 1
 export var inv_slide_dur := 1.0
 
+var _is_mouse_in_background := false
+
 onready var tween: Tween = $Tween
 onready var inventory: MarginContainer = $Inventory
 
@@ -13,8 +15,6 @@ onready var _inv_end_pos_x := inventory.rect_position.x
 
 func _ready() -> void:
 	inventory.rect_position.x = _inv_start_pos_x
-# warning-ignore:return_value_discarded
-	Signals.connect("item_button_down", self, "_on_item_button_down")
 
 
 func slide_inventory_out() -> void:
@@ -47,17 +47,22 @@ func slide_inventory_in() -> void:
 	tween.start()
 
 
+func _input(event: InputEvent) -> void:
+	if (event is InputEventMouseButton and event.button_index == BUTTON_LEFT
+	and event.is_pressed()):
+		pass
+		slide_inventory_in()
+
+
 func _on_Inventory_mouse_entered_background() -> void:
+	_is_mouse_in_background = true
 	if Global.selected_turret and not Global.is_aiming:
 		return
 	slide_inventory_out()
 
 
 func _on_Inventory_mouse_exited_background() -> void:
+	_is_mouse_in_background = false
 	if Global.selected_turret and not Global.is_aiming:
 		return
-	slide_inventory_in()
-
-
-func _on_item_button_down(_item: Item) -> void:
 	slide_inventory_in()

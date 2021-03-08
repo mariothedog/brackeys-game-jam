@@ -2,6 +2,7 @@ class_name Turret
 extends Area2D
 
 signal dead
+signal mouse_down
 
 const BULLET_SCENE := preload("res://projectiles/bullet/bullet.tscn")
 
@@ -11,7 +12,6 @@ var ROTATION_RATE: float = ROTATION_WEIGHT * Constants.PHYSICS_FPS
 
 export var bullet_speed := 300.0
 
-var is_draggable := true
 var can_shoot := false
 var can_be_shot := false setget _set_can_be_shot
 
@@ -19,17 +19,14 @@ var _has_bullets_node := false
 var _target_rotation: float
 
 var bullets_node: Node
-var barrels := []
-var sight_lines := []
 onready var gun: Node2D = $Gun
+onready var barrels := $Gun/Barrels.get_children()
+onready var sight_lines := $Gun/SightLines.get_children()
 onready var sight_blocker_collider: CollisionShape2D = $SightBlocker/CollisionShape2D
 
 
 func _ready() -> void:
 	set_physics_process(false)
-	for barrel in gun.get_children():
-		barrels.append(barrel)
-		sight_lines.append(barrel.get_node("SightLine"))
 
 
 func _physics_process(delta: float) -> void:
@@ -86,15 +83,11 @@ func disable_sight_lines() -> void:
 		sight_line.is_casting = false
 
 
-func _on_Turret_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	if not event is InputEventMouseButton or event.button_index != BUTTON_LEFT or not is_draggable:
-		return
-	if event.is_pressed():
-		Signals.emit_signal("draggable_turret_button_down", self)
-	else:
-		Signals.emit_signal("draggable_turret_button_up", self)
-
-
 func _set_can_be_shot(value: bool) -> void:
 	can_be_shot = value
 	sight_blocker_collider.set_deferred("disabled", not value)
+
+
+func _on_Turret_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.is_pressed():
+		emit_signal("mouse_down")

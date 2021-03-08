@@ -24,16 +24,13 @@ z_index = 2
 texture = ExtResource( 3 )
 offset = Vector2( 2.5, 0 )
 
-[node name="Barrels" type="Node2D" parent="Gun"]
-
-[node name="Barrel" type="Position2D" parent="Gun/Barrels"]
-position = Vector2( 8, 0 )
-z_as_relative = false
-
 [node name="SightLines" type="Node2D" parent="Gun"]
 z_index = -1
 
 [node name="SightLine" parent="Gun/SightLines" instance=ExtResource( 4 )]
+
+[node name="Barrel" type="Position2D" parent="."]
+position = Vector2( 8, 0 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 z_index = 2

@@ -20,8 +20,8 @@ var _target_rotation: float
 
 var bullets_node: Node
 onready var gun: Node2D = $Gun
-onready var barrels := $Gun/Barrels.get_children()
 onready var sight_lines := $Gun/SightLines.get_children()
+onready var barrel: Position2D = $Barrel
 onready var sight_blocker_collider: CollisionShape2D = $SightBlocker/CollisionShape2D
 
 
@@ -56,10 +56,10 @@ func shoot() -> void:
 		return
 	if not can_shoot:
 		return
-	var barrel: Position2D = barrels[0]
-	var dir := barrel.position.normalized().rotated(gun.rotation)
+	var shoot_pos := barrel.position.rotated(_target_rotation)
+	var dir := shoot_pos.normalized()
 	var bullet: Bullet = BULLET_SCENE.instance()
-	bullet.global_position = barrel.global_position
+	bullet.global_position = global_position + shoot_pos
 	bullet.velocity = dir * bullet_speed
 	bullet.rotation = dir.angle()
 	bullet.friendly_turrets.append(self)

@@ -48,8 +48,7 @@ func slide_inventory_in() -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if (event is InputEventMouseButton and event.button_index == BUTTON_LEFT
-	and event.is_pressed()):
+	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.is_pressed():
 		pass
 		slide_inventory_in()
 

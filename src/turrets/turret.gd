@@ -12,6 +12,7 @@ var ROTATION_RATE: float = ROTATION_WEIGHT * Constants.PHYSICS_FPS
 
 export var bullet_speed := 300.0
 
+var is_enabled := true
 var can_shoot := false
 var can_be_shot := false setget _set_can_be_shot
 
@@ -22,6 +23,7 @@ var bullets_node: Node
 onready var gun: Node2D = $Gun
 onready var sight_lines := $Gun/SightLines.get_children()
 onready var barrel: Position2D = $Barrel
+onready var collider: CollisionShape2D = $CollisionShape2D
 onready var sight_blocker_collider: CollisionShape2D = $SightBlocker/CollisionShape2D
 
 
@@ -67,10 +69,24 @@ func shoot() -> void:
 
 
 func explode() -> void:
-	if is_queued_for_deletion():
+	if not is_enabled:
 		return
-	queue_free()
+	disable()
 	emit_signal("dead")
+
+
+func enable() -> void:
+	is_enabled = true
+	visible = true
+	collider.set_deferred("disabled", false)
+	enable_sight_lines()
+
+
+func disable() -> void:
+	is_enabled = false
+	visible = false
+	collider.set_deferred("disabled", true)
+	disable_sight_lines()
 
 
 func enable_sight_lines() -> void:

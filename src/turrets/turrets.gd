@@ -136,4 +136,5 @@ func _on_turret_dead(turret: Turret) -> void:
 
 func _on_StepDelay_timeout() -> void:
 	for turret in placed_turrets.get_children():
-		turret.shoot()
+		if turret.is_enabled:
+			turret.shoot()

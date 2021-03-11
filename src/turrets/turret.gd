@@ -1,7 +1,7 @@
 class_name Turret
 extends Area2D
 
-signal dead
+signal state_changed(is_enabled)
 signal mouse_down
 
 const BULLET_SCENE := preload("res://projectiles/bullet/bullet.tscn")
@@ -72,7 +72,6 @@ func explode() -> void:
 	if not is_enabled:
 		return
 	disable()
-	emit_signal("dead")
 
 
 func enable() -> void:
@@ -80,6 +79,7 @@ func enable() -> void:
 	visible = true
 	collider.set_deferred("disabled", false)
 	enable_sight_lines()
+	emit_signal("state_changed", true)
 
 
 func disable() -> void:
@@ -87,6 +87,7 @@ func disable() -> void:
 	visible = false
 	collider.set_deferred("disabled", true)
 	disable_sight_lines()
+	emit_signal("state_changed", false)
 
 
 func enable_sight_lines() -> void:

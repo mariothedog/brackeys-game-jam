@@ -110,7 +110,7 @@ func _on_item_button_down(_item: Item) -> void:
 # warning-ignore:return_value_discarded
 	turret.connect("mouse_down", self, "_on_Turret_mouse_down", [turret])
 # warning-ignore:return_value_discarded
-	turret.connect("dead", self, "_on_turret_dead", [turret])
+	turret.connect("state_changed", self, "_on_turret_state_changed", [turret])
 	placed_turrets.add_child(turret)
 	_select_turret(turret)
 
@@ -127,8 +127,8 @@ func _on_Turret_mouse_down(turret: Turret) -> void:
 	_select_turret(turret)
 
 
-func _on_turret_dead(turret: Turret) -> void:
-	if turret == Global.selected_turret:
+func _on_turret_state_changed(is_enabled: bool, turret: Turret) -> void:
+	if not is_enabled and turret == Global.selected_turret:
 		Global.selected_turret = null
 		Global.is_aiming = false
 		set_process(false)

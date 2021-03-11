@@ -6,6 +6,11 @@ signal mouse_exited_background
 var _prev_is_mouse_inside := false
 
 
+func _ready() -> void:
+	# Related issue: https://github.com/godotengine/godot/issues/46915
+	rect_min_size.x = rect_size.x
+
+
 func _process(_delta: float) -> void:
 	# The mouse_entered/mouse_exited signals are not enough
 	# Related issue: https://github.com/godotengine/godot/issues/16854

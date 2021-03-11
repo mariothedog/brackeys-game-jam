@@ -62,6 +62,7 @@ func _select_turret(turret: Turret) -> void:
 	turret.raise()
 	turret.can_be_shot = false
 	turret.disable_sight_lines()
+	turret.gun.rotation = 0
 	Global.selected_turret = turret
 	set_process(true)
 

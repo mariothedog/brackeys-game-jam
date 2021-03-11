@@ -122,7 +122,7 @@ func _on_item_button_up(_item: Item) -> void:
 
 
 func _on_Turret_mouse_down(turret: Turret) -> void:
-	if not _is_top_overlapping_turret(turret):
+	if Global.is_running or not _is_top_overlapping_turret(turret):
 		return
 	_select_turret(turret)
 

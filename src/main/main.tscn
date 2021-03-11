@@ -46,5 +46,5 @@ offset = Vector2( 1.5, 0 )
 layer = 0
 
 [node name="StepDelay" type="Timer" parent="."]
-[connection signal="timeout" from="StepDelay" to="Turrets" method="_on_StepDelay_timeout"]
 [connection signal="timeout" from="StepDelay" to="Level/Enemies" method="_on_StepDelay_timeout"]
+[connection signal="timeout" from="StepDelay" to="Turrets" method="_on_StepDelay_timeout"]

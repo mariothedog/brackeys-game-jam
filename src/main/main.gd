@@ -3,6 +3,10 @@ extends Node
 onready var level: TileMap = $Level
 export var dict := {}
 
+onready var step_delay: Timer = $StepDelay
+onready var enemies: Node2D = $Level/Enemies
+onready var placed_turrets: Node2D = $Turrets/PlacedTurrets
+
 
 func _ready() -> void:
 	var level_data := load("res://levels/resources/level_debug.tres")
@@ -14,8 +18,13 @@ func _ready() -> void:
 
 
 func _start() -> void:
-	print("Start!")
+	step_delay.start()
+	for turret in placed_turrets.get_children():
+		turret.disable_sight_lines()
 
 
 func _stop() -> void:
-	print("Stop!")
+	step_delay.stop()
+	Util.queue_free_children(enemies)
+	for turret in placed_turrets.get_children():
+		turret.enable_sight_lines()

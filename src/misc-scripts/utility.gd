@@ -31,3 +31,7 @@ static func wrapf_with_threshold(value: float, minimum: float, maximum: float, t
 	elif is_equal_with_threshold(value, maximum, threshold):
 		return minimum
 	return wrapf(value, minimum, maximum)
+
+static func queue_free_children(node: Node) -> void:
+	for child in node.get_children():
+		child.queue_free()

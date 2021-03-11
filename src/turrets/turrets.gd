@@ -41,7 +41,11 @@ func _process(_delta: float) -> void:
 
 
 func _input(event: InputEvent) -> void:
-	if not event is InputEventMouseButton or event.button_index != BUTTON_LEFT or not Global.selected_turret:
+	if (
+		not event is InputEventMouseButton
+		or event.button_index != BUTTON_LEFT
+		or not Global.selected_turret
+	):
 		return
 	if not event.is_pressed():
 		_release_turret(Global.selected_turret)
@@ -106,7 +110,7 @@ func _on_item_button_down(_item: Item) -> void:
 # warning-ignore:return_value_discarded
 	turret.connect("mouse_down", self, "_on_Turret_mouse_down", [turret])
 # warning-ignore:return_value_discarded
-	turret.connect("dead", self, "_on_turret_dead", [turret])
+	turret.connect("state_changed", self, "_on_turret_state_changed", [turret])
 	placed_turrets.add_child(turret)
 	_select_turret(turret)
 
@@ -118,13 +122,13 @@ func _on_item_button_up(_item: Item) -> void:
 
 
 func _on_Turret_mouse_down(turret: Turret) -> void:
-	if not _is_top_overlapping_turret(turret):
+	if Global.is_running or not _is_top_overlapping_turret(turret):
 		return
 	_select_turret(turret)
 
 
-func _on_turret_dead(turret: Turret) -> void:
-	if turret == Global.selected_turret:
+func _on_turret_state_changed(is_enabled: bool, turret: Turret) -> void:
+	if not is_enabled and turret == Global.selected_turret:
 		Global.selected_turret = null
 		Global.is_aiming = false
 		set_process(false)
@@ -132,4 +136,5 @@ func _on_turret_dead(turret: Turret) -> void:
 
 func _on_StepDelay_timeout() -> void:
 	for turret in placed_turrets.get_children():
-		turret.shoot()
+		if turret.is_enabled:
+			turret.shoot()

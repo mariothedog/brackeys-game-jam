@@ -1,3 +1,4 @@
+class_name HUD
 extends Control
 
 export var inv_pixels_visible_def := 1
@@ -18,6 +19,8 @@ func _ready() -> void:
 
 
 func slide_inventory_out() -> void:
+	if is_equal_approx(inventory.rect_position.x, _inv_end_pos_x):
+		return
 	# warning-ignore:return_value_discarded
 	tween.interpolate_property(
 		inventory,
@@ -33,6 +36,8 @@ func slide_inventory_out() -> void:
 
 
 func slide_inventory_in() -> void:
+	if is_equal_approx(inventory.rect_position.x, _inv_start_pos_x):
+		return
 	# warning-ignore:return_value_discarded
 	tween.interpolate_property(
 		inventory,
@@ -55,13 +60,13 @@ func _input(event: InputEvent) -> void:
 
 func _on_Inventory_mouse_entered_background() -> void:
 	_is_mouse_in_background = true
-	if Global.selected_turret and not Global.is_aiming:
+	if (Global.selected_turret and not Global.is_aiming) or Global.is_running:
 		return
 	slide_inventory_out()
 
 
 func _on_Inventory_mouse_exited_background() -> void:
 	_is_mouse_in_background = false
-	if Global.selected_turret and not Global.is_aiming:
+	if (Global.selected_turret and not Global.is_aiming) or Global.is_running:
 		return
 	slide_inventory_in()

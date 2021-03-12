@@ -55,29 +55,27 @@ func _input(event: InputEvent) -> void:
 
 func _select_turret(turret: Turret) -> void:
 	dragging_turret.visible = true
-	turret.visible = false
-	turret.can_shoot = false
-	turret.raise()
-	turret.can_be_shot = false
-	turret.disable_sight_lines()
+	turret.disable()
 	turret.gun.rotation = 0
+	turret.can_shoot = false
+	turret.can_be_shot = false
+	turret.raise()
 	Global.selected_turret = turret
 	set_process(true)
 
 
 func _release_turret(turret: Turret) -> void:
 	dragging_turret.visible = false
-	turret.visible = true
 	var tile_pos := _get_tile_pos_at_mouse()
 	if level.get_cellv(tile_pos) != Tiles.Main.GROUND:
 		turret.queue_free()
 		set_process(false)
 		return
 	_snap_turret_to_tile(turret, tile_pos)
+	turret.enable()
 	turret.can_shoot = true
 	turret.can_be_shot = true
 	Global.is_aiming = true
-	turret.enable_sight_lines()
 
 
 func _get_tile_pos_at_mouse() -> Vector2:

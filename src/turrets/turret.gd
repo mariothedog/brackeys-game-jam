@@ -105,6 +105,6 @@ func disable_sight_lines() -> void:
 		sight_line.is_casting = false
 
 
-func _on_Turret_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
-	if event is InputEventMouseButton and event.button_index == BUTTON_LEFT and event.is_pressed():
+func _on_Turret_input_event(_viewport: Node, event: InputEventMouseButton, _shape_idx: int) -> void:
+	if event and event.button_index == BUTTON_LEFT and event.is_pressed():
 		emit_signal("mouse_down")

@@ -41,7 +41,7 @@ func _process(_delta: float) -> void:
 func _input(event: InputEvent) -> void:
 	if (
 		not event is InputEventMouseButton
-		or event.button_index != BUTTON_LEFT
+		or (event as InputEventMouseButton).button_index != BUTTON_LEFT
 		or not Global.selected_turret
 	):
 		return

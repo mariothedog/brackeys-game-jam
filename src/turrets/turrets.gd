@@ -121,26 +121,6 @@ func _get_top_overlapping_turret(pos: Vector2) -> Turret:
 	return top_turret
 
 
-func _get_overlapping_turrets(turret: Turret) -> Array:
-	var turrets := []
-	for child in placed_turrets.get_children():
-		if child.position == turret.position and child != turret:
-			turrets.append(child)
-	return turrets
-
-
-func _is_top_overlapping_turret(turret: Turret) -> bool:
-	var pos_in_parent := turret.get_position_in_parent()
-	for child in placed_turrets.get_children():
-		if (
-			child.position == turret.position
-			and child != turret
-			and pos_in_parent < child.get_position_in_parent()
-		):
-			return false
-	return true
-
-
 func _on_item_button_down(_item: Item) -> void:
 	var turret: Turret = TURRET_SCENE.instance()
 	turret.bullets_node = bullets
@@ -151,7 +131,7 @@ func _on_item_button_down(_item: Item) -> void:
 
 
 func _on_Turret_mouse_down(turret: Turret) -> void:
-	if Global.is_running or not _is_top_overlapping_turret(turret):
+	if Global.is_running:
 		return
 	_select_turret(turret)
 

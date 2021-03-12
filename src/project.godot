@@ -72,6 +72,10 @@ Constants="*res://autoload/constants.gd"
 Signals="*res://autoload/signals.gd"
 Global="*res://autoload/global.gd"
 
+[debug]
+
+gdscript/warnings/unused_class_variable=true
+
 [display]
 
 window/size/width=240

@@ -12,11 +12,10 @@ var ROTATION_RATE: float = ROTATION_WEIGHT * Constants.PHYSICS_FPS
 export var bullet_speed := 300.0
 
 var is_enabled := true
+# warning-ignore:unused_class_variable
 var is_merged := false
 var can_shoot := false
-var can_be_shot := false setget _set_can_be_shot
 
-var _has_bullets_node := false
 var _target_rotation: float
 
 var bullets_node: Node
@@ -104,11 +103,6 @@ func enable_sight_lines() -> void:
 func disable_sight_lines() -> void:
 	for sight_line in sight_lines:
 		sight_line.is_casting = false
-
-
-func _set_can_be_shot(value: bool) -> void:
-	can_be_shot = value
-	sight_blocker_collider.set_deferred("disabled", not value)
 
 
 func _on_Turret_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:

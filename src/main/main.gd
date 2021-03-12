@@ -1,7 +1,6 @@
 extends Node
 
 onready var level: TileMap = $Level
-export var dict := {}
 
 onready var step_delay: Timer = $StepDelay
 onready var enemies: Node2D = $Level/Enemies

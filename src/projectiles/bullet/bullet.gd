@@ -3,7 +3,6 @@ extends Area2D
 
 var friendly_turrets := []  # Turrets the bullet won't hurt
 var velocity := Vector2.ZERO
-var can_be_shot := true
 
 
 func _physics_process(delta: float) -> void:
@@ -17,7 +16,7 @@ func explode() -> void:
 
 
 func _on_Bullet_area_entered(area: Area2D) -> void:
-	if is_queued_for_deletion() or area in friendly_turrets or not area.can_be_shot:
+	if is_queued_for_deletion() or area in friendly_turrets:
 		return
 	explode()
 	area.explode()

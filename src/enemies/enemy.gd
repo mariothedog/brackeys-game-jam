@@ -5,7 +5,6 @@ const MOVEMENT_WEIGHT = 0.4
 var MOVEMENT_RATE := MOVEMENT_WEIGHT * Constants.PHYSICS_FPS
 
 var path: PoolVector2Array setget _set_path
-var can_be_shot := true
 
 var _path_length: int
 var _path_current_index := 0

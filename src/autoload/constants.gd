@@ -1,5 +1,7 @@
 extends Node
 
+# warning-ignore-all:unused_class_variable
+
 const FULL_ROTATION := TAU
 
 var PHYSICS_FPS: int = ProjectSettings.get_setting("physics/common/physics_fps")

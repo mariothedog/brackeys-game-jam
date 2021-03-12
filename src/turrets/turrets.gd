@@ -58,7 +58,6 @@ func _select_turret(turret: Turret) -> void:
 	turret.disable()
 	turret.set_rotation(0)
 	turret.can_shoot = false
-	turret.can_be_shot = false
 	turret.raise()
 	Global.selected_turret = turret
 	_update_overlapping_turrets(turret.position)
@@ -75,7 +74,6 @@ func _release_turret(turret: Turret) -> void:
 	_snap_turret_to_tile(turret, tile_pos)
 	turret.enable()
 	turret.can_shoot = true
-	turret.can_be_shot = true
 	Global.is_aiming = true
 	_update_overlapping_turrets(turret.position)
 

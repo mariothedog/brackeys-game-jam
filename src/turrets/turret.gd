@@ -78,6 +78,7 @@ func enable() -> void:
 	is_enabled = true
 	visible = true
 	collider.set_deferred("disabled", false)
+	sight_blocker_collider.set_deferred("disabled", false)
 	enable_sight_lines()
 	emit_signal("state_changed", true)
 
@@ -86,6 +87,7 @@ func disable() -> void:
 	is_enabled = false
 	visible = false
 	collider.set_deferred("disabled", true)
+	sight_blocker_collider.set_deferred("disabled", true)
 	disable_sight_lines()
 	emit_signal("state_changed", false)
 

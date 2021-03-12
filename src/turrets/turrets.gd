@@ -56,11 +56,12 @@ func _input(event: InputEvent) -> void:
 func _select_turret(turret: Turret) -> void:
 	dragging_turret.visible = true
 	turret.disable()
-	turret.gun.rotation = 0
+	turret.set_rotation(0)
 	turret.can_shoot = false
 	turret.can_be_shot = false
 	turret.raise()
 	Global.selected_turret = turret
+	_update_overlapping_turrets(turret.position)
 	set_process(true)
 
 
@@ -76,6 +77,7 @@ func _release_turret(turret: Turret) -> void:
 	turret.can_shoot = true
 	turret.can_be_shot = true
 	Global.is_aiming = true
+	_update_overlapping_turrets(turret.position)
 
 
 func _get_tile_pos_at_mouse() -> Vector2:
@@ -87,6 +89,42 @@ func _snap_turret_to_tile(turret: Turret, tile_pos: Vector2) -> void:
 	var world_pos := level.map_to_world(tile_pos)  # Top left of tile
 	var world_pos_centered := world_pos + level.cell_size / 2
 	turret.global_position = world_pos_centered
+
+
+func _update_overlapping_turrets(pos: Vector2) -> void:
+	var top_turret := _get_top_overlapping_turret(pos)
+	if not top_turret:
+		return
+	for turret in placed_turrets.get_children():
+		if turret.position != pos or (turret == Global.selected_turret and not Global.is_aiming):
+			continue
+		if turret == top_turret:
+			turret.is_merged = false
+			turret.enable()
+		else:
+			turret.is_merged = true
+			turret.disable()
+
+
+func _get_top_overlapping_turret(pos: Vector2) -> Turret:
+	var top_pos_in_parent := -1
+	var top_turret: Turret
+	for turret in placed_turrets.get_children():
+		if turret.position != pos or (turret == Global.selected_turret and not Global.is_aiming):
+			continue
+		var pos_in_parent: int = turret.get_position_in_parent()
+		if pos_in_parent > top_pos_in_parent:
+			top_pos_in_parent = pos_in_parent
+			top_turret = turret
+	return top_turret
+
+
+func _get_overlapping_turrets(turret: Turret) -> Array:
+	var turrets := []
+	for child in placed_turrets.get_children():
+		if child.position == turret.position and child != turret:
+			turrets.append(child)
+	return turrets
 
 
 func _is_top_overlapping_turret(turret: Turret) -> bool:

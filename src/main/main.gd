@@ -32,5 +32,6 @@ func _stop() -> void:
 	Util.queue_free_children(enemies)
 	Util.queue_free_children(bullets)
 	for turret in placed_turrets.get_children():
-		turret.enable()
+		if not turret.is_merged:
+			turret.enable()
 	Global.is_running = false

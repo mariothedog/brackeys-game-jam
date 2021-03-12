@@ -13,6 +13,7 @@ var ROTATION_RATE: float = ROTATION_WEIGHT * Constants.PHYSICS_FPS
 export var bullet_speed := 300.0
 
 var is_enabled := true
+var is_merged := false
 var can_shoot := false
 var can_be_shot := false setget _set_can_be_shot
 
@@ -50,6 +51,12 @@ func rotate_gun_to(radians: float) -> void:
 		return
 	_target_rotation = radians
 	set_physics_process(true)
+
+
+func set_rotation(radians: float) -> void:
+	radians = wrapf(radians, 0, Constants.FULL_ROTATION)  # Restrict to a positive range
+	_target_rotation = radians
+	gun.rotation = radians
 
 
 func shoot() -> void:

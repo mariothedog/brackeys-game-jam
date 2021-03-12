@@ -93,15 +93,19 @@ func _update_overlapping_turrets(pos: Vector2) -> void:
 	var top_turret := _get_top_overlapping_turret(pos)
 	if not top_turret:
 		return
+	var turret_level := 1
 	for turret in placed_turrets.get_children():
-		if turret.position != pos or (turret == Global.selected_turret and not Global.is_aiming):
+		if (
+			turret.position != pos
+			or turret == top_turret
+			or (turret == Global.selected_turret and not Global.is_aiming)
+		):
 			continue
-		if turret == top_turret:
-			turret.is_merged = false
-			turret.enable()
-		else:
-			turret.is_merged = true
-			turret.disable()
+		turret_level += 1
+		turret.disable()
+		turret.level = 0
+	top_turret.level = turret_level
+	top_turret.enable()
 
 
 func _get_top_overlapping_turret(pos: Vector2) -> Turret:

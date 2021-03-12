@@ -22,7 +22,7 @@ texture = ExtResource( 2 )
 [node name="Gun" type="Sprite" parent="."]
 z_index = 2
 texture = ExtResource( 3 )
-offset = Vector2( 2.5, 0 )
+hframes = 8
 
 [node name="SightLines" type="Node2D" parent="Gun"]
 z_index = -1

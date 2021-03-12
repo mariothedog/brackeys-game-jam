@@ -12,14 +12,14 @@ var ROTATION_RATE: float = ROTATION_WEIGHT * Constants.PHYSICS_FPS
 export var bullet_speed := 300.0
 
 var is_enabled := true
-# warning-ignore:unused_class_variable
-var is_merged := false
+# Turret level 0 is reserved for merged turrets
+var level := 1 setget _set_level
 var can_shoot := false
 
 var _target_rotation: float
 
 var bullets_node: Node
-onready var gun: Node2D = $Gun
+onready var gun: Sprite = $Gun
 onready var sight_lines := $Gun/SightLines.get_children()
 onready var barrel: Position2D = $Barrel
 onready var collider: CollisionShape2D = $CollisionShape2D
@@ -103,6 +103,19 @@ func enable_sight_lines() -> void:
 func disable_sight_lines() -> void:
 	for sight_line in sight_lines:
 		sight_line.is_casting = false
+
+
+func _set_level(value: int) -> void:
+	if value - 1 >= gun.hframes:
+		push_warning("Turret level is greater than the number of gun frames available")
+		return
+	elif value < 0:
+		push_warning("Turret level is less than 0")
+		return
+	level = value
+	if not level:
+		return
+	gun.frame = level - 1
 
 
 func _on_Turret_input_event(_viewport: Node, event: InputEventMouseButton, _shape_idx: int) -> void:

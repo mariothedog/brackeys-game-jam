@@ -22,8 +22,6 @@ func _ready() -> void:
 	dragging_turret.visible = false
 # warning-ignore:return_value_discarded
 	Signals.connect("item_button_down", self, "_on_item_button_down")
-# warning-ignore:return_value_discarded
-	Signals.connect("item_button_up", self, "_on_item_button_up")
 
 
 func _process(_delta: float) -> void:
@@ -114,12 +112,6 @@ func _on_item_button_down(_item: Item) -> void:
 	turret.connect("state_changed", self, "_on_turret_state_changed", [turret])
 	placed_turrets.add_child(turret)
 	_select_turret(turret)
-
-
-func _on_item_button_up(_item: Item) -> void:
-	if not Global.selected_turret:
-		return
-	_release_turret(Global.selected_turret)
 
 
 func _on_Turret_mouse_down(turret: Turret) -> void:

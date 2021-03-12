@@ -1,7 +1,6 @@
 extends Node
 
-onready var level: TileMap = $Level
-
+onready var level: Level = $Level
 onready var step_delay: Timer = $StepDelay
 onready var enemies: Node2D = $Level/Enemies
 onready var bullets: Node2D = $Turrets/Bullets

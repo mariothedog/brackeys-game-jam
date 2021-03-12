@@ -1,3 +1,4 @@
+class_name Level
 extends TileMap
 
 var Tiles := TilesManager.new()

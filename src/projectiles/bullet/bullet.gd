@@ -19,6 +19,7 @@ func _on_Bullet_area_entered(area: Area2D) -> void:
 	if is_queued_for_deletion() or area in friendly_turrets:
 		return
 	explode()
+# warning-ignore:unsafe_method_access
 	area.explode()
 
 

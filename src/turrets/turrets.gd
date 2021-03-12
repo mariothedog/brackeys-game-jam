@@ -56,6 +56,7 @@ func _input(event: InputEvent) -> void:
 func _select_turret(turret: Turret) -> void:
 	dragging_turret.visible = true
 	turret.disable()
+	_prev_angle_snapped = 0
 	turret.set_rotation(0)
 	turret.can_shoot = false
 	turret.raise()

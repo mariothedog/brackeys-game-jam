@@ -144,8 +144,6 @@ func _on_item_button_down(_item: Item) -> void:
 	turret.bullets_node = bullets
 # warning-ignore:return_value_discarded
 	turret.connect("mouse_down", self, "_on_Turret_mouse_down", [turret])
-# warning-ignore:return_value_discarded
-	turret.connect("state_changed", self, "_on_turret_state_changed", [turret])
 	placed_turrets.add_child(turret)
 	_select_turret(turret)
 
@@ -154,13 +152,6 @@ func _on_Turret_mouse_down(turret: Turret) -> void:
 	if Global.is_running or not _is_top_overlapping_turret(turret):
 		return
 	_select_turret(turret)
-
-
-func _on_turret_state_changed(is_enabled: bool, turret: Turret) -> void:
-	if not is_enabled and turret == Global.selected_turret:
-		Global.selected_turret = null
-		Global.is_aiming = false
-		set_process(false)
 
 
 func _on_StepDelay_timeout() -> void:

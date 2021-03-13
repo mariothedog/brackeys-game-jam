@@ -1,10 +1,13 @@
 class_name Level
 extends TileMap
 
+const ENEMY_SPAWN_INDICATOR_SCENE = preload("res://enemies/enemy_spawn_indicator.tscn")
+
 var Tiles := TilesManager.new()
 var data: LevelData
 
 onready var enemies: Enemies = $Enemies
+onready var enemy_spawn_indicators: Node = $EnemySpawnIndicators
 
 
 func build_level(level_data: LevelData) -> void:
@@ -28,6 +31,7 @@ func build_level(level_data: LevelData) -> void:
 		add_child(line2d)
 
 	enemies.paths = world_paths
+	_add_enemy_spawn_indicators(world_paths)
 
 
 func point_to_world(point: Vector2) -> Vector2:
@@ -36,3 +40,11 @@ func point_to_world(point: Vector2) -> Vector2:
 
 func rand_color(alpha: float) -> Color:
 	return Color(randf(), randf(), randf(), alpha)
+
+
+func _add_enemy_spawn_indicators(paths: Array) -> void:
+	for path in paths:
+		var start_pos: Vector2 = path[0]
+		var spawn_indicator = ENEMY_SPAWN_INDICATOR_SCENE.instance()
+		spawn_indicator.global_position = start_pos
+		enemy_spawn_indicators.add_child(spawn_indicator)

@@ -1,3 +1,4 @@
+class_name SightLine
 extends RayCast2D
 
 var is_casting := false setget _set_is_casting

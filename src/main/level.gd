@@ -1,9 +1,10 @@
+class_name Level
 extends TileMap
 
 var Tiles := TilesManager.new()
 var data: LevelData
 
-onready var enemies: Node2D = $Enemies
+onready var enemies: Enemies = $Enemies
 
 
 func build_level(level_data: LevelData) -> void:

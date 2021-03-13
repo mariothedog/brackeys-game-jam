@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://levels/tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://main/level.gd" type="Script" id=2]
@@ -6,7 +6,8 @@
 [ext_resource path="res://main/enemies.gd" type="Script" id=4]
 [ext_resource path="res://ui/hud/hud.tscn" type="PackedScene" id=5]
 [ext_resource path="res://turrets/turrets.gd" type="Script" id=6]
-[ext_resource path="res://ui/hud/inventory/item_turret.png" type="Texture" id=7]
+[ext_resource path="res://turrets/gun.png" type="Texture" id=7]
+[ext_resource path="res://turrets/base.png" type="Texture" id=8]
 
 [node name="Main" type="Node"]
 script = ExtResource( 3 )
@@ -39,8 +40,11 @@ z_index = 1
 [node name="DraggingTurretLayer" type="CanvasLayer" parent="Turrets"]
 
 [node name="DraggingTurret" type="Sprite" parent="Turrets/DraggingTurretLayer"]
+texture = ExtResource( 8 )
+
+[node name="Gun" type="Sprite" parent="Turrets/DraggingTurretLayer/DraggingTurret"]
 texture = ExtResource( 7 )
-offset = Vector2( 1.5, 0 )
+hframes = 8
 
 [node name="HUDLayer" parent="." instance=ExtResource( 5 )]
 layer = 0

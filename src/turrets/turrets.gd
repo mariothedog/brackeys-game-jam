@@ -15,6 +15,7 @@ onready var level: TileMap = get_node(level_path)
 onready var bullets: Node2D = $Bullets
 onready var placed_turrets: Node2D = $PlacedTurrets
 onready var dragging_turret: Sprite = $DraggingTurretLayer/DraggingTurret
+onready var dragging_gun: Sprite = $DraggingTurretLayer/DraggingTurret/Gun
 
 
 func _ready() -> void:
@@ -33,6 +34,7 @@ func _process(_delta: float) -> void:
 		if angle_snapped != _prev_angle_snapped:
 			_prev_angle_snapped = angle_snapped
 			Global.selected_turret.rotate_gun_to(angle_snapped)
+			dragging_gun.rotation = angle_snapped
 	else:
 		dragging_turret.global_position = get_global_mouse_position()
 

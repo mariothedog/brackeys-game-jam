@@ -59,8 +59,6 @@ func _get_turret_angle_to(pos: Vector2) -> float:
 func _select_turret(turret: Turret) -> void:
 	dragging_turret.visible = true
 	turret.disable()
-	_prev_angle_snapped = 0
-	turret.set_rotation(0)
 	turret.can_shoot = false
 	turret.raise()
 	Global.selected_turret = turret
@@ -76,6 +74,10 @@ func _release_turret(turret: Turret) -> void:
 		set_process(false)
 		return
 	_snap_turret_to_tile(turret, tile_pos)
+	var mouse_pos := turret.get_local_mouse_position()
+	var angle = _get_turret_angle_to(mouse_pos)
+	_prev_angle_snapped = angle
+	turret.set_rotation(angle)
 	turret.enable()
 	turret.can_shoot = true
 	Global.is_aiming = true

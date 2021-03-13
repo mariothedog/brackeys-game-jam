@@ -80,6 +80,7 @@ func _release_turret(turret: Turret) -> void:
 	var angle = _get_turret_angle_to(mouse_pos)
 	_prev_angle_snapped = angle
 	turret.set_rotation(angle)
+	dragging_gun.rotation = angle
 	turret.enable()
 	turret.can_shoot = true
 	Global.is_aiming = true

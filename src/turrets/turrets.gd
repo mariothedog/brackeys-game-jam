@@ -29,8 +29,7 @@ func _process(_delta: float) -> void:
 		var mouse_pos := Global.selected_turret.get_local_mouse_position()
 		if mouse_pos.length() < TURRET_AIMING_MOUSE_DIST_THRESHOLD:
 			return
-		var angle_to_mouse := mouse_pos.angle()
-		var angle_snapped := stepify(angle_to_mouse, TURRET_AIMING_ANGLE_SNAP)
+		var angle_snapped := _get_turret_angle_to(mouse_pos)
 		if angle_snapped != _prev_angle_snapped:
 			_prev_angle_snapped = angle_snapped
 			Global.selected_turret.rotate_gun_to(angle_snapped)
@@ -51,6 +50,10 @@ func _input(event: InputEvent) -> void:
 		set_process(false)
 		Global.selected_turret = null
 		Global.is_aiming = false
+
+
+func _get_turret_angle_to(pos: Vector2) -> float:
+	return stepify(pos.angle(), TURRET_AIMING_ANGLE_SNAP)
 
 
 func _select_turret(turret: Turret) -> void:

@@ -55,6 +55,7 @@ func set_rotation(radians: float) -> void:
 	radians = wrapf(radians, 0, Constants.FULL_ROTATION)  # Restrict to a positive range
 	_target_rotation = radians
 	gun.rotation = radians
+	set_physics_process(false)
 
 
 func shoot() -> void:

@@ -21,7 +21,7 @@ func _start() -> void:
 	hud.slide_inventory_in()
 	step_delay.start()
 	for turret in placed_turrets.get_children():
-		turret.disable_sight_lines()
+		turret.toggle_sight_lines(false)
 	Global.is_running = true
 
 

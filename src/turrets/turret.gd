@@ -3,7 +3,19 @@ extends Area2D
 
 signal mouse_down
 
+const SIGHT_LINE_SCENE := preload("res://turrets/sight_line/sight_line.tscn")
 const BULLET_SCENE := preload("res://projectiles/bullet/bullet.tscn")
+
+const SIGHT_LINE_ROTATIONS := [
+	0,
+	deg2rad(180),
+	deg2rad(90),
+	deg2rad(270),
+	deg2rad(315),
+	deg2rad(45),
+	deg2rad(135),
+	deg2rad(225),
+]
 
 const ROTATION_THRESHOLD := deg2rad(1)
 const ROTATION_WEIGHT := 0.4
@@ -20,7 +32,7 @@ var _target_rotation: float
 
 var bullets_node: Node
 onready var gun: Sprite = $Gun
-onready var sight_lines := $Gun/SightLines.get_children()
+onready var sight_lines := $Gun/SightLines
 onready var barrel: Position2D = $Barrel
 onready var collider: CollisionShape2D = $CollisionShape2D
 onready var sight_blocker_collider: CollisionShape2D = $SightBlocker/CollisionShape2D
@@ -28,6 +40,7 @@ onready var sight_blocker_collider: CollisionShape2D = $SightBlocker/CollisionSh
 
 func _ready() -> void:
 	set_physics_process(false)
+	_instance_sight_lines()
 
 
 func _physics_process(delta: float) -> void:
@@ -85,7 +98,7 @@ func enable() -> void:
 	visible = true
 	collider.set_deferred("disabled", false)
 	sight_blocker_collider.set_deferred("disabled", false)
-	enable_sight_lines()
+	toggle_sight_lines(true)
 
 
 func disable() -> void:
@@ -93,17 +106,21 @@ func disable() -> void:
 	visible = false
 	collider.set_deferred("disabled", true)
 	sight_blocker_collider.set_deferred("disabled", true)
-	disable_sight_lines()
+	toggle_sight_lines(false)
 
 
-func enable_sight_lines() -> void:
-	for sight_line in sight_lines:
-		sight_line.is_casting = true
+func toggle_sight_lines(should_enable: bool) -> void:
+	for sight_line in sight_lines.get_children():
+		if sight_line.visible:
+			sight_line.is_casting = should_enable
 
 
-func disable_sight_lines() -> void:
-	for sight_line in sight_lines:
-		sight_line.is_casting = false
+func _instance_sight_lines() -> void:
+	for i in gun.hframes:
+		var sight_line: SightLine  = SIGHT_LINE_SCENE.instance()
+		sight_line.rotation = SIGHT_LINE_ROTATIONS[i]
+		sight_line.visible = i < level
+		sight_lines.add_child(sight_line)
 
 
 func _set_level(value: int) -> void:
@@ -117,6 +134,9 @@ func _set_level(value: int) -> void:
 	if not level:
 		return
 	gun.frame = level - 1
+	for i in gun.hframes:
+		var sight_line: SightLine = sight_lines.get_child(i)
+		sight_line.visible = i < level
 
 
 func _on_Turret_input_event(_viewport: Node, event: InputEventMouseButton, _shape_idx: int) -> void:

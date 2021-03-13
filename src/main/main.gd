@@ -2,7 +2,7 @@ extends Node
 
 onready var level: Level = $Level
 onready var step_delay: Timer = $StepDelay
-onready var enemies: Node2D = $Level/Enemies
+onready var enemies: Enemies = $Level/Enemies
 onready var bullets: Node2D = $Turrets/Bullets
 onready var placed_turrets: Node2D = $Turrets/PlacedTurrets
 onready var hud: HUD = $HUDLayer/HUD
@@ -32,4 +32,5 @@ func _stop() -> void:
 	for turret in placed_turrets.get_children():
 		if turret.level > 0:
 			turret.enable()
+	enemies.path_index = 0
 	Global.is_running = false

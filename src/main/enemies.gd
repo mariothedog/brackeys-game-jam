@@ -4,9 +4,9 @@ extends Node
 const ENEMY_SCENE = preload("res://enemies/enemy.tscn")
 
 var paths: Array setget _set_paths
+var path_index := 0
 
 var _num_paths: int
-var _path_index := 0
 
 
 func update_enemy_positions() -> void:
@@ -16,8 +16,8 @@ func update_enemy_positions() -> void:
 
 func spawn_enemy() -> void:
 	var enemy: Enemy = ENEMY_SCENE.instance()
-	enemy.path = paths[_path_index]
-	_path_index = (_path_index + 1) % _num_paths
+	enemy.path = paths[path_index]
+	path_index = (path_index + 1) % _num_paths
 	add_child(enemy)
 
 

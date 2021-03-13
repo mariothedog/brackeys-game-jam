@@ -6,7 +6,7 @@ signal mouse_down
 const SIGHT_LINE_SCENE := preload("res://turrets/sight_line/sight_line.tscn")
 const BULLET_SCENE := preload("res://projectiles/bullet/bullet.tscn")
 
-const SIGHT_LINE_ROTATIONS := [
+const GUN_ROTATIONS := [
 	0,
 	deg2rad(180),
 	deg2rad(90),
@@ -77,14 +77,15 @@ func shoot() -> void:
 		return
 	if not can_shoot:
 		return
-	var shoot_pos := barrel.position.rotated(_target_rotation)
-	var dir := shoot_pos.normalized()
-	var bullet: Bullet = BULLET_SCENE.instance()
-	bullet.global_position = global_position + shoot_pos
-	bullet.velocity = dir * bullet_speed
-	bullet.rotation = dir.angle()
-	bullet.friendly_turrets.append(self)
-	bullets_node.add_child(bullet)
+	for i in level:
+		var shoot_pos := barrel.position.rotated(_target_rotation).rotated(GUN_ROTATIONS[i])
+		var dir := shoot_pos.normalized()
+		var bullet: Bullet = BULLET_SCENE.instance()
+		bullet.global_position = global_position + shoot_pos
+		bullet.velocity = dir * bullet_speed
+		bullet.rotation = dir.angle()
+		bullet.friendly_turrets.append(self)
+		bullets_node.add_child(bullet)
 
 
 func explode() -> void:
@@ -117,8 +118,8 @@ func toggle_sight_lines(should_enable: bool) -> void:
 
 func _instance_sight_lines() -> void:
 	for i in gun.hframes:
-		var sight_line: SightLine  = SIGHT_LINE_SCENE.instance()
-		sight_line.rotation = SIGHT_LINE_ROTATIONS[i]
+		var sight_line: SightLine = SIGHT_LINE_SCENE.instance()
+		sight_line.rotation = GUN_ROTATIONS[i]
 		sight_line.visible = i < level
 		sight_lines.add_child(sight_line)
 

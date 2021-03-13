@@ -68,7 +68,7 @@ func _select_turret(turret: Turret) -> void:
 func _release_turret(turret: Turret) -> void:
 	dragging_turret.visible = false
 	var tile_pos := _get_tile_pos_at_mouse()
-	if level.get_cellv(tile_pos) != Tiles.Main.GROUND:
+	if not _can_place_at_tile(tile_pos):
 		turret.queue_free()
 		set_process(false)
 		return
@@ -77,6 +77,12 @@ func _release_turret(turret: Turret) -> void:
 	turret.can_shoot = true
 	Global.is_aiming = true
 	_update_overlapping_turrets(turret.position)
+
+
+func _can_place_at_tile(tile_pos: Vector2) -> bool:
+	var world_pos := level.map_to_world(tile_pos) + level.cell_size / 2
+	var turrets = _get_unselected_or_aiming_turrets_at(world_pos)
+	return level.get_cellv(tile_pos) == Tiles.Main.GROUND and len(turrets) < 8
 
 
 func _get_tile_pos_at_mouse() -> Vector2:
@@ -94,32 +100,33 @@ func _update_overlapping_turrets(pos: Vector2) -> void:
 	var top_turret := _get_top_overlapping_turret(pos)
 	if not top_turret:
 		return
-	var turret_level := 1
-	for turret in placed_turrets.get_children():
-		if (
-			turret.position != pos
-			or turret == top_turret
-			or (turret == Global.selected_turret and not Global.is_aiming)
-		):
+	var unselected_turrets := _get_unselected_or_aiming_turrets_at(pos)
+	for turret in unselected_turrets:
+		if turret == top_turret:
 			continue
-		turret_level += 1
 		turret.disable()
 		turret.level = 0
-	top_turret.level = turret_level
+	top_turret.level = len(unselected_turrets)
 	top_turret.enable()
 
 
 func _get_top_overlapping_turret(pos: Vector2) -> Turret:
 	var top_pos_in_parent := -1
 	var top_turret: Turret
-	for turret in placed_turrets.get_children():
-		if turret.position != pos or (turret == Global.selected_turret and not Global.is_aiming):
-			continue
+	for turret in _get_unselected_or_aiming_turrets_at(pos):
 		var pos_in_parent: int = turret.get_position_in_parent()
 		if pos_in_parent > top_pos_in_parent:
 			top_pos_in_parent = pos_in_parent
 			top_turret = turret
 	return top_turret
+
+
+func _get_unselected_or_aiming_turrets_at(pos: Vector2) -> Array:
+	var turrets := []
+	for turret in placed_turrets.get_children():
+		if turret.position == pos and (turret != Global.selected_turret or Global.is_aiming):
+			turrets.append(turret)
+	return turrets
 
 
 func _on_item_button_down(_item: Item) -> void:

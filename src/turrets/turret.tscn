@@ -19,7 +19,7 @@ script = ExtResource( 1 )
 texture = ExtResource( 2 )
 
 [node name="Gun" type="Sprite" parent="."]
-z_index = 2
+z_index = 4
 texture = ExtResource( 3 )
 hframes = 8
 

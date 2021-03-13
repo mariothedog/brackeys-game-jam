@@ -6,6 +6,8 @@ onready var enemies: Enemies = $Level/Enemies
 onready var bullets: Node2D = $Turrets/Bullets
 onready var placed_turrets: Node2D = $Turrets/PlacedTurrets
 onready var hud: HUD = $HUDLayer/HUD
+onready var start_button: TextureButton = $HUDLayer/HUD/Buttons/Start
+onready var stop_button: TextureButton = $HUDLayer/HUD/Buttons/Stop
 
 
 func _ready() -> void:
@@ -35,3 +37,9 @@ func _stop() -> void:
 		if turret.level > 0:
 			turret.enable()
 	Global.is_running = false
+
+
+func _on_Enemies_enemy_reached_end_of_path(_enemy: Enemy) -> void:
+	start_button.disabled = false
+	stop_button.disabled = true
+	_stop()

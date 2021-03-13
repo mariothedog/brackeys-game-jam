@@ -1,6 +1,8 @@
 class_name Enemies
 extends Node
 
+signal enemy_reached_end_of_path(enemy)
+
 const ENEMY_SCENE = preload("res://enemies/enemy.tscn")
 
 var paths: Array setget _set_paths
@@ -17,6 +19,8 @@ func update_enemy_positions() -> void:
 func spawn_enemy() -> void:
 	var enemy: Enemy = ENEMY_SCENE.instance()
 	enemy.path = paths[path_index]
+# warning-ignore:return_value_discarded
+	enemy.connect("reached_end_of_path", self, "_on_enemy_reached_end_of_path", [enemy])
 	path_index = (path_index + 1) % _num_paths
 	add_child(enemy)
 
@@ -24,6 +28,10 @@ func spawn_enemy() -> void:
 func _set_paths(value: Array) -> void:
 	paths = value
 	_num_paths = len(paths)
+
+
+func _on_enemy_reached_end_of_path(enemy: Enemy) -> void:
+	emit_signal("enemy_reached_end_of_path", [enemy])
 
 
 func _on_StepDelay_timeout() -> void:

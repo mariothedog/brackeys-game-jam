@@ -20,7 +20,8 @@ var LevelEditor := {
 var Main := {
 	"GROUND": MAIN_TILE_SET.find_tile_by_name("ground"),
 	"WALL": MAIN_TILE_SET.find_tile_by_name("wall"),
-	"ENEMY_PATH": MAIN_TILE_SET.find_tile_by_name("enemy_path")
+	"ENEMY_PATH": MAIN_TILE_SET.find_tile_by_name("enemy_path"),
+	"BASE": MAIN_TILE_SET.find_tile_by_name("base"),
 }
 
 var level_editor_to_main := {
@@ -28,7 +29,7 @@ var level_editor_to_main := {
 	LevelEditor.WALL: Main.WALL,
 	LevelEditor.ENEMY_PATH: Main.ENEMY_PATH,
 	LevelEditor.ENEMY_PATH_START: Main.ENEMY_PATH,
-	LevelEditor.ENEMY_PATH_END: Main.ENEMY_PATH,
+	LevelEditor.ENEMY_PATH_END: Main.BASE,
 }
 
 

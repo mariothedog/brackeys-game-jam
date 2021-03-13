@@ -19,6 +19,7 @@ func _ready() -> void:
 
 func _start() -> void:
 	hud.slide_inventory_in()
+	level.start()
 	step_delay.start()
 	for turret in placed_turrets.get_children():
 		turret.toggle_sight_lines(false)
@@ -27,10 +28,10 @@ func _start() -> void:
 
 func _stop() -> void:
 	step_delay.stop()
+	level.stop()
 	Util.queue_free_children(enemies)
 	Util.queue_free_children(bullets)
 	for turret in placed_turrets.get_children():
 		if turret.level > 0:
 			turret.enable()
-	enemies.path_index = 0
 	Global.is_running = false

@@ -42,6 +42,17 @@ func rand_color(alpha: float) -> Color:
 	return Color(randf(), randf(), randf(), alpha)
 
 
+func start() -> void:
+	for spawn_indicator in enemy_spawn_indicators.get_children():
+		spawn_indicator.visible = false
+
+
+func stop() -> void:
+	enemies.path_index = 0
+	for spawn_indicator in enemy_spawn_indicators.get_children():
+		spawn_indicator.visible = true
+
+
 func _add_enemy_spawn_indicators(paths: Array) -> void:
 	for path in paths:
 		var start_pos: Vector2 = path[0]

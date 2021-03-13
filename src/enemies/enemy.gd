@@ -25,7 +25,9 @@ func _physics_process(delta: float) -> void:
 		else:
 			position = position.round()
 		return
-	sprite.global_position = sprite.global_position.linear_interpolate(_target_pos, MOVEMENT_RATE * delta)
+	sprite.global_position = sprite.global_position.linear_interpolate(
+		_target_pos, MOVEMENT_RATE * delta
+	)
 
 
 func update_position_along_path() -> void:

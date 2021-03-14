@@ -31,7 +31,7 @@ func _set_paths(value: Array) -> void:
 
 
 func _on_enemy_reached_end_of_path(enemy: Enemy) -> void:
-	emit_signal("enemy_reached_end_of_path", [enemy])
+	emit_signal("enemy_reached_end_of_path", enemy)
 
 
 func _on_StepDelay_timeout() -> void:

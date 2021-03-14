@@ -5,3 +5,4 @@ extends Node
 signal item_button_down(item)
 signal start_pressed
 signal stop_pressed
+signal ran_out_of_lives

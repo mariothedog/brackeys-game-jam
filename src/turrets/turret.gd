@@ -18,7 +18,7 @@ const GUN_ROTATIONS := [
 ]
 
 const ROTATION_THRESHOLD := deg2rad(1)
-const ROTATION_WEIGHT := 0.4
+const ROTATION_WEIGHT := 0.3
 var ROTATION_RATE: float = ROTATION_WEIGHT * Constants.PHYSICS_FPS
 
 export var bullet_speed := 300.0

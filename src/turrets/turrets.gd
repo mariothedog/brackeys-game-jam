@@ -154,6 +154,7 @@ func _on_item_button_down(_item: Item) -> void:
 func _on_Turret_mouse_down(turret: Turret) -> void:
 	if Global.is_running:
 		return
+	dragging_gun.rotation = turret.gun.rotation
 	_select_turret(turret)
 
 

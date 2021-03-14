@@ -83,6 +83,7 @@ func _release_turret(turret: Turret) -> void:
 		set_process(false)
 		return
 	_snap_turret_to_tile(turret, tile_pos)
+	_prev_angle_snapped = 0
 	var mouse_pos := turret.get_local_mouse_position()
 	_rotate_gun_to(mouse_pos, false)
 	turret.enable()

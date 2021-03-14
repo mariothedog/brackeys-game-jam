@@ -3,7 +3,7 @@ extends Node2D
 const TURRET_SCENE := preload("res://turrets/turret.tscn")
 
 const TURRET_AIMING_ANGLE_SNAP := deg2rad(45)
-const TURRET_AIMING_MOUSE_DIST_THRESHOLD := 3.0
+const TURRET_AIMING_MOUSE_DIST_THRESHOLD := 2.0
 
 export (NodePath) var level_path
 

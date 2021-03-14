@@ -1,7 +1,9 @@
 tool
 extends TileMap
 
+# warning-ignore:unused_class_variable
 export var create_level := false setget _create_level
+# warning-ignore:unused_class_variable
 export var clear_level := false setget _clear_level
 
 var astar: AStar

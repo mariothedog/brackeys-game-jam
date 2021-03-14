@@ -1,8 +1,11 @@
 class_name Enemy
 extends Area2D
 
-const MOVEMENT_WEIGHT = 0.4
+signal reached_end_of_path
+
+const MOVEMENT_WEIGHT := 0.4
 var MOVEMENT_RATE := MOVEMENT_WEIGHT * Constants.PHYSICS_FPS
+const DAMAGE := 1
 
 var path: PoolVector2Array setget _set_path
 
@@ -21,7 +24,7 @@ func _physics_process(delta: float) -> void:
 	if Util.is_equal_approx_vec2(sprite.global_position, _target_pos):
 		set_physics_process(false)
 		if _path_current_index + 1 == _path_length:
-			queue_free()
+			emit_signal("reached_end_of_path")
 		else:
 			position = position.round()
 		return

@@ -3,7 +3,7 @@ extends Node2D
 const TURRET_SCENE := preload("res://turrets/turret.tscn")
 
 const TURRET_AIMING_ANGLE_SNAP := deg2rad(45)
-const TURRET_AIMING_MOUSE_DIST_THRESHOLD := 3.0
+const TURRET_AIMING_MOUSE_DIST_THRESHOLD := 2.0
 
 export (NodePath) var level_path
 
@@ -28,13 +28,8 @@ func _ready() -> void:
 func _process(_delta: float) -> void:
 	if Global.is_aiming:
 		var mouse_pos := Global.selected_turret.get_local_mouse_position()
-		if mouse_pos.length() < TURRET_AIMING_MOUSE_DIST_THRESHOLD:
-			return
-		var angle_snapped := _get_turret_angle_to(mouse_pos)
-		if angle_snapped != _prev_angle_snapped:
-			_prev_angle_snapped = angle_snapped
-			Global.selected_turret.rotate_gun_to(angle_snapped)
-			dragging_gun.rotation = angle_snapped
+		if mouse_pos.length() >= TURRET_AIMING_MOUSE_DIST_THRESHOLD:
+			_rotate_gun_to(mouse_pos, true)
 	else:
 		dragging_turret.global_position = get_global_mouse_position()
 
@@ -52,6 +47,18 @@ func _input(event: InputEvent) -> void:
 		set_process(false)
 		Global.selected_turret = null
 		Global.is_aiming = false
+
+
+func _rotate_gun_to(pos: Vector2, is_smooth: bool) -> void:
+	var angle_snapped := _get_turret_angle_to(pos)
+	if angle_snapped == _prev_angle_snapped:
+		return
+	_prev_angle_snapped = angle_snapped
+	dragging_gun.rotation = angle_snapped
+	if is_smooth:
+		Global.selected_turret.rotate_gun_to(angle_snapped)
+	else:
+		Global.selected_turret.set_rotation(angle_snapped)
 
 
 func _get_turret_angle_to(pos: Vector2) -> float:
@@ -77,10 +84,7 @@ func _release_turret(turret: Turret) -> void:
 		return
 	_snap_turret_to_tile(turret, tile_pos)
 	var mouse_pos := turret.get_local_mouse_position()
-	var angle = _get_turret_angle_to(mouse_pos)
-	_prev_angle_snapped = angle
-	turret.set_rotation(angle)
-	dragging_gun.rotation = angle
+	_rotate_gun_to(mouse_pos, false)
 	turret.enable()
 	turret.can_shoot = true
 	Global.is_aiming = true
@@ -138,6 +142,7 @@ func _get_unselected_or_aiming_turrets_at(pos: Vector2) -> Array:
 
 
 func _on_item_button_down(_item: Item) -> void:
+	dragging_gun.rotation = 0
 	var turret: Turret = TURRET_SCENE.instance()
 	turret.bullets_node = bullets
 # warning-ignore:return_value_discarded

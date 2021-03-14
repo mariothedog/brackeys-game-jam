@@ -66,6 +66,10 @@ func _get_turret_angle_to(pos: Vector2) -> float:
 
 
 func _select_turret(turret: Turret) -> void:
+	var new_top_turret := _get_second_top_overlapping_turret(turret.position)
+	if new_top_turret:
+		new_top_turret.set_rotation(turret.gun.rotation)
+		new_top_turret.rotate_gun_to(_prev_angle_snapped)
 	dragging_turret.visible = true
 	turret.disable()
 	turret.can_shoot = false
@@ -82,10 +86,11 @@ func _release_turret(turret: Turret) -> void:
 		turret.queue_free()
 		set_process(false)
 		return
-	_snap_turret_to_tile(turret, tile_pos)
-	_prev_angle_snapped = 0
-	var mouse_pos := turret.get_local_mouse_position()
-	_rotate_gun_to(mouse_pos, false)
+	var turret_pos := _get_turret_pos_from(tile_pos)
+	var prev_top_turret := _get_top_overlapping_turret(turret_pos)
+	if prev_top_turret:
+		turret.set_rotation(prev_top_turret.gun.rotation)
+	turret.global_position = turret_pos
 	turret.enable()
 	turret.can_shoot = true
 	Global.is_aiming = true
@@ -93,8 +98,8 @@ func _release_turret(turret: Turret) -> void:
 
 
 func _can_place_at_tile(tile_pos: Vector2) -> bool:
-	var world_pos := level.map_to_world(tile_pos) + level.cell_size / 2
-	var turrets = _get_unselected_or_aiming_turrets_at(world_pos)
+	var world_pos := _get_turret_pos_from(tile_pos)
+	var turrets := _get_unselected_or_aiming_turrets_at(world_pos)
 	return level.get_cellv(tile_pos) == Tiles.Main.GROUND and len(turrets) < 8
 
 
@@ -103,10 +108,10 @@ func _get_tile_pos_at_mouse() -> Vector2:
 	return level.world_to_map(mouse_pos)
 
 
-func _snap_turret_to_tile(turret: Turret, tile_pos: Vector2) -> void:
+func _get_turret_pos_from(tile_pos: Vector2) -> Vector2:
 	var world_pos := level.map_to_world(tile_pos)  # Top left of tile
 	var world_pos_centered := world_pos + level.cell_size / 2
-	turret.global_position = world_pos_centered
+	return world_pos_centered
 
 
 func _update_overlapping_turrets(pos: Vector2) -> void:
@@ -132,6 +137,20 @@ func _get_top_overlapping_turret(pos: Vector2) -> Turret:
 			top_pos_in_parent = pos_in_parent
 			top_turret = turret
 	return top_turret
+
+
+func _get_second_top_overlapping_turret(pos: Vector2) -> Turret:
+	var top_turret := _get_top_overlapping_turret(pos)
+	var second_top_pos_in_parent := -1
+	var second_top_turret: Turret
+	for turret in _get_unselected_or_aiming_turrets_at(pos):
+		if turret == top_turret:
+			continue
+		var pos_in_parent: int = turret.get_position_in_parent()
+		if pos_in_parent > second_top_pos_in_parent:
+			second_top_pos_in_parent = pos_in_parent
+			second_top_turret = turret
+	return second_top_turret
 
 
 func _get_unselected_or_aiming_turrets_at(pos: Vector2) -> Array:

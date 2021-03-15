@@ -6,70 +6,13 @@ export var create_level := false setget _create_level
 # warning-ignore:unused_class_variable
 export var clear_level := false setget _clear_level
 
+var Tiles: TilesManager
+
 var astar: AStar
 var level_size: Vector2
 var enemy_path_start_points: PoolVector2Array
 var enemy_path_end_points: PoolVector2Array
 var enemy_path_points: PoolVector2Array
-
-
-func _create_level(value: bool) -> void:
-	if not value:
-		# Return if setter is called automatically
-		return
-	if not Engine.editor_hint:
-		push_warning("Attempting to create a level resource when not in the editor")
-		return
-
-	var Tiles := TilesManager.new()
-	var enemy_path_tiles := [
-		Tiles.LevelEditor.ENEMY_PATH_START,
-		Tiles.LevelEditor.ENEMY_PATH_END,
-		Tiles.LevelEditor.ENEMY_PATH,
-	]
-
-	astar = AStar.new()
-	var used_rect := get_used_rect()
-	level_size = used_rect.position + used_rect.size
-	enemy_path_start_points = PoolVector2Array()
-	enemy_path_end_points = PoolVector2Array()
-	enemy_path_points = PoolVector2Array()
-
-	var all_tiles := {}
-	for type in tile_set.get_tiles_ids():
-		var tiles := PoolVector2Array()
-		for point in get_used_cells_by_id(type):
-			tiles.append(point)
-
-			if not type in enemy_path_tiles:
-				continue
-			var point_index := get_point_index(point)
-			astar.add_point(point_index, Util.get_Vector3(point))
-			enemy_path_points.append(point)
-			match type:
-				Tiles.LevelEditor.ENEMY_PATH_START:
-					enemy_path_start_points.append(point)
-				Tiles.LevelEditor.ENEMY_PATH_END:
-					enemy_path_end_points.append(point)
-
-		if tiles:
-			all_tiles[type] = tiles
-
-	connect_enemy_path_points(enemy_path_points)
-	var paths := get_all_astar_paths(enemy_path_start_points, enemy_path_end_points)
-
-	var data := LevelData.new()
-	data.tiles = all_tiles
-	data.enemy_paths = paths
-# warning-ignore:return_value_discarded
-	ResourceSaver.save("res://levels/resources//level_debug.tres", data)
-
-
-func _clear_level(value: bool) -> void:
-	if not value:
-		# Return if setter is called automatically
-		return
-	clear()
 
 
 func get_all_astar_paths(start_points: PoolVector2Array, end_points: PoolVector2Array) -> Array:
@@ -110,3 +53,80 @@ func connect_enemy_path_points(points: PoolVector2Array) -> void:
 
 func get_point_index(point: Vector2) -> int:
 	return int(point.x * level_size.x + point.y)
+
+
+func _create_level(value: bool) -> void:
+	if not value:
+		# Return if setter is called automatically
+		return
+	if not Engine.editor_hint:
+		push_warning("Attempting to create a level resource when not in the editor")
+		return
+
+	Tiles = TilesManager.new()
+	astar = AStar.new()
+	var used_rect := get_used_rect()
+	level_size = used_rect.position + used_rect.size
+	enemy_path_start_points = PoolVector2Array()
+	enemy_path_end_points = PoolVector2Array()
+	enemy_path_points = PoolVector2Array()
+
+	var all_tiles := {}
+	var tile_ids := tile_set.get_tiles_ids()
+	tile_ids.sort_custom(self, "_sort_tile_ids")
+	for type in tile_ids:
+		var tiles := PoolVector2Array()
+		for point in get_used_cells_by_id(type):
+			tiles.append(point)
+
+			if not type in Tiles.enemy_path_tiles:
+				continue
+			var point_index := get_point_index(point)
+			astar.add_point(point_index, Util.get_Vector3(point))
+			enemy_path_points.append(point)
+			if type in Tiles.enemy_path_start_tiles:
+				enemy_path_start_points.append(point)
+			elif type in Tiles.enemy_path_end_tiles:
+				enemy_path_end_points.append(point)
+		if tiles:
+			all_tiles[type] = tiles
+
+	connect_enemy_path_points(enemy_path_points)
+	var paths := get_all_astar_paths(enemy_path_start_points, enemy_path_end_points)
+
+	var data := LevelData.new()
+	data.tiles = all_tiles
+	data.enemy_paths = paths
+# warning-ignore:return_value_discarded
+	ResourceSaver.save("res://levels/resources//level_debug.tres", data)
+
+
+func _sort_tile_ids(a, b):
+	# Order:
+	# - Start paths
+	# - End paths
+	# - Other tiles (including normal paths)
+	var a_start_index := Tiles.enemy_path_start_tiles.find(a)
+	var b_start_index := Tiles.enemy_path_start_tiles.find(b)
+	var a_end_index := Tiles.enemy_path_end_tiles.find(a)
+	var b_end_index := Tiles.enemy_path_end_tiles.find(b)
+	if a_start_index > -1 and b_start_index > -1:
+		return a_start_index < b_start_index
+	elif a_end_index > -1 and b_end_index > -1:
+		return a_end_index < b_end_index
+	elif a_start_index > -1:
+		return true
+	elif b_start_index > -1:
+		return false
+	elif a_end_index > -1:
+		return true
+	elif b_end_index > -1:
+		return false
+	return a < b
+
+
+func _clear_level(value: bool) -> void:
+	if not value:
+		# Return if setter is called automatically
+		return
+	clear()

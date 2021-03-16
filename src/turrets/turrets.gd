@@ -79,7 +79,6 @@ func _select_turret(turret: Turret) -> void:
 		new_top_turret.rotate_gun_to(_prev_angle_snapped)
 	dragging_turret.visible = true
 	turret.disable()
-	turret.can_shoot = false
 	turret.raise()
 	Global.selected_turret = turret
 	_update_overlapping_turrets(turret.position)
@@ -99,7 +98,6 @@ func _release_turret(turret: Turret) -> void:
 		turret.set_rotation(prev_top_turret.gun.rotation)
 	turret.global_position = turret_pos
 	turret.enable()
-	turret.can_shoot = true
 	Global.is_aiming = true
 	_update_overlapping_turrets(turret.position)
 

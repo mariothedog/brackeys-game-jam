@@ -26,7 +26,6 @@ export var bullet_speed := 300.0
 var is_enabled := true
 # Turret level 0 is reserved for merged turrets
 var level := 1 setget _set_level
-var can_shoot := false
 
 var _target_rotation: float
 
@@ -74,8 +73,6 @@ func set_rotation(radians: float) -> void:
 func shoot() -> void:
 	if not bullets_node:
 		push_error("Attempting to shoot without a bullets node")
-		return
-	if not can_shoot:
 		return
 	for i in level:
 		var shoot_pos := barrel.position.rotated(_target_rotation).rotated(GUN_ROTATIONS[i])

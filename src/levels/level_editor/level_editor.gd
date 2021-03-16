@@ -1,6 +1,7 @@
 tool
 extends TileMap
 
+export (int, 1, 100) var num_lives := 1
 # warning-ignore:unused_class_variable
 export var create_level := false setget _create_level
 # warning-ignore:unused_class_variable
@@ -97,6 +98,7 @@ func _create_level(value: bool) -> void:
 	var data := LevelData.new()
 	data.tiles = all_tiles
 	data.enemy_paths = paths
+	data.num_lives = num_lives
 # warning-ignore:return_value_discarded
 	ResourceSaver.save("res://levels/resources//level_debug.tres", data)
 

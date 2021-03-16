@@ -3,7 +3,7 @@ extends MarginContainer
 
 const LIFE_SCENE := preload("res://ui/hud/health/life.tscn")
 
-export var initial_num_lives := 2
+export var initial_num_lives := 1
 
 var _num_lives := 0 setget _set_num_lives
 

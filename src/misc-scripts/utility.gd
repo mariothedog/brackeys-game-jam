@@ -13,9 +13,6 @@ static func get_PoolVector2Array(arr: PoolVector3Array) -> PoolVector2Array:
 		array.append(get_Vector2(vec))
 	return array
 
-static func is_equal_approx_vec2(a: Vector2, b: Vector2) -> bool:
-	return is_equal_approx(a.x, b.x) and is_equal_approx(a.y, b.y)
-
 static func map(function: FuncRef, arr: Array) -> Array:
 	var new_arr := []
 	for elem in arr:

@@ -21,7 +21,7 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if Util.is_equal_approx_vec2(sprite.global_position, _target_pos):
+	if sprite.global_position.is_equal_approx(_target_pos):
 		set_physics_process(false)
 		if _path_current_index + 1 == _path_length:
 			emit_signal("reached_end_of_path")

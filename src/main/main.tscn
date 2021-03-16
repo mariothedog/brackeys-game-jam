@@ -54,5 +54,4 @@ layer = 0
 
 [node name="StepDelay" type="Timer" parent="."]
 [connection signal="enemy_reached_end_of_path" from="Level/Enemies" to="." method="_on_Enemies_enemy_reached_end_of_path"]
-[connection signal="timeout" from="StepDelay" to="Turrets" method="_on_StepDelay_timeout"]
-[connection signal="timeout" from="StepDelay" to="Level/Enemies" method="_on_StepDelay_timeout"]
+[connection signal="timeout" from="StepDelay" to="." method="_on_StepDelay_timeout"]

@@ -4,7 +4,6 @@ onready var level: Level = $Level
 onready var step_delay: Timer = $StepDelay
 onready var enemies: Enemies = $Level/Enemies
 onready var turrets: Turrets = $Turrets
-onready var bullets: Node2D = $Turrets/Bullets
 onready var placed_turrets: Node2D = $Turrets/PlacedTurrets
 onready var hud: HUD = $HUDLayer/HUD
 onready var lives: Lives = $HUDLayer/HUD/Lives
@@ -28,7 +27,7 @@ func _start() -> void:
 	level.start()
 	step_delay.start()
 	for turret in placed_turrets.get_children():
-		turret.toggle_sight_lines(false)
+		turret.toggle_lasers(false)
 	if not Signals.is_connected("ran_out_of_lives", self, "_force_stop"):
 		# Signal is deferred so the force stop happens after the lives have been set to 0
 		# Signal is oneshot so there is no chance of two enemies trigerring force stop simultaneously
@@ -44,7 +43,6 @@ func _stop() -> void:
 	level.stop()
 	lives.reset()
 	Util.queue_free_children(enemies)
-	Util.queue_free_children(bullets)
 	for turret in placed_turrets.get_children():
 		if turret.level > 0:
 			turret.enable()

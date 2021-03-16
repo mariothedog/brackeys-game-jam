@@ -34,6 +34,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://ui/hud/inventory/item.gd"
 }, {
+"base": "RayCast2D",
+"class": "Laser",
+"language": "GDScript",
+"path": "res://turrets/laser/laser.gd"
+}, {
 "base": "TileMap",
 "class": "Level",
 "language": "GDScript",
@@ -48,11 +53,6 @@ _global_script_classes=[ {
 "class": "Lives",
 "language": "GDScript",
 "path": "res://ui/hud/health/lives.gd"
-}, {
-"base": "RayCast2D",
-"class": "SightLine",
-"language": "GDScript",
-"path": "res://turrets/sight_line/sight_line.gd"
 }, {
 "base": "Object",
 "class": "TilesManager",
@@ -80,10 +80,10 @@ _global_script_class_icons={
 "Enemy": "",
 "HUD": "",
 "Item": "",
+"Laser": "",
 "Level": "",
 "LevelData": "",
 "Lives": "",
-"SightLine": "",
 "TilesManager": "",
 "Turret": "",
 "Turrets": "",
@@ -148,7 +148,7 @@ texture={
 2d_physics/layer_2="turrets"
 2d_physics/layer_3="projectiles"
 2d_physics/layer_4="enemies"
-2d_physics/layer_5="sight_blockers"
+2d_physics/layer_5="laser_blockers"
 
 [rendering]
 

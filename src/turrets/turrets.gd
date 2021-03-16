@@ -13,7 +13,6 @@ var Tiles := TilesManager.new()
 var _prev_angle_snapped := 0.0
 
 onready var level: TileMap = get_node(level_path)
-onready var bullets: Node2D = $Bullets
 onready var placed_turrets: Node2D = $PlacedTurrets
 onready var dragging_turret: Sprite = $DraggingTurretLayer/DraggingTurret
 onready var dragging_gun: Sprite = $DraggingTurretLayer/DraggingTurret/Gun
@@ -79,7 +78,6 @@ func _select_turret(turret: Turret) -> void:
 		new_top_turret.rotate_gun_to(_prev_angle_snapped)
 	dragging_turret.visible = true
 	turret.disable()
-	turret.can_shoot = false
 	turret.raise()
 	Global.selected_turret = turret
 	_update_overlapping_turrets(turret.position)
@@ -99,7 +97,6 @@ func _release_turret(turret: Turret) -> void:
 		turret.set_rotation(prev_top_turret.gun.rotation)
 	turret.global_position = turret_pos
 	turret.enable()
-	turret.can_shoot = true
 	Global.is_aiming = true
 	_update_overlapping_turrets(turret.position)
 
@@ -171,7 +168,6 @@ func _get_unselected_or_aiming_turrets_at(pos: Vector2) -> Array:
 func _on_item_button_down(_item: Item) -> void:
 	dragging_gun.rotation = 0
 	var turret: Turret = TURRET_SCENE.instance()
-	turret.bullets_node = bullets
 # warning-ignore:return_value_discarded
 	turret.connect("mouse_down", self, "_on_Turret_mouse_down", [turret])
 	placed_turrets.add_child(turret)

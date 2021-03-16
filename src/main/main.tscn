@@ -35,9 +35,6 @@ z_index = 2
 script = ExtResource( 6 )
 level_path = NodePath("../Level")
 
-[node name="Bullets" type="Node2D" parent="Turrets"]
-z_index = 1
-
 [node name="PlacedTurrets" type="Node2D" parent="Turrets"]
 
 [node name="DraggingTurretLayer" type="CanvasLayer" parent="Turrets"]

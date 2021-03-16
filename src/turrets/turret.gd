@@ -3,7 +3,7 @@ extends Area2D
 
 signal mouse_down
 
-const SIGHT_LINE_SCENE := preload("res://turrets/sight_line/sight_line.tscn")
+const LASER_SCENE := preload("res://turrets/laser/laser.tscn")
 const BULLET_SCENE := preload("res://projectiles/bullet/bullet.tscn")
 
 const GUN_ROTATIONS := [
@@ -21,26 +21,21 @@ const ROTATION_THRESHOLD := deg2rad(1)
 const ROTATION_WEIGHT := 0.3
 var ROTATION_RATE: float = ROTATION_WEIGHT * Constants.PHYSICS_FPS
 
-export var bullet_speed := 300.0
-
 var is_enabled := true
 # Turret level 0 is reserved for merged turrets
 var level := 1 setget _set_level
-var can_shoot := false
 
 var _target_rotation: float
 
-var bullets_node: Node
 onready var gun: Sprite = $Gun
-onready var sight_lines := $Gun/SightLines
-onready var barrel: Position2D = $Barrel
+onready var lasers := $Gun/Lasers
 onready var collider: CollisionShape2D = $CollisionShape2D
-onready var sight_blocker_collider: CollisionShape2D = $SightBlocker/CollisionShape2D
+onready var laser_blocker_collider: CollisionShape2D = $LaserBlocker/CollisionShape2D
 
 
 func _ready() -> void:
 	set_physics_process(false)
-	_instance_sight_lines()
+	_instance_lasers()
 
 
 func _physics_process(delta: float) -> void:
@@ -72,20 +67,11 @@ func set_rotation(radians: float) -> void:
 
 
 func shoot() -> void:
-	if not bullets_node:
-		push_error("Attempting to shoot without a bullets node")
-		return
-	if not can_shoot:
-		return
-	for i in level:
-		var shoot_pos := barrel.position.rotated(_target_rotation).rotated(GUN_ROTATIONS[i])
-		var dir := shoot_pos.normalized()
-		var bullet: Bullet = BULLET_SCENE.instance()
-		bullet.global_position = global_position + shoot_pos
-		bullet.velocity = dir * bullet_speed
-		bullet.rotation = dir.angle()
-		bullet.friendly_turrets.append(self)
-		bullets_node.add_child(bullet)
+	toggle_lasers(true)
+	yield(get_tree().create_timer(0.4), "timeout")
+	_shoot_lasers()
+	yield(get_tree().create_timer(0.4), "timeout")
+	toggle_lasers(false)
 
 
 func explode() -> void:
@@ -98,30 +84,35 @@ func enable() -> void:
 	is_enabled = true
 	visible = true
 	collider.set_deferred("disabled", false)
-	sight_blocker_collider.set_deferred("disabled", false)
-	toggle_sight_lines(true)
+	laser_blocker_collider.set_deferred("disabled", false)
+	toggle_lasers(true)
 
 
 func disable() -> void:
 	is_enabled = false
 	visible = false
 	collider.set_deferred("disabled", true)
-	sight_blocker_collider.set_deferred("disabled", true)
-	toggle_sight_lines(false)
+	laser_blocker_collider.set_deferred("disabled", true)
+	toggle_lasers(false)
 
 
-func toggle_sight_lines(should_enable: bool) -> void:
-	for sight_line in sight_lines.get_children():
-		if sight_line.visible:
-			sight_line.is_casting = should_enable
+func toggle_lasers(should_enable: bool) -> void:
+	for laser in lasers.get_children():
+		if laser.visible:
+			laser.is_casting = should_enable
 
 
-func _instance_sight_lines() -> void:
+func _instance_lasers() -> void:
 	for i in gun.hframes:
-		var sight_line: SightLine = SIGHT_LINE_SCENE.instance()
-		sight_line.rotation = GUN_ROTATIONS[i]
-		sight_line.visible = i < level
-		sight_lines.add_child(sight_line)
+		var laser: Laser = LASER_SCENE.instance()
+		laser.rotation = GUN_ROTATIONS[i]
+		laser.visible = i < level
+		lasers.add_child(laser)
+
+
+func _shoot_lasers() -> void:
+	for laser in lasers.get_children():
+		laser.attack()
 
 
 func _set_level(value: int) -> void:
@@ -136,8 +127,8 @@ func _set_level(value: int) -> void:
 		return
 	gun.frame = level - 1
 	for i in gun.hframes:
-		var sight_line: SightLine = sight_lines.get_child(i)
-		sight_line.visible = i < level
+		var laser: Laser = lasers.get_child(i)
+		laser.visible = i < level
 
 
 func _on_Turret_input_event(_viewport: Node, event: InputEventMouseButton, _shape_idx: int) -> void:

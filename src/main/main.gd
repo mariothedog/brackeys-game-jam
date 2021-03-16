@@ -3,7 +3,8 @@ extends Node
 onready var level: Level = $Level
 onready var step_delay: Timer = $StepDelay
 onready var enemies: Enemies = $Level/Enemies
-onready var bullets: Node2D = $Turrets/Bullets
+onready var turrets: Turrets = $Turrets
+onready var bullets: Bullets = $Turrets/Bullets
 onready var placed_turrets: Node2D = $Turrets/PlacedTurrets
 onready var hud: HUD = $HUDLayer/HUD
 onready var lives: Lives = $HUDLayer/HUD/Lives
@@ -59,3 +60,14 @@ func _force_stop() -> void:
 func _on_Enemies_enemy_reached_end_of_path(enemy: Enemy) -> void:
 	lives.damage(enemy.DAMAGE)
 	enemy.queue_free()
+
+
+func _on_StepDelay_timeout() -> void:
+	# It's important that the enemy positions are updated before an enemy is
+	# spawned.
+	# If an enemy spawns and then a step occurs immediately after then the enemy
+	# will go straight to the path's second tile.
+	enemies.update_enemy_positions()
+	enemies.spawn_enemy()
+	turrets.shoot_turrets()
+	bullets.move_bullets(level.cell_size)

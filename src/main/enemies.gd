@@ -32,12 +32,3 @@ func _set_paths(value: Array) -> void:
 
 func _on_enemy_reached_end_of_path(enemy: Enemy) -> void:
 	emit_signal("enemy_reached_end_of_path", enemy)
-
-
-func _on_StepDelay_timeout() -> void:
-	# It's important that the enemy positions are updated before an enemy is
-	# spawned.
-	# If an enemy spawns and then a step occurs immediately after then the enemy
-	# will go straight to the path's second tile.
-	update_enemy_positions()
-	spawn_enemy()

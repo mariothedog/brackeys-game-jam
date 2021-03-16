@@ -26,7 +26,7 @@ func _physics_process(delta: float) -> void:
 		if _path_current_index + 1 == _path_length:
 			emit_signal("reached_end_of_path")
 		else:
-			position = position.round()
+			sprite.position = Vector2.ZERO
 		return
 	sprite.global_position = sprite.global_position.linear_interpolate(
 		_target_pos, MOVEMENT_RATE * delta

@@ -12,7 +12,9 @@ onready var stop_button: TextureButton = $HUDLayer/HUD/Buttons/Stop
 
 
 func _ready() -> void:
-	var level_data := load("res://levels/resources/level_debug.tres")
+	var level_data: LevelData = load("res://levels/resources/level_debug.tres")
+	lives.initial_num_lives = level_data.num_lives
+	lives.reset()
 	level.build_level(level_data)
 # warning-ignore:return_value_discarded
 	Signals.connect("start_pressed", self, "_start")

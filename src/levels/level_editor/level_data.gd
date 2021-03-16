@@ -5,3 +5,4 @@ extends Resource
 
 export var tiles := {}
 export var enemy_paths := []
+export var num_lives: int

@@ -69,4 +69,4 @@ func _on_StepDelay_timeout() -> void:
 	# will go straight to the path's second tile.
 	enemies.update_enemy_positions()
 	enemies.spawn_enemy()
-	turrets.shoot_turrets()
+	turrets.shoot_turrets(bullets)

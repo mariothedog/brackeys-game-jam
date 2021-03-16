@@ -13,7 +13,6 @@ var Tiles := TilesManager.new()
 var _prev_angle_snapped := 0.0
 
 onready var level: TileMap = get_node(level_path)
-onready var bullets: Node2D = $Bullets
 onready var placed_turrets: Node2D = $PlacedTurrets
 onready var dragging_turret: Sprite = $DraggingTurretLayer/DraggingTurret
 onready var dragging_gun: Sprite = $DraggingTurretLayer/DraggingTurret/Gun
@@ -50,10 +49,10 @@ func _input(event: InputEvent) -> void:
 		Global.is_aiming = false
 
 
-func shoot_turrets() -> void:
+func shoot_turrets(bullets_node: Node) -> void:
 	for turret in placed_turrets.get_children():
 		if turret.is_enabled:
-			turret.shoot()
+			turret.shoot(bullets_node)
 
 
 func _rotate_gun_to(pos: Vector2, is_smooth: bool) -> void:
@@ -169,7 +168,6 @@ func _get_unselected_or_aiming_turrets_at(pos: Vector2) -> Array:
 func _on_item_button_down(_item: Item) -> void:
 	dragging_gun.rotation = 0
 	var turret: Turret = TURRET_SCENE.instance()
-	turret.bullets_node = bullets
 # warning-ignore:return_value_discarded
 	turret.connect("mouse_down", self, "_on_Turret_mouse_down", [turret])
 	placed_turrets.add_child(turret)

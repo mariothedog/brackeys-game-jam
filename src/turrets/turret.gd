@@ -29,7 +29,6 @@ var level := 1 setget _set_level
 
 var _target_rotation: float
 
-var bullets_node: Node
 onready var gun: Sprite = $Gun
 onready var sight_lines := $Gun/SightLines
 onready var barrel: Position2D = $Barrel
@@ -70,10 +69,7 @@ func set_rotation(radians: float) -> void:
 	set_physics_process(false)
 
 
-func shoot() -> void:
-	if not bullets_node:
-		push_error("Attempting to shoot without a bullets node")
-		return
+func shoot(bullets_node: Node) -> void:
 	for i in level:
 		var shoot_pos := barrel.position.rotated(_target_rotation).rotated(GUN_ROTATIONS[i])
 		var dir := shoot_pos.normalized()

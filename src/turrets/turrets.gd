@@ -1,3 +1,4 @@
+class_name Turrets
 extends Node2D
 
 const TURRET_SCENE := preload("res://turrets/turret.tscn")
@@ -47,6 +48,12 @@ func _input(event: InputEvent) -> void:
 		set_process(false)
 		Global.selected_turret = null
 		Global.is_aiming = false
+
+
+func shoot_turrets() -> void:
+	for turret in placed_turrets.get_children():
+		if turret.is_enabled:
+			turret.shoot()
 
 
 func _rotate_gun_to(pos: Vector2, is_smooth: bool) -> void:
@@ -176,9 +183,3 @@ func _on_Turret_mouse_down(turret: Turret) -> void:
 		return
 	dragging_gun.rotation = turret.gun.rotation
 	_select_turret(turret)
-
-
-func _on_StepDelay_timeout() -> void:
-	for turret in placed_turrets.get_children():
-		if turret.is_enabled:
-			turret.shoot()

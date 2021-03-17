@@ -52,15 +52,6 @@ func slide_inventory_in() -> void:
 	tween.start()
 
 
-func _input(event: InputEvent) -> void:
-	if (
-		event is InputEventMouseButton
-		and (event as InputEventMouseButton).button_index == BUTTON_LEFT
-		and event.is_pressed()
-	):
-		slide_inventory_in()
-
-
 func _on_Inventory_mouse_entered_background() -> void:
 	_is_mouse_in_background = true
 	if (Global.selected_turret and not Global.is_aiming) or Global.is_running:
@@ -70,6 +61,4 @@ func _on_Inventory_mouse_entered_background() -> void:
 
 func _on_Inventory_mouse_exited_background() -> void:
 	_is_mouse_in_background = false
-	if (Global.selected_turret and not Global.is_aiming) or Global.is_running:
-		return
 	slide_inventory_in()

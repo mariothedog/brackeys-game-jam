@@ -61,7 +61,8 @@ func shoot_turrets(bullets_node: Node) -> void:
 
 
 func _get_snapped_angle_to(pos: Vector2) -> float:
-	return stepify(pos.angle(), TURRET_AIMING_ANGLE_SNAP)
+	var angle_snapped := stepify(pos.angle(), TURRET_AIMING_ANGLE_SNAP)
+	return wrapf(angle_snapped, 0, Constants.FULL_ROTATION)
 
 
 func _select_turret(turret: Turret) -> void:

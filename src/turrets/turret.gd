@@ -56,7 +56,7 @@ func _physics_process(delta: float) -> void:
 
 func rotate_gun_to(radians: float) -> void:
 	radians = wrapf(radians, 0, Constants.FULL_ROTATION)  # Restrict to a positive range
-	if is_equal_approx(gun.rotation, radians):
+	if is_equal_approx(_target_rotation, radians):
 		return
 	_target_rotation = radians
 	set_physics_process(true)

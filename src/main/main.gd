@@ -8,6 +8,7 @@ onready var bullets: Node2D = $Turrets/Bullets
 onready var placed_turrets: Node2D = $Turrets/PlacedTurrets
 onready var hud: HUD = $HUDLayer/HUD
 onready var lives: Lives = $HUDLayer/HUD/Lives
+onready var item: Item = $HUDLayer/HUD/Inventory/ItemsMargin/Items/Item
 onready var start_button: TextureButton = $HUDLayer/HUD/Buttons/Start
 onready var stop_button: TextureButton = $HUDLayer/HUD/Buttons/Stop
 
@@ -16,6 +17,8 @@ func _ready() -> void:
 	var level_data: LevelData = load("res://levels/resources/level_debug.tres")
 	lives.initial_num_lives = level_data.num_lives
 	lives.reset()
+	item.initial_num = level_data.num_turrets
+	item.reset()
 	level.build_level(level_data)
 # warning-ignore:return_value_discarded
 	Signals.connect("start_pressed", self, "_start")

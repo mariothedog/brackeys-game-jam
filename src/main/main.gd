@@ -14,7 +14,7 @@ onready var stop_button: TextureButton = $HUDLayer/HUD/Buttons/Stop
 
 
 func _ready() -> void:
-	var level_data: LevelData = load("res://levels/resources/level_debug.tres")
+	var level_data: LevelData = load("res://levels/resources/level_0.tres")
 	lives.initial_num_lives = level_data.num_lives
 	lives.reset()
 	item.initial_num = level_data.num_turrets

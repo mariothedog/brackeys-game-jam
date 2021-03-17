@@ -1,5 +1,9 @@
 extends Node
 
+var level_data: LevelData
+
+var _num_enemies_left: int
+
 onready var level: Level = $Level
 onready var step_delay: Timer = $StepDelay
 onready var enemies: Enemies = $Level/Enemies
@@ -14,11 +18,9 @@ onready var stop_button: TextureButton = $HUDLayer/HUD/Buttons/Stop
 
 
 func _ready() -> void:
-	var level_data: LevelData = load("res://levels/resources/level_0.tres")
-	lives.initial_num_lives = level_data.num_lives
-	lives.reset()
-	item.initial_num = level_data.num_turrets
-	item.reset()
+	level_data = load("res://levels/resources/level_0.tres")
+	item.num_left = level_data.num_turrets
+	_reset()
 	level.build_level(level_data)
 # warning-ignore:return_value_discarded
 	Signals.connect("start_pressed", self, "_start")
@@ -45,13 +47,18 @@ func _start() -> void:
 func _stop() -> void:
 	step_delay.stop()
 	level.stop()
-	lives.reset()
+	_reset()
 	Util.queue_free_children(enemies)
 	Util.queue_free_children(bullets)
 	for turret in placed_turrets.get_children():
 		if turret.level > 0:
 			turret.enable()
 	Global.is_running = false
+
+
+func _reset() -> void:
+	lives.num_lives = level_data.num_lives
+	_num_enemies_left = level_data.num_enemies
 
 
 func _force_stop() -> void:
@@ -71,5 +78,7 @@ func _on_StepDelay_timeout() -> void:
 	# If an enemy spawns and then a step occurs immediately after then the enemy
 	# will go straight to the path's second tile.
 	enemies.update_enemy_positions()
-	enemies.spawn_enemy()
+	if _num_enemies_left > 0:
+		_num_enemies_left -= 1
+		enemies.spawn_enemy()
 	turrets.shoot_turrets(bullets)

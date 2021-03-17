@@ -1,19 +1,9 @@
 class_name Item
 extends HBoxContainer
 
-export var initial_num := 1
-
 var num_left := 1 setget _set_num_left
 
 onready var number_label: Label = $Number
-
-
-func _ready() -> void:
-	reset()
-
-
-func reset() -> void:
-	self.num_left = initial_num
 
 
 func _set_num_left(value: int) -> void:

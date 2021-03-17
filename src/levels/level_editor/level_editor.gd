@@ -1,6 +1,9 @@
 tool
 extends TileMap
 
+const FORMAT_PATH := "res://levels/resources//level_%s.tres"
+
+export var level_name := "debug"
 export (int, 1, 100) var num_lives := 1
 export (int, 1, 100) var num_turrets := 1
 # warning-ignore:unused_class_variable
@@ -102,7 +105,7 @@ func _create_level(value: bool) -> void:
 	data.num_lives = num_lives
 	data.num_turrets = num_turrets
 # warning-ignore:return_value_discarded
-	ResourceSaver.save("res://levels/resources//level_debug.tres", data)
+	ResourceSaver.save(FORMAT_PATH % level_name, data)
 
 
 func _sort_tile_ids(a, b):

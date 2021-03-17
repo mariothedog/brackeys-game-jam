@@ -17,6 +17,8 @@ func update_enemy_positions() -> void:
 
 
 func spawn_enemy() -> void:
+	if not paths:
+		return
 	var enemy: Enemy = ENEMY_SCENE.instance()
 	enemy.path = paths[path_index]
 # warning-ignore:return_value_discarded

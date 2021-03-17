@@ -23,6 +23,7 @@ var ROTATION_RATE: float = ROTATION_WEIGHT * Constants.PHYSICS_FPS
 
 export var bullet_speed := 300.0
 
+var item: Item
 var is_enabled := true
 # Turret level 0 is reserved for merged turrets
 var level := 1 setget _set_level
@@ -136,3 +137,7 @@ func _set_level(value: int) -> void:
 func _on_Turret_input_event(_viewport: Node, event: InputEventMouseButton, _shape_idx: int) -> void:
 	if event and event.button_index == BUTTON_LEFT and event.is_pressed():
 		emit_signal("mouse_down")
+
+
+func _on_Turret_tree_exited() -> void:
+	item.num_left += 1

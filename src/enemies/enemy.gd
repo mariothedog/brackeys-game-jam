@@ -2,6 +2,7 @@ class_name Enemy
 extends Area2D
 
 signal reached_end_of_path
+signal exploded
 
 const MOVEMENT_WEIGHT := 0.4
 var MOVEMENT_RATE := MOVEMENT_WEIGHT * Constants.PHYSICS_FPS
@@ -48,6 +49,7 @@ func explode() -> void:
 	if is_queued_for_deletion():
 		return
 	queue_free()
+	emit_signal("exploded")
 
 
 func _set_path(value: PoolVector2Array) -> void:

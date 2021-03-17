@@ -1,8 +1,9 @@
 extends Node
 
-var level_data: LevelData
-
+var _level_num := 0
+var _level_data: LevelData
 var _num_enemies_left: int
+var _num_enemies_dead := 0 setget _set_num_enemies_dead
 
 onready var level: Level = $Level
 onready var step_delay: Timer = $StepDelay
@@ -18,10 +19,10 @@ onready var stop_button: TextureButton = $HUDLayer/HUD/Buttons/Stop
 
 
 func _ready() -> void:
-	level_data = load("res://levels/resources/level_0.tres")
-	item.num_left = level_data.num_turrets
+	_level_data = load("res://levels/resources/level_0.tres")
+	item.num_left = _level_data.num_turrets
 	_reset()
-	level.build_level(level_data)
+	level.build_level(_level_data)
 # warning-ignore:return_value_discarded
 	Signals.connect("start_pressed", self, "_start")
 # warning-ignore:return_value_discarded
@@ -57,8 +58,9 @@ func _stop() -> void:
 
 
 func _reset() -> void:
-	lives.num_lives = level_data.num_lives
-	_num_enemies_left = level_data.num_enemies
+	lives.num_lives = _level_data.num_lives
+	_num_enemies_left = _level_data.num_enemies
+	_num_enemies_dead = 0
 
 
 func _force_stop() -> void:
@@ -67,9 +69,29 @@ func _force_stop() -> void:
 	_stop()
 
 
+func _go_to_next_level() -> void:
+	_level_num += 1
+	_go_to_level(_level_num)
+
+
+func _go_to_level(num: int) -> void:
+	print("TODO - Go to level method")
+
+
+func _set_num_enemies_dead(value: int) -> void:
+	_num_enemies_dead = value
+	if value == _level_data.num_enemies:
+		_go_to_next_level()
+
+
 func _on_Enemies_enemy_reached_end_of_path(enemy: Enemy) -> void:
 	lives.damage(enemy.DAMAGE)
 	enemy.queue_free()
+	self._num_enemies_dead += 1
+
+
+func _on_Enemies_enemy_exploded(enemy) -> void:
+	self._num_enemies_dead += 1
 
 
 func _on_StepDelay_timeout() -> void:

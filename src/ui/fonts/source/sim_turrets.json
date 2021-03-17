@@ -5,7 +5,8 @@
 		"0123456789",
 		"abcdefghij",
 		"klmnopqrst",
-		"uvwxyz"
+		"uvwxyz",
+		":"
 	],
 	"glyph-color": "auto",
 	"in-kerning": [
@@ -33,11 +34,13 @@
 	"font-desc": "A font for all of Simultaneous Turrets' needs",
 	"font-license": "",
 	"font-license-url": "",
-	"font-sample-text": "0123456789abcdefghijklmnopqrstuvwxyz",
+	"font-sample-text": "0123456789abcdefghijklmnopqrstuvwxyz:",
 	"font-preview-text": [
 		"0123456789",
+		"",
 		"abcdefghij",
 		"klmnopqrst",
-		"uvwxyz"
+		"uvwxyz",
+		":"
 	]
 }

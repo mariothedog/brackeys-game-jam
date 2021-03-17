@@ -29,7 +29,12 @@ func _process(_delta: float) -> void:
 	if Global.is_aiming:
 		var mouse_pos := Global.selected_turret.get_local_mouse_position()
 		if mouse_pos.length() >= TURRET_AIMING_MOUSE_DIST_THRESHOLD:
-			_rotate_gun_to(mouse_pos, true)
+			var angle_snapped := _get_snapped_angle_to(mouse_pos)
+			if angle_snapped == _prev_angle_snapped:
+				return
+			_prev_angle_snapped = angle_snapped
+			dragging_gun.rotation = angle_snapped
+			Global.selected_turret.rotate_gun_to(angle_snapped)
 	else:
 		dragging_turret.global_position = get_global_mouse_position()
 
@@ -55,20 +60,9 @@ func shoot_turrets(bullets_node: Node) -> void:
 			turret.shoot(bullets_node)
 
 
-func _rotate_gun_to(pos: Vector2, is_smooth: bool) -> void:
-	var angle_snapped := _get_turret_angle_to(pos)
-	if angle_snapped == _prev_angle_snapped:
-		return
-	_prev_angle_snapped = angle_snapped
-	dragging_gun.rotation = angle_snapped
-	if is_smooth:
-		Global.selected_turret.rotate_gun_to(angle_snapped)
-	else:
-		Global.selected_turret.set_rotation(angle_snapped)
-
-
-func _get_turret_angle_to(pos: Vector2) -> float:
-	return stepify(pos.angle(), TURRET_AIMING_ANGLE_SNAP)
+func _get_snapped_angle_to(pos: Vector2) -> float:
+	var angle_snapped := stepify(pos.angle(), TURRET_AIMING_ANGLE_SNAP)
+	return wrapf(angle_snapped, 0, Constants.FULL_ROTATION)
 
 
 func _select_turret(turret: Turret) -> void:

@@ -159,9 +159,11 @@ func _get_unselected_or_aiming_turrets_at(pos: Vector2) -> Array:
 	return turrets
 
 
-func _on_item_button_down(_item: Item) -> void:
+func _on_item_button_down(item: Item) -> void:
+	item.num_left -= 1
 	dragging_gun.rotation = 0
 	var turret: Turret = TURRET_SCENE.instance()
+	turret.item = item
 # warning-ignore:return_value_discarded
 	turret.connect("mouse_down", self, "_on_Turret_mouse_down", [turret])
 	placed_turrets.add_child(turret)

@@ -37,3 +37,4 @@ margin_right = 27.0
 margin_bottom = 116.0
 
 [node name="Item" parent="ItemsMargin/Items" instance=ExtResource( 2 )]
+margin_right = 20.0

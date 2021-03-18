@@ -1,5 +1,7 @@
 extends Node
 
+const FORMAT_LEVEL_PATH := "res://levels/resources/level_%s.tres"
+
 var _level_num := 0
 var _level_data: LevelData
 var _num_enemies_left: int
@@ -8,10 +10,12 @@ var _num_enemies_dead := 0 setget _set_num_enemies_dead
 onready var level: Level = $Level
 onready var step_delay: Timer = $StepDelay
 onready var enemies: Enemies = $Level/Enemies
+onready var enemy_spawn_indicators: Node2D = $Level/EnemySpawnIndicators
 onready var turrets: Turrets = $Turrets
 onready var bullets: Node2D = $Turrets/Bullets
 onready var placed_turrets: Node2D = $Turrets/PlacedTurrets
 onready var hud: HUD = $HUDLayer/HUD
+onready var level_label: Label = $HUDLayer/HUD/VBoxContainer/LevelMargin/Level
 onready var lives: Lives = $HUDLayer/HUD/VBoxContainer/Lives
 onready var item: Item = $HUDLayer/HUD/Inventory/ItemsMargin/Items/Item
 onready var start_button: TextureButton = $HUDLayer/HUD/Buttons/Start
@@ -19,10 +23,7 @@ onready var stop_button: TextureButton = $HUDLayer/HUD/Buttons/Stop
 
 
 func _ready() -> void:
-	_level_data = load("res://levels/resources/level_0.tres")
-	item.num_left = _level_data.num_turrets
-	_reset()
-	level.build_level(_level_data)
+	_go_to_level(_level_num)
 # warning-ignore:return_value_discarded
 	Signals.connect("start_pressed", self, "_start")
 # warning-ignore:return_value_discarded
@@ -75,7 +76,14 @@ func _go_to_next_level() -> void:
 
 
 func _go_to_level(num: int) -> void:
-	print("TODO - Go to level method")
+	Util.queue_free_children(enemy_spawn_indicators)
+	Util.queue_free_children(placed_turrets)
+	_level_data = load(FORMAT_LEVEL_PATH % num)
+	_force_stop()
+	item.num_left = _level_data.num_turrets
+	_reset()
+	level.build_level(_level_data)
+	level_label.text = "level: %s" % (num + 1)
 
 
 func _set_num_enemies_dead(value: int) -> void:
@@ -90,7 +98,7 @@ func _on_Enemies_enemy_reached_end_of_path(enemy: Enemy) -> void:
 	self._num_enemies_dead += 1
 
 
-func _on_Enemies_enemy_exploded(enemy) -> void:
+func _on_Enemies_enemy_exploded(_enemy: Enemy) -> void:
 	self._num_enemies_dead += 1
 
 

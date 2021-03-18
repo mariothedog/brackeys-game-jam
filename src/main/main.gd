@@ -3,7 +3,8 @@ extends Node
 const FORMAT_LEVEL_PATH := "res://levels/resources/level_%s.tres"
 const FORMAT_LEVEL_LABEL := "level: %s"
 
-var _level_num := 1
+export var level_num := 1
+
 var _level_data: LevelData
 var _num_enemies_left: int
 var _num_enemies_dead := 0 setget _set_num_enemies_dead
@@ -24,7 +25,7 @@ onready var stop_button: TextureButton = $HUDLayer/HUD/Buttons/Stop
 
 
 func _ready() -> void:
-	_go_to_level(_level_num)
+	_go_to_level(level_num)
 # warning-ignore:return_value_discarded
 	Signals.connect("start_pressed", self, "_start")
 # warning-ignore:return_value_discarded
@@ -72,8 +73,8 @@ func _force_stop() -> void:
 
 
 func _go_to_next_level() -> void:
-	_level_num += 1
-	_go_to_level(_level_num)
+	level_num += 1
+	_go_to_level(level_num)
 
 
 func _go_to_level(num: int) -> void:

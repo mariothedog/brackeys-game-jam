@@ -1,25 +1,31 @@
 extends Node
 
+const FORMAT_LEVEL_PATH := "res://levels/resources/level_%s.tres"
+const FORMAT_LEVEL_LABEL := "level: %s"
+
+export var level_num := 1
+
+var _level_data: LevelData
+var _num_enemies_left: int
+var _num_enemies_dead := 0 setget _set_num_enemies_dead
+
 onready var level: Level = $Level
 onready var step_delay: Timer = $StepDelay
 onready var enemies: Enemies = $Level/Enemies
+onready var enemy_spawn_indicators: Node2D = $Level/EnemySpawnIndicators
 onready var turrets: Turrets = $Turrets
 onready var bullets: Node2D = $Turrets/Bullets
 onready var placed_turrets: Node2D = $Turrets/PlacedTurrets
 onready var hud: HUD = $HUDLayer/HUD
-onready var lives: Lives = $HUDLayer/HUD/Lives
+onready var level_label: Label = $HUDLayer/HUD/VBoxContainer/LevelMargin/Level
+onready var lives: Lives = $HUDLayer/HUD/VBoxContainer/Lives
 onready var item: Item = $HUDLayer/HUD/Inventory/ItemsMargin/Items/Item
 onready var start_button: TextureButton = $HUDLayer/HUD/Buttons/Start
 onready var stop_button: TextureButton = $HUDLayer/HUD/Buttons/Stop
 
 
 func _ready() -> void:
-	var level_data: LevelData = load("res://levels/resources/level_debug.tres")
-	lives.initial_num_lives = level_data.num_lives
-	lives.reset()
-	item.initial_num = level_data.num_turrets
-	item.reset()
-	level.build_level(level_data)
+	_go_to_level(level_num)
 # warning-ignore:return_value_discarded
 	Signals.connect("start_pressed", self, "_start")
 # warning-ignore:return_value_discarded
@@ -45,7 +51,7 @@ func _start() -> void:
 func _stop() -> void:
 	step_delay.stop()
 	level.stop()
-	lives.reset()
+	_reset()
 	Util.queue_free_children(enemies)
 	Util.queue_free_children(bullets)
 	for turret in placed_turrets.get_children():
@@ -54,15 +60,48 @@ func _stop() -> void:
 	Global.is_running = false
 
 
+func _reset() -> void:
+	lives.num_lives = _level_data.num_lives
+	_num_enemies_left = _level_data.num_enemies
+	_num_enemies_dead = 0
+
+
 func _force_stop() -> void:
 	start_button.disabled = false
 	stop_button.disabled = true
 	_stop()
 
 
+func _go_to_next_level() -> void:
+	level_num += 1
+	_go_to_level(level_num)
+
+
+func _go_to_level(num: int) -> void:
+	Util.queue_free_children(enemy_spawn_indicators)
+	Util.queue_free_children(placed_turrets)
+	_level_data = load(FORMAT_LEVEL_PATH % num)
+	_force_stop()
+	item.num_left = _level_data.num_turrets
+	_reset()
+	level.build_level(_level_data)
+	level_label.text = FORMAT_LEVEL_LABEL % num
+
+
+func _set_num_enemies_dead(value: int) -> void:
+	_num_enemies_dead = value
+	if value == _level_data.num_enemies:
+		_go_to_next_level()
+
+
 func _on_Enemies_enemy_reached_end_of_path(enemy: Enemy) -> void:
 	lives.damage(enemy.DAMAGE)
 	enemy.queue_free()
+	self._num_enemies_dead += 1
+
+
+func _on_Enemies_enemy_exploded(_enemy: Enemy) -> void:
+	self._num_enemies_dead += 1
 
 
 func _on_StepDelay_timeout() -> void:
@@ -71,5 +110,7 @@ func _on_StepDelay_timeout() -> void:
 	# If an enemy spawns and then a step occurs immediately after then the enemy
 	# will go straight to the path's second tile.
 	enemies.update_enemy_positions()
-	enemies.spawn_enemy()
+	if _num_enemies_left > 0:
+		_num_enemies_left -= 1
+		enemies.spawn_enemy()
 	turrets.shoot_turrets(bullets)

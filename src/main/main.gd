@@ -1,8 +1,9 @@
 extends Node
 
 const FORMAT_LEVEL_PATH := "res://levels/resources/level_%s.tres"
+const FORMAT_LEVEL_LABEL := "level: %s"
 
-var _level_num := 0
+var _level_num := 1
 var _level_data: LevelData
 var _num_enemies_left: int
 var _num_enemies_dead := 0 setget _set_num_enemies_dead
@@ -83,7 +84,7 @@ func _go_to_level(num: int) -> void:
 	item.num_left = _level_data.num_turrets
 	_reset()
 	level.build_level(_level_data)
-	level_label.text = "level: %s" % (num + 1)
+	level_label.text = FORMAT_LEVEL_LABEL % num
 
 
 func _set_num_enemies_dead(value: int) -> void:

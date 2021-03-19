@@ -1,9 +1,11 @@
 class_name Enemy
 extends Area2D
 
+signal reached_target_pos
 signal reached_end_of_path
 signal exploded
 
+const NUM_TILES_TO_MOVE_PER_TURN := 2
 const MOVEMENT_WEIGHT := 0.4
 var MOVEMENT_RATE := MOVEMENT_WEIGHT * Constants.PHYSICS_FPS
 const DAMAGE := 1
@@ -28,6 +30,7 @@ func _physics_process(delta: float) -> void:
 			emit_signal("reached_end_of_path")
 		else:
 			sprite.position = Vector2.ZERO
+		emit_signal("reached_target_pos")
 		return
 	sprite.global_position = sprite.global_position.linear_interpolate(
 		_target_pos, MOVEMENT_RATE * delta
@@ -35,14 +38,16 @@ func _physics_process(delta: float) -> void:
 
 
 func update_position_along_path() -> void:
-	if _path_current_index + 1 == _path_length:
-		return
-	_path_current_index += 1
-	_target_pos = path[_path_current_index]
-	var prev_global_pos := global_position
-	global_position = _target_pos
-	sprite.global_position = prev_global_pos
-	set_physics_process(true)
+	for _i in NUM_TILES_TO_MOVE_PER_TURN:
+		if _path_current_index + 1 == _path_length:
+			return
+		_path_current_index += 1
+		_target_pos = path[_path_current_index]
+		var prev_global_pos := global_position
+		global_position = _target_pos
+		sprite.global_position = prev_global_pos
+		set_physics_process(true)
+		yield(self, "reached_target_pos")
 
 
 func explode() -> void:

@@ -8,6 +8,7 @@ export var level_num := 1
 var _level_data: LevelData
 var _num_enemies_left: int
 var _num_enemies_dead := 0 setget _set_num_enemies_dead
+var _turn_num := 0
 
 onready var level: Level = $Level
 onready var step_delay: Timer = $StepDelay
@@ -64,6 +65,7 @@ func _reset() -> void:
 	lives.num_lives = _level_data.num_lives
 	_num_enemies_left = _level_data.num_enemies
 	_num_enemies_dead = 0
+	_turn_num = 0
 
 
 func _force_stop() -> void:
@@ -105,12 +107,11 @@ func _on_Enemies_enemy_exploded(_enemy: Enemy) -> void:
 
 
 func _on_StepDelay_timeout() -> void:
-	# It's important that the enemy positions are updated before an enemy is
-	# spawned.
-	# If an enemy spawns and then a step occurs immediately after then the enemy
-	# will go straight to the path's second tile.
+	# The order that these methods are called in matters
+	turrets.shoot_turrets(bullets)
+	yield(get_tree().create_timer(0.5), "timeout")  # Temporary hack
 	enemies.update_enemy_positions()
-	if _num_enemies_left > 0:
+	if _num_enemies_left > 0: #and _turn_num % 2 == 0:
 		_num_enemies_left -= 1
 		enemies.spawn_enemy()
-	turrets.shoot_turrets(bullets)
+	_turn_num += 1

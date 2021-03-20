@@ -52,7 +52,6 @@ func _input(event: InputEvent) -> void:
 		set_process(false)
 		Global.selected_turret = null
 		Global.is_aiming = false
-		_prev_angle_snapped = 0
 
 
 func shoot_turrets(bullets_node: Node) -> void:

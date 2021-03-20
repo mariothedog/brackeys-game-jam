@@ -5,6 +5,7 @@
 [node name="Lives" type="MarginContainer"]
 margin_right = 2.0
 margin_bottom = 2.0
+mouse_filter = 2
 custom_constants/margin_right = 1
 custom_constants/margin_top = 1
 custom_constants/margin_left = 1
@@ -19,6 +20,7 @@ margin_left = 1.0
 margin_top = 1.0
 margin_right = 1.0
 margin_bottom = 1.0
+mouse_filter = 2
 custom_constants/separation = 1
 __meta__ = {
 "_edit_use_anchors_": false

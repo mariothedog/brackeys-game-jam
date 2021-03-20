@@ -11,6 +11,7 @@
 
 [node name="Main" type="Node"]
 script = ExtResource( 3 )
+level_num = 0
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0

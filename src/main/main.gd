@@ -2,6 +2,7 @@ extends Node
 
 const FORMAT_LEVEL_PATH := "res://levels/resources/level_%s.tres"
 const FORMAT_LEVEL_LABEL := "level: %s"
+const ENEMY_STEP_TO_TURRET_STEP_RATIO := 2
 
 export var level_num := 1
 
@@ -11,7 +12,6 @@ var _num_enemies_dead := 0 setget _set_num_enemies_dead
 var _turn_num := 0
 
 onready var level: Level = $Level
-onready var step_delay: Timer = $StepDelay
 onready var enemies: Enemies = $Level/Enemies
 onready var enemy_spawn_indicators: Node2D = $Level/EnemySpawnIndicators
 onready var turrets: Turrets = $Turrets
@@ -23,9 +23,11 @@ onready var lives: Lives = $HUDLayer/HUD/VBoxContainer/Lives
 onready var item: Item = $HUDLayer/HUD/Inventory/ItemsMargin/Items/Item
 onready var start_button: TextureButton = $HUDLayer/HUD/Buttons/Start
 onready var stop_button: TextureButton = $HUDLayer/HUD/Buttons/Stop
+onready var step_delay: Timer = $StepDelay
 
 
 func _ready() -> void:
+	step_delay.wait_time = 1.0 / ENEMY_STEP_TO_TURRET_STEP_RATIO
 	_go_to_level(level_num)
 # warning-ignore:return_value_discarded
 	Signals.connect("start_pressed", self, "_start")
@@ -36,7 +38,6 @@ func _ready() -> void:
 func _start() -> void:
 	hud.slide_inventory_in()
 	level.start()
-	step_delay.start()
 	for turret in placed_turrets.get_children():
 		turret.toggle_sight_lines(false)
 	if not Signals.is_connected("ran_out_of_lives", self, "_force_stop"):
@@ -47,6 +48,7 @@ func _start() -> void:
 			"ran_out_of_lives", self, "_force_stop", [], CONNECT_DEFERRED + CONNECT_ONESHOT
 		)
 	Global.is_running = true
+	step_delay.start()
 
 
 func _stop() -> void:
@@ -62,10 +64,10 @@ func _stop() -> void:
 
 
 func _reset() -> void:
+	_turn_num = 0
 	lives.num_lives = _level_data.num_lives
 	_num_enemies_left = _level_data.num_enemies
 	_num_enemies_dead = 0
-	_turn_num = 0
 
 
 func _force_stop() -> void:
@@ -108,10 +110,10 @@ func _on_Enemies_enemy_exploded(_enemy: Enemy) -> void:
 
 func _on_StepDelay_timeout() -> void:
 	# The order that these methods are called in matters
-	turrets.shoot_turrets(bullets)
-	yield(get_tree().create_timer(0.5), "timeout")  # Temporary hack
 	enemies.update_enemy_positions()
-	if _num_enemies_left > 0: #and _turn_num % 2 == 0:
+	if _num_enemies_left > 0:
 		_num_enemies_left -= 1
 		enemies.spawn_enemy()
+	if _turn_num % ENEMY_STEP_TO_TURRET_STEP_RATIO == 0:
+		turrets.shoot_turrets(bullets)
 	_turn_num += 1

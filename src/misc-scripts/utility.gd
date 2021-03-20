@@ -32,3 +32,20 @@ static func wrapf_with_threshold(value: float, minimum: float, maximum: float, t
 static func queue_free_children(node: Node) -> void:
 	for child in node.get_children():
 		child.queue_free()
+
+static func sign_vec2(vec: Vector2) -> Vector2:
+	# The built-in Vector2.sign method does not work as expected
+	var new_vec := Vector2()
+	if vec.x > 0.1:
+		new_vec.x = 1
+	elif vec.x < -0.1:
+		new_vec.x = -1
+	else:
+		new_vec.x = 0
+	if vec.y > 0.1:
+		new_vec.y = 1
+	elif vec.y < -0.1:
+		new_vec.y = -1
+	else:
+		new_vec.y = 0
+	return new_vec

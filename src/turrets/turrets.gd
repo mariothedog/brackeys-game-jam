@@ -70,6 +70,7 @@ func _select_turret(turret: Turret) -> void:
 	if new_top_turret:
 		new_top_turret.set_rotation(turret.gun.rotation)
 		new_top_turret.rotate_gun_to(_prev_angle_snapped)
+	_prev_angle_snapped = turret.gun.rotation
 	dragging_turret.visible = true
 	turret.disable()
 	turret.raise()

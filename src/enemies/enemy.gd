@@ -15,6 +15,8 @@ var _path_length: int
 var _path_current_index := 0
 var _target_pos: Vector2
 
+onready var world_2d := get_world_2d()
+onready var direct_space_state := world_2d.direct_space_state
 onready var sprite: Sprite = $Sprite
 
 
@@ -25,11 +27,10 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if sprite.global_position.is_equal_approx(_target_pos):
 		set_physics_process(false)
+		sprite.position = Vector2.ZERO
+		emit_signal("reached_target_pos")
 		if _path_current_index + 1 == _path_length:
 			emit_signal("reached_end_of_path")
-		else:
-			sprite.position = Vector2.ZERO
-		emit_signal("reached_target_pos")
 		return
 	sprite.global_position = sprite.global_position.linear_interpolate(
 		_target_pos, MOVEMENT_RATE * delta
@@ -41,6 +42,9 @@ func update_position_along_path() -> void:
 		return
 	_path_current_index += 1
 	_target_pos = path[_path_current_index]
+	for shape in direct_space_state.intersect_point(_target_pos, 32, [], 4, false, true):
+		shape.collider.explode()
+		explode()
 	var prev_global_pos := global_position
 	global_position = _target_pos
 	sprite.global_position = prev_global_pos

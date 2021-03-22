@@ -2,7 +2,7 @@ extends Node
 
 const FORMAT_LEVEL_PATH := "res://levels/resources/level_%s.tres"
 const FORMAT_LEVEL_LABEL := "level: %s"
-const STEP_RATE := 1.0
+const STEP_RATE := 0.5
 const ENEMY_STEP_TO_TURRET_STEP_RATIO := 2
 
 export var level_num := 1

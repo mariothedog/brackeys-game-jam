@@ -14,8 +14,6 @@ var _path_length: int
 var _path_current_index := 0
 var _target_pos: Vector2
 
-onready var world_2d := get_world_2d()
-onready var direct_space_state := world_2d.direct_space_state
 onready var sprite: Sprite = $Sprite
 
 
@@ -40,9 +38,6 @@ func update_position_along_path() -> void:
 		return
 	_path_current_index += 1
 	_target_pos = path[_path_current_index]
-	for shape in direct_space_state.intersect_point(_target_pos, 32, [], 4, false, true):
-		shape.collider.explode()
-		explode()
 	var prev_global_pos := global_position
 	global_position = _target_pos
 	sprite.global_position = prev_global_pos

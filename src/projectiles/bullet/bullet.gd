@@ -1,7 +1,7 @@
 class_name Bullet
 extends Area2D
 
-const MOVEMENT_WEIGHT := 0.6
+const MOVEMENT_WEIGHT := 0.3
 var MOVEMENT_RATE := MOVEMENT_WEIGHT * Constants.PHYSICS_FPS
 
 var friendly_turrets := []  # Turrets the bullet won't hurt

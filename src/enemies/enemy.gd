@@ -4,7 +4,7 @@ extends Area2D
 signal reached_end_of_path
 signal exploded
 
-const MOVEMENT_WEIGHT := 0.4
+const MOVEMENT_WEIGHT := 0.3
 var MOVEMENT_RATE := MOVEMENT_WEIGHT * Constants.PHYSICS_FPS
 const DAMAGE := 1
 

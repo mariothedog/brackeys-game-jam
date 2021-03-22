@@ -1,7 +1,6 @@
 class_name Enemy
 extends Area2D
 
-signal reached_target_pos
 signal reached_end_of_path
 signal exploded
 
@@ -28,7 +27,6 @@ func _physics_process(delta: float) -> void:
 	if sprite.global_position.is_equal_approx(_target_pos):
 		set_physics_process(false)
 		sprite.position = Vector2.ZERO
-		emit_signal("reached_target_pos")
 		if _path_current_index + 1 == _path_length:
 			emit_signal("reached_end_of_path")
 		return
@@ -49,7 +47,6 @@ func update_position_along_path() -> void:
 	global_position = _target_pos
 	sprite.global_position = prev_global_pos
 	set_physics_process(true)
-	yield(self, "reached_target_pos")
 
 
 func explode() -> void:

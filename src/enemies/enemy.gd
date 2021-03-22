@@ -6,6 +6,7 @@ signal exploded
 
 const MOVEMENT_WEIGHT := 0.3
 var MOVEMENT_RATE := MOVEMENT_WEIGHT * Constants.PHYSICS_FPS
+const TILES_MOVED_PER_TURN := 2
 const DAMAGE := 1
 
 var path: PoolVector2Array setget _set_path
@@ -33,7 +34,10 @@ func _physics_process(delta: float) -> void:
 func update_position_along_path() -> void:
 	if _path_current_index + 1 == _path_length:
 		return
-	_path_current_index += 1
+	if _path_current_index + TILES_MOVED_PER_TURN >= _path_length:
+		_path_current_index = _path_length - 1
+	else:
+		_path_current_index += TILES_MOVED_PER_TURN
 	_target_pos = path[_path_current_index]
 	set_physics_process(true)
 

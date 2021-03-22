@@ -2,8 +2,6 @@ extends Node
 
 const FORMAT_LEVEL_PATH := "res://levels/resources/level_%s.tres"
 const FORMAT_LEVEL_LABEL := "level: %s"
-const STEP_RATE := 1.0
-const ENEMY_STEP_TO_TURRET_STEP_RATIO := 2
 
 export var level_num := 1
 
@@ -28,7 +26,6 @@ onready var step_delay: Timer = $StepDelay
 
 
 func _ready() -> void:
-	step_delay.wait_time = STEP_RATE / ENEMY_STEP_TO_TURRET_STEP_RATIO
 	_go_to_level(level_num)
 # warning-ignore:return_value_discarded
 	Signals.connect("start_pressed", self, "_start")
@@ -115,7 +112,6 @@ func _on_StepDelay_timeout() -> void:
 	if _num_enemies_left > 0:
 		_num_enemies_left -= 1
 		enemies.spawn_enemy()
-	if _turn_num % ENEMY_STEP_TO_TURRET_STEP_RATIO == 0:
-		turrets.shoot_turrets(bullets)
-		bullets.move_bullets(level.cell_size)
+	turrets.shoot_turrets(bullets)
+	bullets.move_bullets(level.cell_size)
 	_turn_num += 1

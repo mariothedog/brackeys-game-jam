@@ -56,6 +56,7 @@ hframes = 8
 layer = 0
 
 [node name="StepDelay" type="Timer" parent="."]
+wait_time = 0.5
 [connection signal="enemy_exploded" from="Level/Enemies" to="." method="_on_Enemies_enemy_exploded"]
 [connection signal="enemy_reached_end_of_path" from="Level/Enemies" to="." method="_on_Enemies_enemy_reached_end_of_path"]
 [connection signal="timeout" from="StepDelay" to="." method="_on_StepDelay_timeout"]

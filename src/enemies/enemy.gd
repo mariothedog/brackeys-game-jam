@@ -19,7 +19,7 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if global_position.is_equal_approx(_target_pos):
+	if Util.is_vec2_equal_with_threshold(global_position, _target_pos, 0.1):
 		set_physics_process(false)
 		global_position = _target_pos
 		if _path_current_index + 1 == _path_length:

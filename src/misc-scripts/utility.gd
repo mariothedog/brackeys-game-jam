@@ -22,6 +22,9 @@ static func map(function: FuncRef, arr: Array) -> Array:
 static func is_equal_with_threshold(a: float, b: float, threshold: float) -> bool:
 	return abs(a - b) <= threshold
 
+static func is_vec2_equal_with_threshold(a: Vector2, b: Vector2, threshold: float) -> bool:
+	return abs(a.x - b.x) <= threshold and abs(a.y - b.y) <= threshold
+
 static func wrapf_with_threshold(value: float, minimum: float, maximum: float, threshold: float) -> float:
 	if is_equal_with_threshold(value, minimum, threshold):
 		return maximum

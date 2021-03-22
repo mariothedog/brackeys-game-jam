@@ -6,6 +6,7 @@ signal exploded
 
 const MOVEMENT_WEIGHT := 0.3
 var MOVEMENT_RATE := MOVEMENT_WEIGHT * Constants.PHYSICS_FPS
+const ENEMY_AT_TARGET_THRESHOLD := 0.1
 const DAMAGE := 1
 
 var path: PoolVector2Array setget _set_path
@@ -19,7 +20,7 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
-	if Util.is_vec2_equal_with_threshold(global_position, _target_pos, 0.1):
+	if Util.is_vec2_equal_with_threshold(global_position, _target_pos, ENEMY_AT_TARGET_THRESHOLD):
 		set_physics_process(false)
 		global_position = _target_pos
 		if _path_current_index + 1 == _path_length:

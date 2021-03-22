@@ -21,6 +21,7 @@ const ROTATION_THRESHOLD := deg2rad(1)
 const ROTATION_WEIGHT := 0.3
 var ROTATION_RATE: float = ROTATION_WEIGHT * Constants.PHYSICS_FPS
 
+# warning-ignore:unused_class_variable
 var item: Item
 var is_enabled := true
 # Turret level 0 is reserved for merged turrets
@@ -136,7 +137,3 @@ func _set_level(value: int) -> void:
 func _on_Turret_input_event(_viewport: Node, event: InputEventMouseButton, _shape_idx: int) -> void:
 	if event and event.button_index == BUTTON_LEFT and event.is_pressed():
 		emit_signal("mouse_down")
-
-
-func _on_Turret_tree_exited() -> void:
-	item.num_left += 1

@@ -84,6 +84,7 @@ func _release_turret(turret: Turret) -> void:
 	var tile_pos := _get_tile_pos_at_mouse()
 	if not _can_place_at_tile(tile_pos):
 		turret.queue_free()
+		turret.item.num_left += 1
 		set_process(false)
 		return
 	var turret_pos := _get_turret_pos_from(tile_pos)

@@ -21,6 +21,8 @@ const ROTATION_THRESHOLD := deg2rad(1)
 const ROTATION_WEIGHT := 0.3
 var ROTATION_RATE: float = ROTATION_WEIGHT * Constants.PHYSICS_FPS
 
+export var bullet_speed := 300.0
+
 # warning-ignore:unused_class_variable
 var item: Item
 var is_enabled := true
@@ -72,11 +74,10 @@ func set_rotation(radians: float) -> void:
 func shoot(bullets_node: Node) -> void:
 	for i in level:
 		var shoot_pos := barrel.position.rotated(_target_rotation).rotated(GUN_ROTATIONS[i])
-		var dir := Util.sign_vec2(shoot_pos)
+		var dir := shoot_pos.normalized()
 		var bullet: Bullet = BULLET_SCENE.instance()
 		bullet.global_position = global_position + shoot_pos
-		bullet.parent_pos = global_position
-		bullet.dir = dir
+		bullet.velocity = dir * bullet_speed
 		bullet.rotation = dir.angle()
 		bullet.friendly_turrets.append(self)
 		bullets_node.add_child(bullet)

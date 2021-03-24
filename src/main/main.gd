@@ -3,7 +3,7 @@ extends Node
 const FORMAT_LEVEL_PATH := "res://levels/resources/level_%s.tres"
 const FORMAT_LEVEL_LABEL := "level: %s"
 const STEP_RATE := 0.5
-const ENEMY_STEP_TO_TURRET_STEP_RATIO := 2
+const ENEMY_MOVE_TO_TURRET_SHOOT_RATIO := 2
 
 export var level_num := 1
 
@@ -16,7 +16,7 @@ onready var level: Level = $Level
 onready var enemies: Enemies = $Level/Enemies
 onready var enemy_spawn_indicators: Node2D = $Level/EnemySpawnIndicators
 onready var turrets: Turrets = $Turrets
-onready var bullets: Bullets = $Turrets/Bullets
+onready var bullets: Node2D = $Turrets/Bullets
 onready var placed_turrets: Node2D = $Turrets/PlacedTurrets
 onready var hud: HUD = $HUDLayer/HUD
 onready var level_label: Label = $HUDLayer/HUD/VBoxContainer/LevelMargin/Level
@@ -28,7 +28,7 @@ onready var step_delay: Timer = $StepDelay
 
 
 func _ready() -> void:
-	step_delay.wait_time = STEP_RATE / ENEMY_STEP_TO_TURRET_STEP_RATIO
+	step_delay.wait_time = STEP_RATE / ENEMY_MOVE_TO_TURRET_SHOOT_RATIO
 	_go_to_level(level_num)
 # warning-ignore:return_value_discarded
 	Signals.connect("start_pressed", self, "_start")
@@ -115,7 +115,6 @@ func _on_StepDelay_timeout() -> void:
 	if _num_enemies_left > 0:
 		_num_enemies_left -= 1
 		enemies.spawn_enemy()
-	if _turn_num % ENEMY_STEP_TO_TURRET_STEP_RATIO == 0:
+	if _turn_num % ENEMY_MOVE_TO_TURRET_SHOOT_RATIO == 0:
 		turrets.shoot_turrets(bullets)
-		bullets.move_bullets(level.cell_size)
 	_turn_num += 1

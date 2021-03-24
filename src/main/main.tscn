@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://levels/tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://main/level.gd" type="Script" id=2]
@@ -8,7 +8,6 @@
 [ext_resource path="res://turrets/turrets.gd" type="Script" id=6]
 [ext_resource path="res://turrets/gun.png" type="Texture" id=7]
 [ext_resource path="res://turrets/base.png" type="Texture" id=8]
-[ext_resource path="res://main/bullets.gd" type="Script" id=9]
 
 [node name="Main" type="Node"]
 script = ExtResource( 3 )
@@ -39,7 +38,6 @@ level_path = NodePath("../Level")
 
 [node name="Bullets" type="Node2D" parent="Turrets"]
 z_index = 1
-script = ExtResource( 9 )
 
 [node name="PlacedTurrets" type="Node2D" parent="Turrets"]
 

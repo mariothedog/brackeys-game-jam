@@ -73,6 +73,9 @@ func set_rotation(radians: float) -> void:
 
 func shoot(bullets_node: Node) -> void:
 	for i in level:
+		var sight_line: SightLine = sight_lines.get_child(i)
+		if sight_line.is_colliding() and sight_line.get_collider().name == "SightBlocker":  # Temporary hack
+			yield(get_tree().create_timer(0.5), "timeout")
 		var shoot_pos := barrel.position.rotated(_target_rotation).rotated(GUN_ROTATIONS[i])
 		var dir := shoot_pos.normalized()
 		var bullet: Bullet = BULLET_SCENE.instance()
@@ -107,16 +110,16 @@ func disable() -> void:
 
 func toggle_sight_lines(should_enable: bool) -> void:
 	for sight_line in sight_lines.get_children():
-		if sight_line.visible:
-			sight_line.is_casting = should_enable
+		if sight_line.is_casting:
+			sight_line.visible = should_enable
 
 
 func _instance_sight_lines() -> void:
 	for i in gun.hframes:
 		var sight_line: SightLine = SIGHT_LINE_SCENE.instance()
 		sight_line.rotation = GUN_ROTATIONS[i]
-		sight_line.visible = i < level
 		sight_lines.add_child(sight_line)
+		sight_line.is_casting = i < level
 
 
 func _set_level(value: int) -> void:
@@ -132,7 +135,7 @@ func _set_level(value: int) -> void:
 	gun.frame = level - 1
 	for i in gun.hframes:
 		var sight_line: SightLine = sight_lines.get_child(i)
-		sight_line.visible = i < level
+		sight_line.is_casting = i < level
 
 
 func _on_Turret_input_event(_viewport: Node, event: InputEventMouseButton, _shape_idx: int) -> void:

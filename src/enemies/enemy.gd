@@ -15,20 +15,21 @@ var _path_length: int
 var _path_current_index := 0
 var _target_pos: Vector2
 
+onready var sprite: Sprite = $Sprite
+
+
 func _ready() -> void:
 	set_physics_process(false)
 
 
 func _physics_process(delta: float) -> void:
-	if Util.is_vec2_equal_with_threshold(global_position, _target_pos, ENEMY_AT_TARGET_THRESHOLD):
+	if Util.is_vec2_equal_with_threshold(sprite.global_position, _target_pos, ENEMY_AT_TARGET_THRESHOLD):
 		set_physics_process(false)
-		global_position = _target_pos
+		sprite.position = Vector2.ZERO
 		if _path_current_index + 1 == _path_length:
 			emit_signal("reached_end_of_path")
 		return
-	global_position = global_position.linear_interpolate(
-		_target_pos, MOVEMENT_RATE * delta
-	)
+	sprite.global_position = sprite.global_position.linear_interpolate(_target_pos, MOVEMENT_RATE * delta)
 
 
 func update_position_along_path() -> void:
@@ -36,6 +37,9 @@ func update_position_along_path() -> void:
 		return
 	_path_current_index += 1
 	_target_pos = path[_path_current_index]
+	var prev_global_pos := global_position
+	global_position = _target_pos
+	sprite.global_position = prev_global_pos
 	set_physics_process(true)
 
 

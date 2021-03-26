@@ -32,7 +32,7 @@ var level := 1 setget _set_level
 var _target_rotation: float
 
 onready var gun: Sprite = $Gun
-onready var sight_lines := $Gun/SightLines
+onready var sight_lines: Node2D = $Gun/SightLines
 onready var barrel: Position2D = $Barrel
 onready var collider: CollisionShape2D = $CollisionShape2D
 onready var sight_blocker_collider: CollisionShape2D = $SightBlocker/CollisionShape2D

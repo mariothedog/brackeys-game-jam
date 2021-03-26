@@ -106,6 +106,7 @@ func disable() -> void:
 
 
 func toggle_sight_lines(should_enable: bool) -> void:
+	sight_lines.visible = should_enable
 	for sight_line in sight_lines.get_children():
 		if sight_line.visible:
 			sight_line.is_casting = should_enable

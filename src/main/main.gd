@@ -48,6 +48,8 @@ func _start() -> void:
 		Signals.connect(
 			"ran_out_of_lives", self, "_force_stop", [], CONNECT_DEFERRED + CONNECT_ONESHOT
 		)
+	if enemies.is_connected("enemy_reached_target", self, "_on_Enemy_reached_target"):
+		enemies.disconnect("enemy_reached_target", self, "_on_Enemy_reached_target")
 	Global.is_running = true
 	step_delay.start()
 
@@ -111,6 +113,14 @@ func _on_Enemies_enemy_exploded(_enemy: Enemy) -> void:
 
 func _on_StepDelay_timeout() -> void:
 	# The order that these methods are called in matters
+	print("Turn num: ", _turn_num)
+#	if _turn_num > 1:
+#		enemies.connect("enemy_reached_target", self, "_on_Enemy_reached_target", [], CONNECT_ONESHOT)
+#		step_delay.stop()
+	if enemies.get_child_count() > 0:
+		print("Connect: ", enemies.is_connected("enemy_reached_target", self, "_on_Enemy_reached_target"))
+		enemies.connect("enemy_reached_target", self, "_on_Enemy_reached_target")
+		step_delay.stop()
 	enemies.update_enemy_positions()
 	if _num_enemies_left > 0:
 		_num_enemies_left -= 1
@@ -118,3 +128,9 @@ func _on_StepDelay_timeout() -> void:
 	if _turn_num % ENEMY_MOVE_TO_TURRET_SHOOT_RATIO == 0:
 		turrets.shoot_turrets(bullets)
 	_turn_num += 1
+
+
+func _on_Enemy_reached_target(_enemy: Enemy) -> void:
+	enemies.disconnect("enemy_reached_target", self, "_on_Enemy_reached_target")
+	print("Enemy reached target, connected: ", enemies.is_connected("enemy_reached_target", self, "_on_Enemy_reached_target"))
+	_on_StepDelay_timeout()

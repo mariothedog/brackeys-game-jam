@@ -54,10 +54,10 @@ func _input(event: InputEvent) -> void:
 		Global.is_aiming = false
 
 
-func shoot_turrets(bullets_node: Node) -> void:
+func shoot_turrets(bullets_node: Node, tile_size: Vector2) -> void:
 	for turret in placed_turrets.get_children():
 		if turret.is_enabled:
-			turret.shoot(bullets_node)
+			turret.shoot(bullets_node, tile_size)
 
 
 func _get_snapped_angle_to(pos: Vector2) -> float:

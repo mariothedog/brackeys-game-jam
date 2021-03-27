@@ -1,14 +1,13 @@
 class_name Bullet
 extends Area2D
 
-const SPEED := 300.0
+const TILES_MOVED_PER_SECOND := 25.0
 
 var friendly_turrets := []  # Turrets the bullet won't hurt
-var dir := Vector2.ZERO
+var velocity := Vector2.ZERO
 
 
 func _physics_process(delta: float) -> void:
-	var velocity := dir * SPEED
 	position += velocity * delta
 
 

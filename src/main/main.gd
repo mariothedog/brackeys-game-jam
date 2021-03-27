@@ -116,5 +116,5 @@ func _on_StepDelay_timeout() -> void:
 		_num_enemies_left -= 1
 		enemies.spawn_enemy()
 	if _turn_num % ENEMY_MOVE_TO_TURRET_SHOOT_RATIO == 0:
-		turrets.shoot_turrets(bullets)
+		turrets.shoot_turrets(bullets, level.cell_size)
 	_turn_num += 1

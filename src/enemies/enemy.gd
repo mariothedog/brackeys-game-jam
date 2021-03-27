@@ -19,6 +19,7 @@ onready var sprite: Sprite = $Sprite
 
 
 func _ready() -> void:
+	print("New enemy: ", self)
 	set_physics_process(false)
 
 

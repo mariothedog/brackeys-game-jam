@@ -3,6 +3,7 @@ extends RayCast2D
 
 var is_casting := false setget _set_is_casting
 
+onready var hit_cast: RayCast2D = $HitCast
 onready var line: Line2D = $Line2D
 
 
@@ -21,6 +22,10 @@ func update() -> void:
 	if is_colliding():
 		cast_point = to_local(get_collision_point())
 	line.points[1] = cast_point
+
+
+#func is_hit_cast_colliding() -> bool:
+#	return hit_cast.is_colliding()
 
 
 func _set_is_casting(value: bool) -> void:

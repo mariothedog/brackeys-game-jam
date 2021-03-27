@@ -73,14 +73,23 @@ func set_rotation(radians: float) -> void:
 
 func shoot(bullets_node: Node) -> void:
 	for i in level:
-		var shoot_pos := barrel.position.rotated(_target_rotation).rotated(GUN_ROTATIONS[i])
-		var dir := shoot_pos.normalized()
-		var bullet: Bullet = BULLET_SCENE.instance()
-		bullet.global_position = global_position + shoot_pos
-		bullet.velocity = dir * bullet_speed
-		bullet.rotation = dir.angle()
-		bullet.friendly_turrets.append(self)
-		bullets_node.add_child(bullet)
+		_shoot_gun(bullets_node, i)
+
+
+func _shoot_gun(bullets_node: Node, gun_num: int):
+	var sight_line: SightLine = sight_lines.get_child(gun_num)
+#	print("A: ", sight_line.get_collider())
+	sight_line.hit_cast.force_raycast_update()
+	print(OS.get_ticks_msec(), " A: ", sight_line.hit_cast.get_collider())#is_hit_cast_colliding)
+	var shoot_pos := barrel.position.rotated(_target_rotation).rotated(GUN_ROTATIONS[gun_num])
+	var dir := shoot_pos.normalized()
+	var bullet: Bullet = BULLET_SCENE.instance()
+	bullet.global_position = global_position + shoot_pos
+	bullet.velocity = dir * bullet_speed
+	bullet.rotation = dir.angle()
+	bullet.target = sight_line.hit_cast.get_collider()
+#	bullet.friendly_turrets.append(self)
+	bullets_node.add_child(bullet)
 
 
 func explode() -> void:
@@ -107,17 +116,17 @@ func disable() -> void:
 
 func toggle_sight_lines(should_enable: bool) -> void:
 	sight_lines.visible = should_enable
-	for sight_line in sight_lines.get_children():
-		if sight_line.visible:
-			sight_line.is_casting = should_enable
+#	for sight_line in sight_lines.get_children():
+#		sight_line.visible = sight_line.is_casting and should_enable
 
 
 func _instance_sight_lines() -> void:
 	for i in gun.hframes:
 		var sight_line: SightLine = SIGHT_LINE_SCENE.instance()
 		sight_line.rotation = GUN_ROTATIONS[i]
-		sight_line.visible = i < level
 		sight_lines.add_child(sight_line)
+		sight_line.is_casting = i < level
+		sight_line.visible = i < level
 
 
 func _set_level(value: int) -> void:
@@ -133,6 +142,7 @@ func _set_level(value: int) -> void:
 	gun.frame = level - 1
 	for i in gun.hframes:
 		var sight_line: SightLine = sight_lines.get_child(i)
+		sight_line.is_casting = i < level
 		sight_line.visible = i < level
 
 

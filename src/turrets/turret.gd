@@ -21,8 +21,6 @@ const ROTATION_THRESHOLD := deg2rad(1)
 const ROTATION_WEIGHT := 0.3
 var ROTATION_RATE: float = ROTATION_WEIGHT * Constants.PHYSICS_FPS
 
-export var bullet_speed := 300.0
-
 # warning-ignore:unused_class_variable
 var item: Item
 var is_enabled := true
@@ -77,7 +75,7 @@ func shoot(bullets_node: Node) -> void:
 		var dir := shoot_pos.normalized()
 		var bullet: Bullet = BULLET_SCENE.instance()
 		bullet.global_position = global_position + shoot_pos
-		bullet.velocity = dir * bullet_speed
+		bullet.dir = dir
 		bullet.rotation = dir.angle()
 		bullet.friendly_turrets.append(self)
 		bullets_node.add_child(bullet)

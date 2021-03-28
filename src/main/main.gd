@@ -16,7 +16,7 @@ onready var level: Level = $Level
 onready var enemies: Enemies = $Level/Enemies
 onready var enemy_spawn_indicators: Node2D = $Level/EnemySpawnIndicators
 onready var turrets: Turrets = $Turrets
-onready var bullets: Node2D = $Turrets/Bullets
+onready var bullets: Bullets = $Turrets/Bullets
 onready var placed_turrets: Node2D = $Turrets/PlacedTurrets
 onready var hud: HUD = $HUDLayer/HUD
 onready var level_label: Label = $HUDLayer/HUD/VBoxContainer/LevelMargin/Level
@@ -129,4 +129,5 @@ func _on_StepDelay_timeout() -> void:
 
 
 func _on_enemy_reached_target(_enemy: Enemy) -> void:
+	bullets.move_bullets()
 	turrets.shoot_turrets(bullets, level.cell_size)

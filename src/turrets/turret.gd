@@ -72,13 +72,14 @@ func set_rotation(radians: float) -> void:
 func shoot(bullets_node: Node, tile_size: Vector2) -> void:
 	for i in level:
 		var shoot_pos := barrel.position.rotated(_target_rotation).rotated(GUN_ROTATIONS[i])
-		var dir := shoot_pos.normalized()
+		var dir := Util.sign_vec2(shoot_pos)
 		var bullet: Bullet = BULLET_SCENE.instance()
 		bullet.global_position = global_position + shoot_pos
-		bullet.velocity = dir * bullet.TILES_MOVED_PER_SECOND * tile_size
+		bullet.velocity = dir * tile_size
 		bullet.rotation = dir.angle()
 		bullet.friendly_turrets.append(self)
 		bullets_node.add_child(bullet)
+		bullet.move_to(global_position + dir * tile_size)
 
 
 func explode() -> void:

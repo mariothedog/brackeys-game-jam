@@ -52,3 +52,7 @@ static func sign_vec2(vec: Vector2) -> Vector2:
 	else:
 		new_vec.y = 0
 	return new_vec
+
+static func disconnect_safe(object: Object, object_signal: String, target: Object, method: String) -> void:
+	if object.is_connected(object_signal, target, method):
+		object.disconnect(object_signal, target, method)

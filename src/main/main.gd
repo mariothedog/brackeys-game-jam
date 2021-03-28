@@ -48,8 +48,7 @@ func _start() -> void:
 		Signals.connect(
 			"ran_out_of_lives", self, "_force_stop", [], CONNECT_DEFERRED + CONNECT_ONESHOT
 		)
-	if enemies.is_connected("enemy_reached_target", self, "_on_enemy_reached_target"):
-		enemies.disconnect("enemy_reached_target", self, "_on_enemy_reached_target")
+	Util.disconnect_safe(enemies, "enemy_reached_target", self, "_on_enemy_reached_target")
 	Global.is_running = true
 	step_delay.start()
 
@@ -118,8 +117,7 @@ func _on_StepDelay_timeout() -> void:
 		_num_enemies_left -= 1
 		enemies.spawn_enemy()
 	if enemies.get_child_count() > 1:
-		if enemies.is_connected("enemy_reached_target", self, "_on_enemy_reached_target"):
-			enemies.disconnect("enemy_reached_target", self, "_on_enemy_reached_target")
+		Util.disconnect_safe(enemies, "enemy_reached_target", self, "_on_enemy_reached_target")
 		if _turn_num % ENEMY_MOVE_TO_TURRET_SHOOT_RATIO == 0:
 # warning-ignore:return_value_discarded
 			enemies.connect(

@@ -1,7 +1,6 @@
 class_name Enemies
 extends Node
 
-signal enemy_reached_target(enemy)
 signal enemy_reached_end_of_path(enemy)
 signal enemy_exploded(enemy)
 
@@ -23,8 +22,6 @@ func spawn_enemy() -> void:
 		return
 	var enemy: Enemy = ENEMY_SCENE.instance()
 	enemy.path = paths[path_index]
-# warning-ignore:return_value_discarded
-	enemy.connect("reached_target", self, "_on_enemy_reached_target", [enemy])
 # warning-ignore:return_value_discarded
 	enemy.connect("reached_end_of_path", self, "_on_enemy_reached_end_of_path", [enemy])
 # warning-ignore:return_value_discarded

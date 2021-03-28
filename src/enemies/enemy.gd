@@ -1,6 +1,7 @@
 class_name Enemy
 extends Area2D
 
+signal reached_target
 signal reached_end_of_path
 signal exploded
 
@@ -24,6 +25,7 @@ func _physics_process(delta: float) -> void:
 	if Util.is_vec2_equal_with_threshold(global_position, _target_pos, ENEMY_AT_TARGET_THRESHOLD):
 		set_physics_process(false)
 		global_position = _target_pos
+		emit_signal("reached_target")
 		if _path_current_index + 1 == _path_length:
 			emit_signal("reached_end_of_path")
 		return

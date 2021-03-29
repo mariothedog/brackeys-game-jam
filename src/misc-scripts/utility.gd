@@ -36,21 +36,16 @@ static func queue_free_children(node: Node) -> void:
 	for child in node.get_children():
 		child.queue_free()
 
-static func sign_vec2(vec: Vector2) -> Vector2:
-	# The built-in Vector2.sign method does not work as expected
+static func sign_vec2(vec: Vector2, threshold: float) -> Vector2:
 	var new_vec := Vector2()
-	if vec.x > 0.1:
+	if vec.x > threshold:
 		new_vec.x = 1
-	elif vec.x < -0.1:
+	elif vec.x < -threshold:
 		new_vec.x = -1
-	else:
-		new_vec.x = 0
-	if vec.y > 0.1:
+	if vec.y > threshold:
 		new_vec.y = 1
-	elif vec.y < -0.1:
+	elif vec.y < -threshold:
 		new_vec.y = -1
-	else:
-		new_vec.y = 0
 	return new_vec
 
 static func disconnect_safe(object: Object, object_signal: String, target: Object, method: String) -> void:

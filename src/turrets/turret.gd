@@ -16,6 +16,7 @@ const GUN_ROTATIONS := [
 	deg2rad(135),
 	deg2rad(225),
 ]
+const SHOOT_POS_SIGN_DIRECTION_THRESHOLD := 0.00001
 
 const ROTATION_THRESHOLD := deg2rad(1)
 const ROTATION_WEIGHT := 0.3
@@ -72,7 +73,7 @@ func set_rotation(radians: float) -> void:
 func shoot(bullets_node: Node, tile_size: Vector2) -> void:
 	for i in level:
 		var shoot_pos := barrel.position.rotated(_target_rotation).rotated(GUN_ROTATIONS[i])
-		var dir := Util.sign_vec2(shoot_pos)
+		var dir := Util.sign_vec2(shoot_pos, SHOOT_POS_SIGN_DIRECTION_THRESHOLD)
 		var bullet: Bullet = BULLET_SCENE.instance()
 		bullet.global_position = global_position + shoot_pos
 		bullet.velocity = dir * tile_size

@@ -3,23 +3,6 @@ extends Node
 const FORMAT_LEVEL_PATH := "res://levels/resources/level_%s.tres"
 const FORMAT_LEVEL_LABEL := "level: %s"
 
-enum StepTypes {
-	TURRET_SHOOT,
-	BULLET_MOVE,
-	ENEMY_SPAWN,
-	ENEMY_MOVE,
-}
-
-const STEPS := [
-	StepTypes.TURRET_SHOOT,
-	StepTypes.BULLET_MOVE,
-	StepTypes.BULLET_MOVE,
-	StepTypes.BULLET_MOVE,
-	StepTypes.ENEMY_SPAWN,
-	StepTypes.ENEMY_MOVE,
-	StepTypes.ENEMY_MOVE,
-]
-
 export var level_num := 1
 
 var num_enemies_left: int
@@ -44,7 +27,6 @@ onready var step_timer: Timer = $Step
 
 
 func _ready() -> void:
-	hud.add_step_labels(StepTypes, STEPS)
 	_go_to_level(level_num)
 # warning-ignore:return_value_discarded
 	Signals.connect("start_pressed", self, "_start")
@@ -103,6 +85,9 @@ func _go_to_level(num: int) -> void:
 	Util.queue_free_children(enemy_spawn_indicators)
 	Util.queue_free_children(placed_turrets)
 	_level_data = load(FORMAT_LEVEL_PATH % num)
+	if not _level_data.steps:
+		push_warning("Level %s has no steps" % num)
+	hud.set_step_labels(_level_data.steps)
 	_force_stop()
 	item.num_left = _level_data.num_turrets
 	_reset()
@@ -130,16 +115,16 @@ func _get_valid_step() -> int:
 	var step: int
 	var is_valid := false
 	while not is_valid:
-		_step_index %= STEPS.size()
-		step = STEPS[_step_index]
+		_step_index %= _level_data.steps.size()
+		step = _level_data.steps[_step_index]
 		match step:
-			StepTypes.ENEMY_SPAWN:
+			Constants.StepTypes.ENEMY_SPAWN:
 				is_valid = num_enemies_left > 0
-			StepTypes.ENEMY_MOVE:
+			Constants.StepTypes.ENEMY_MOVE:
 				is_valid = enemies.get_child_count() > 0
-			StepTypes.BULLET_MOVE:
+			Constants.StepTypes.BULLET_MOVE:
 				is_valid = bullets.get_child_count() > 0
-			StepTypes.TURRET_SHOOT:
+			Constants.StepTypes.TURRET_SHOOT:
 				is_valid = placed_turrets.get_child_count() > 0
 		if not is_valid:
 			_step_index += 1
@@ -150,13 +135,13 @@ func _on_StepDelay_timeout() -> void:
 	var step := _get_valid_step()
 	hud.highlight_step_labels(_step_index)
 	match step:
-		StepTypes.ENEMY_SPAWN:
+		Constants.StepTypes.ENEMY_SPAWN:
 			num_enemies_left -= 1
 			enemies.spawn_enemy()
-		StepTypes.ENEMY_MOVE:
+		Constants.StepTypes.ENEMY_MOVE:
 			enemies.move_enemies()
-		StepTypes.BULLET_MOVE:
+		Constants.StepTypes.BULLET_MOVE:
 			bullets.move_bullets()
-		StepTypes.TURRET_SHOOT:
+		Constants.StepTypes.TURRET_SHOOT:
 			turrets.shoot_turrets(bullets, level.cell_size)
 	_step_index += 1

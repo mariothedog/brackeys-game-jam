@@ -12,7 +12,7 @@ var path_index := 0
 var _num_paths: int
 
 
-func update_enemy_positions() -> void:
+func move_enemies() -> void:
 	for enemy in get_children():
 		enemy.update_position_along_path()
 
@@ -33,6 +33,10 @@ func spawn_enemy() -> void:
 func _set_paths(value: Array) -> void:
 	paths = value
 	_num_paths = len(paths)
+
+
+func _on_enemy_reached_target(enemy: Enemy) -> void:
+	emit_signal("enemy_reached_target", enemy)
 
 
 func _on_enemy_reached_end_of_path(enemy: Enemy) -> void:

@@ -16,13 +16,13 @@ const GUN_ROTATIONS := [
 	deg2rad(135),
 	deg2rad(225),
 ]
+const SHOOT_POS_SIGN_DIRECTION_THRESHOLD := 0.00001
 
 const ROTATION_THRESHOLD := deg2rad(1)
 const ROTATION_WEIGHT := 0.3
 var ROTATION_RATE: float = ROTATION_WEIGHT * Constants.PHYSICS_FPS
 
-export var bullet_speed := 300.0
-
+# warning-ignore:unused_class_variable
 var item: Item
 var is_enabled := true
 # Turret level 0 is reserved for merged turrets
@@ -31,7 +31,7 @@ var level := 1 setget _set_level
 var _target_rotation: float
 
 onready var gun: Sprite = $Gun
-onready var sight_lines := $Gun/SightLines
+onready var sight_lines: Node2D = $Gun/SightLines
 onready var barrel: Position2D = $Barrel
 onready var collider: CollisionShape2D = $CollisionShape2D
 onready var sight_blocker_collider: CollisionShape2D = $SightBlocker/CollisionShape2D
@@ -70,16 +70,17 @@ func set_rotation(radians: float) -> void:
 	set_physics_process(false)
 
 
-func shoot(bullets_node: Node) -> void:
+func shoot(bullets_node: Node, tile_size: Vector2) -> void:
 	for i in level:
 		var shoot_pos := barrel.position.rotated(_target_rotation).rotated(GUN_ROTATIONS[i])
-		var dir := shoot_pos.normalized()
+		var dir := Util.sign_vec2(shoot_pos, SHOOT_POS_SIGN_DIRECTION_THRESHOLD)
 		var bullet: Bullet = BULLET_SCENE.instance()
 		bullet.global_position = global_position + shoot_pos
-		bullet.velocity = dir * bullet_speed
+		bullet.velocity = dir * tile_size
 		bullet.rotation = dir.angle()
 		bullet.friendly_turrets.append(self)
 		bullets_node.add_child(bullet)
+		bullet.move_to(global_position + dir * tile_size)
 
 
 func explode() -> void:
@@ -105,6 +106,7 @@ func disable() -> void:
 
 
 func toggle_sight_lines(should_enable: bool) -> void:
+	sight_lines.visible = should_enable
 	for sight_line in sight_lines.get_children():
 		if sight_line.visible:
 			sight_line.is_casting = should_enable
@@ -137,7 +139,3 @@ func _set_level(value: int) -> void:
 func _on_Turret_input_event(_viewport: Node, event: InputEventMouseButton, _shape_idx: int) -> void:
 	if event and event.button_index == BUTTON_LEFT and event.is_pressed():
 		emit_signal("mouse_down")
-
-
-func _on_Turret_tree_exited() -> void:
-	item.num_left += 1

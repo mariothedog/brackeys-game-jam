@@ -70,7 +70,6 @@ func _select_turret(turret: Turret) -> void:
 	if new_top_turret:
 		new_top_turret.set_rotation(turret.gun.rotation)
 		new_top_turret.rotate_gun_to(_prev_angle_snapped)
-	_prev_angle_snapped = turret.gun.rotation
 	dragging_turret.visible = true
 	turret.disable()
 	turret.raise()
@@ -91,6 +90,9 @@ func _release_turret(turret: Turret) -> void:
 	var prev_top_turret := _get_top_overlapping_turret(turret_pos)
 	if prev_top_turret:
 		turret.set_rotation(prev_top_turret.gun.rotation)
+		_prev_angle_snapped = prev_top_turret.gun.rotation
+	else:
+		_prev_angle_snapped = turret.gun.rotation
 	turret.global_position = turret_pos
 	turret.enable()
 	Global.is_aiming = true
@@ -175,5 +177,5 @@ func _on_item_button_down(item: Item) -> void:
 func _on_Turret_mouse_down(turret: Turret) -> void:
 	if Global.is_running:
 		return
-	dragging_gun.rotation = turret.gun.rotation
+	dragging_gun.rotation = _prev_angle_snapped
 	_select_turret(turret)

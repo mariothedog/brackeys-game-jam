@@ -32,6 +32,7 @@ inv_slide_dur = 0.15
 [node name="VBoxContainer" type="VBoxContainer" parent="HUD"]
 margin_right = 29.0
 margin_bottom = 13.0
+mouse_filter = 2
 custom_constants/separation = 3
 __meta__ = {
 "_edit_use_anchors_": false
@@ -62,6 +63,27 @@ __meta__ = {
 margin_top = 11.0
 margin_right = 29.0
 margin_bottom = 13.0
+
+[node name="StepLabelsMargin" type="MarginContainer" parent="HUD"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+custom_constants/margin_right = 15
+custom_constants/margin_bottom = 15
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StepLabels" type="VBoxContainer" parent="HUD/StepLabelsMargin"]
+margin_left = 225.0
+margin_right = 225.0
+margin_bottom = 105.0
+mouse_filter = 2
+size_flags_horizontal = 8
+alignment = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="Inventory" parent="HUD" instance=ExtResource( 1 )]
 anchor_left = 1.0

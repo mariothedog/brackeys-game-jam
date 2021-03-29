@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://levels/tileset.tres" type="TileSet" id=1]
 [ext_resource path="res://main/level.gd" type="Script" id=2]
@@ -8,9 +8,11 @@
 [ext_resource path="res://turrets/turrets.gd" type="Script" id=6]
 [ext_resource path="res://turrets/gun.png" type="Texture" id=7]
 [ext_resource path="res://turrets/base.png" type="Texture" id=8]
+[ext_resource path="res://main/bullets.gd" type="Script" id=9]
 
 [node name="Main" type="Node"]
 script = ExtResource( 3 )
+level_num = 0
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
@@ -37,6 +39,7 @@ level_path = NodePath("../Level")
 
 [node name="Bullets" type="Node2D" parent="Turrets"]
 z_index = 1
+script = ExtResource( 9 )
 
 [node name="PlacedTurrets" type="Node2D" parent="Turrets"]
 
@@ -52,7 +55,8 @@ hframes = 8
 [node name="HUDLayer" parent="." instance=ExtResource( 5 )]
 layer = 0
 
-[node name="StepDelay" type="Timer" parent="."]
+[node name="Step" type="Timer" parent="."]
+wait_time = 0.5
 [connection signal="enemy_exploded" from="Level/Enemies" to="." method="_on_Enemies_enemy_exploded"]
 [connection signal="enemy_reached_end_of_path" from="Level/Enemies" to="." method="_on_Enemies_enemy_reached_end_of_path"]
-[connection signal="timeout" from="StepDelay" to="." method="_on_StepDelay_timeout"]
+[connection signal="timeout" from="Step" to="." method="_on_StepDelay_timeout"]

@@ -5,6 +5,7 @@
 [node name="Life" type="TextureRect"]
 margin_right = 7.0
 margin_bottom = 7.0
+mouse_filter = 2
 texture = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false

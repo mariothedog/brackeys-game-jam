@@ -52,13 +52,12 @@ func _input(event: InputEvent) -> void:
 		set_process(false)
 		Global.selected_turret = null
 		Global.is_aiming = false
-		_prev_angle_snapped = 0
 
 
-func shoot_turrets(bullets_node: Node) -> void:
+func shoot_turrets(bullets_node: Node, tile_size: Vector2) -> void:
 	for turret in placed_turrets.get_children():
 		if turret.is_enabled:
-			turret.shoot(bullets_node)
+			turret.shoot(bullets_node, tile_size)
 
 
 func _get_snapped_angle_to(pos: Vector2) -> float:
@@ -84,12 +83,16 @@ func _release_turret(turret: Turret) -> void:
 	var tile_pos := _get_tile_pos_at_mouse()
 	if not _can_place_at_tile(tile_pos):
 		turret.queue_free()
+		turret.item.num_left += 1
 		set_process(false)
 		return
 	var turret_pos := _get_turret_pos_from(tile_pos)
 	var prev_top_turret := _get_top_overlapping_turret(turret_pos)
 	if prev_top_turret:
 		turret.set_rotation(prev_top_turret.gun.rotation)
+		_prev_angle_snapped = prev_top_turret.gun.rotation
+	else:
+		_prev_angle_snapped = turret.gun.rotation
 	turret.global_position = turret_pos
 	turret.enable()
 	Global.is_aiming = true
@@ -174,5 +177,5 @@ func _on_item_button_down(item: Item) -> void:
 func _on_Turret_mouse_down(turret: Turret) -> void:
 	if Global.is_running:
 		return
-	dragging_gun.rotation = turret.gun.rotation
+	dragging_gun.rotation = _prev_angle_snapped
 	_select_turret(turret)

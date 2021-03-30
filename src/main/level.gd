@@ -4,16 +4,14 @@ extends TileMap
 const ENEMY_SPAWN_INDICATOR_SCENE = preload("res://enemies/enemy_spawn_indicator.tscn")
 
 var Tiles := TilesManager.new()
-var data: LevelData
 
 onready var enemies: Enemies = $Enemies
 onready var enemy_spawn_indicators: Node = $EnemySpawnIndicators
 
 
 func build_level(level_data: LevelData) -> void:
-	data = level_data
-	for type in data.tiles:
-		var tiles: PoolVector2Array = data.tiles[type]
+	for type in level_data.tiles:
+		var tiles: PoolVector2Array = level_data.tiles[type]
 		for pos in tiles:
 			if Tiles.level_editor_to_main.has(type):
 				set_cellv(pos, Tiles.level_editor_to_main[type])
@@ -21,7 +19,7 @@ func build_level(level_data: LevelData) -> void:
 				push_warning("Level editor tile %s has no corresponding main tile" % type)
 
 	var world_paths := []
-	for path in data.enemy_paths:
+	for path in level_data.enemy_paths:
 		var world_path := Util.map(funcref(self, "point_to_world"), path)
 		world_paths.append(world_path)
 

@@ -10,6 +10,7 @@ onready var enemy_spawn_indicators: Node = $EnemySpawnIndicators
 
 
 func build_level(level_data: LevelData) -> void:
+	clear()
 	for type in level_data.tiles:
 		var tiles: PoolVector2Array = level_data.tiles[type]
 		for pos in tiles:

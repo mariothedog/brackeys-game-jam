@@ -15,4 +15,4 @@ enemy_paths = [ PoolVector2Array( 18, 1, 17, 1, 16, 1, 15, 1, 14, 1, 13, 1, 12, 
 num_lives = 1
 num_turrets = 3
 num_enemies = 5
-steps = [ 0, 1, 1, 1, 2, 3, 2, 3 ]
+steps = [ 0, 1, 1, 1, 3, 2, 3, 2 ]

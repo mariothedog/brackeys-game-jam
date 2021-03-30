@@ -20,14 +20,14 @@ func build_level(level_data: LevelData) -> void:
 
 	var world_paths := []
 	for path in level_data.enemy_paths:
-		var world_path := Util.map(funcref(self, "point_to_world"), path)
+		var world_path := Util.map(funcref(self, "_point_to_world"), path)
 		world_paths.append(world_path)
 
 	enemies.paths = world_paths
 	_add_enemy_spawn_indicators(world_paths)
 
 
-func point_to_world(point: Vector2) -> Vector2:
+func _point_to_world(point: Vector2) -> Vector2:
 	return map_to_world(point) + cell_size / 2
 
 

@@ -12,6 +12,8 @@ export (Array, Constants.StepTypes) var steps
 export var create_level := false setget _create_level
 # warning-ignore:unused_class_variable
 export var clear_level := false setget _clear_level
+# warning-ignore:unused_class_variable
+export var load_level := false setget _load_level
 
 var Tiles: TilesManager
 
@@ -136,8 +138,35 @@ func _sort_tile_ids(a, b):
 	return a < b
 
 
+func _build_level(level_data: LevelData) -> void:
+	clear()
+	for type in level_data.tiles:
+		var tiles: PoolVector2Array = level_data.tiles[type]
+		for pos in tiles:
+			set_cellv(pos, type)
+#			if Tiles.level_editor_to_main.has(type):
+#				set_cellv(pos, Tiles.level_editor_to_main[type])
+#			else:
+#				push_warning("Level editor tile %s has no corresponding main tile" % type)
+
+
 func _clear_level(value: bool) -> void:
 	if not value:
 		# Return if setter is called automatically
 		return
 	clear()
+
+
+func _load_level(value: bool) -> void:
+	if not value:
+		# Return if setter is called automatically
+		return
+	var level_data: LevelData = load(Constants.FORMAT_LEVEL_PATH % level_num)
+	if not level_data:
+		push_warning("Attempted to load level %s but it wasn't found" % level_num)
+		return
+	num_lives = level_data.num_lives
+	num_turrets = level_data.num_turrets
+	num_enemies = level_data.num_enemies
+	steps = level_data.steps
+	_build_level(level_data)

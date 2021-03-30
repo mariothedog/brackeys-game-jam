@@ -64,6 +64,9 @@ func _stop() -> void:
 func _reset() -> void:
 	_step_index = 0
 	hud.highlight_step_labels(-1)
+	if not _level_data:
+		push_warning("Attempted to reset but the level data is invalid")
+		return
 	lives.num_lives = _level_data.num_lives
 	num_enemies_left = _level_data.num_enemies
 	_num_enemies_dead = 0

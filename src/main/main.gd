@@ -31,7 +31,7 @@ func _ready() -> void:
 # warning-ignore:return_value_discarded
 	Signals.connect("start_pressed", self, "_start")
 # warning-ignore:return_value_discarded
-	Signals.connect("stop_pressed", self, "_stop")
+	Signals.connect("stop_pressed", self, "_on_stop_pressed")
 
 
 func _start() -> void:
@@ -39,12 +39,12 @@ func _start() -> void:
 	level.start()
 	for turret in placed_turrets.get_children():
 		turret.toggle_sight_lines(false)
-	if not Signals.is_connected("ran_out_of_lives", self, "_force_stop"):
+	if not Signals.is_connected("ran_out_of_lives", self, "_on_ran_out_of_lives"):
 		# Signal is deferred so the force stop happens after the lives have been set to 0
 		# Signal is oneshot so there is no chance of two enemies trigerring force stop simultaneously
 # warning-ignore:return_value_discarded
 		Signals.connect(
-			"ran_out_of_lives", self, "_force_stop", [], CONNECT_DEFERRED + CONNECT_ONESHOT
+			"ran_out_of_lives", self, "_on_ran_out_of_lives", [], CONNECT_DEFERRED + CONNECT_ONESHOT
 		)
 	Global.is_running = true
 	step_timer.start()
@@ -53,7 +53,6 @@ func _start() -> void:
 func _stop() -> void:
 	step_timer.stop()
 	level.stop()
-	_reset()
 	Util.queue_free_children(enemies)
 	Util.queue_free_children(bullets)
 	for turret in placed_turrets.get_children():
@@ -84,13 +83,16 @@ func _go_to_next_level() -> void:
 func _go_to_level(num: int) -> void:
 	Util.queue_free_children(enemy_spawn_indicators)
 	Util.queue_free_children(placed_turrets)
+	_force_stop()
 	_level_data = load(FORMAT_LEVEL_PATH % num)
+	if not _level_data:
+		push_warning("Level %s was not found" % num)
+		return
 	if not _level_data.steps:
 		push_warning("Level %s has no steps" % num)
-	hud.set_step_labels(_level_data.steps)
-	_force_stop()
-	item.num_left = _level_data.num_turrets
 	_reset()
+	hud.set_step_labels(_level_data.steps)
+	item.num_left = _level_data.num_turrets
 	level.build_level(_level_data)
 	level_label.text = FORMAT_LEVEL_LABEL % num
 
@@ -99,6 +101,16 @@ func _set_num_enemies_dead(value: int) -> void:
 	_num_enemies_dead = value
 	if value == _level_data.num_enemies:
 		_go_to_next_level()
+
+
+func _on_stop_pressed() -> void:
+	_stop()
+	_reset()
+
+
+func _on_ran_out_of_lives() -> void:
+	_force_stop()
+	_reset()
 
 
 func _on_Enemies_enemy_reached_end_of_path(enemy: Enemy) -> void:

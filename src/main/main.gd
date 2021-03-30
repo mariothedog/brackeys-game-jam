@@ -1,6 +1,5 @@
 extends Node
 
-const FORMAT_LEVEL_PATH := "res://levels/resources/level_%s.tres"
 const FORMAT_LEVEL_LABEL := "level: %s"
 
 export var level_num := 1
@@ -87,12 +86,12 @@ func _go_to_level(num: int) -> void:
 	Util.queue_free_children(enemy_spawn_indicators)
 	Util.queue_free_children(placed_turrets)
 	_force_stop()
-	_level_data = load(FORMAT_LEVEL_PATH % num)
+	_level_data = load(Constants.FORMAT_LEVEL_PATH % num)
 	if not _level_data:
-		push_warning("Level %s was not found" % num)
+		push_warning("Attempted to go to level %s but it wasn't found" % num)
 		return
 	if not _level_data.steps:
-		push_warning("Level %s has no steps" % num)
+		push_warning("Attempted to go to level %s but it has no steps" % num)
 	_reset()
 	hud.set_step_labels(_level_data.steps)
 	item.num_left = _level_data.num_turrets

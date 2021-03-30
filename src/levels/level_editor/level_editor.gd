@@ -12,6 +12,8 @@ export (Array, Constants.StepTypes) var steps
 export var create_level := false setget _create_level
 # warning-ignore:unused_class_variable
 export var clear_level := false setget _clear_level
+# warning-ignore:unused_class_variable
+export var load_level := false setget _load_level
 
 var Tiles: TilesManager
 
@@ -22,26 +24,26 @@ var enemy_path_end_points: PoolVector2Array
 var enemy_path_points: PoolVector2Array
 
 
-func get_all_astar_paths(start_points: PoolVector2Array, end_points: PoolVector2Array) -> Array:
+func _get_all_astar_paths(start_points: PoolVector2Array, end_points: PoolVector2Array) -> Array:
 	var paths := []
 	for start_point in start_points:
 		for end_point in end_points:
-			var path := get_astar_path(start_point, end_point)
+			var path := _get_astar_path(start_point, end_point)
 			if path:
 				paths.append(path)
 	return paths
 
 
-func get_astar_path(start_point: Vector2, end_point: Vector2) -> PoolVector2Array:
-	var start_point_index := get_point_index(start_point)
-	var end_point_index := get_point_index(end_point)
+func _get_astar_path(start_point: Vector2, end_point: Vector2) -> PoolVector2Array:
+	var start_point_index := _get_point_index(start_point)
+	var end_point_index := _get_point_index(end_point)
 	var path := astar.get_point_path(start_point_index, end_point_index)
 	return Util.get_PoolVector2Array(path)
 
 
-func connect_enemy_path_points(points: PoolVector2Array) -> void:
+func _connect_enemy_path_points(points: PoolVector2Array) -> void:
 	for point in points:
-		var point_index := get_point_index(point)
+		var point_index := _get_point_index(point)
 		var points_relative := PoolVector2Array(
 			[
 				point + Vector2.RIGHT,
@@ -51,14 +53,14 @@ func connect_enemy_path_points(points: PoolVector2Array) -> void:
 			]
 		)
 		for point_relative in points_relative:
-			var point_relative_index = get_point_index(point_relative)
+			var point_relative_index = _get_point_index(point_relative)
 			if not astar.has_point(point_relative_index):
 				continue
 			astar.connect_points(point_index, point_relative_index, false)
 			update()
 
 
-func get_point_index(point: Vector2) -> int:
+func _get_point_index(point: Vector2) -> int:
 	return int(point.x * level_size.x + point.y)
 
 
@@ -88,7 +90,7 @@ func _create_level(value: bool) -> void:
 
 			if not type in Tiles.enemy_path_tiles:
 				continue
-			var point_index := get_point_index(point)
+			var point_index := _get_point_index(point)
 			astar.add_point(point_index, Util.get_Vector3(point))
 			enemy_path_points.append(point)
 			if type in Tiles.enemy_path_start_tiles:
@@ -98,8 +100,8 @@ func _create_level(value: bool) -> void:
 		if tiles:
 			all_tiles[type] = tiles
 
-	connect_enemy_path_points(enemy_path_points)
-	var paths := get_all_astar_paths(enemy_path_start_points, enemy_path_end_points)
+	_connect_enemy_path_points(enemy_path_points)
+	var paths := _get_all_astar_paths(enemy_path_start_points, enemy_path_end_points)
 
 	var data := LevelData.new()
 	data.tiles = all_tiles
@@ -136,8 +138,35 @@ func _sort_tile_ids(a, b):
 	return a < b
 
 
+func _build_level(level_data: LevelData) -> void:
+	clear()
+	for type in level_data.tiles:
+		var tiles: PoolVector2Array = level_data.tiles[type]
+		for pos in tiles:
+			set_cellv(pos, type)
+#			if Tiles.level_editor_to_main.has(type):
+#				set_cellv(pos, Tiles.level_editor_to_main[type])
+#			else:
+#				push_warning("Level editor tile %s has no corresponding main tile" % type)
+
+
 func _clear_level(value: bool) -> void:
 	if not value:
 		# Return if setter is called automatically
 		return
 	clear()
+
+
+func _load_level(value: bool) -> void:
+	if not value:
+		# Return if setter is called automatically
+		return
+	var level_data: LevelData = load(Constants.FORMAT_LEVEL_PATH % level_num)
+	if not level_data:
+		push_warning("Attempted to load level %s but it wasn't found" % level_num)
+		return
+	num_lives = level_data.num_lives
+	num_turrets = level_data.num_turrets
+	num_enemies = level_data.num_enemies
+	steps = level_data.steps
+	_build_level(level_data)

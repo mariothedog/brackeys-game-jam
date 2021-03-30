@@ -7,6 +7,7 @@ export var level_num := 0
 export (int, 1, 100) var num_lives := 1
 export (int, 1, 100) var num_turrets := 1
 export (int, 0, 1000) var num_enemies := 1
+export (Array, Constants.StepTypes) var steps
 # warning-ignore:unused_class_variable
 export var create_level := false setget _create_level
 # warning-ignore:unused_class_variable
@@ -106,6 +107,7 @@ func _create_level(value: bool) -> void:
 	data.num_lives = num_lives
 	data.num_turrets = num_turrets
 	data.num_enemies = num_enemies
+	data.steps = steps
 # warning-ignore:return_value_discarded
 	ResourceSaver.save(FORMAT_PATH % level_num, data)
 

@@ -36,6 +36,10 @@ static func queue_free_children(node: Node) -> void:
 	for child in node.get_children():
 		child.queue_free()
 
+static func deferred_free_children(node: Node) -> void:
+	for child in node.get_children():
+		child.call_deferred("free")
+
 static func sign_vec2(vec: Vector2, threshold: float) -> Vector2:
 	var new_vec := Vector2()
 	if vec.x > threshold:

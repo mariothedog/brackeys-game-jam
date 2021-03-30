@@ -21,8 +21,9 @@ func _ready() -> void:
 	inventory.rect_position.x = _inv_start_pos_x
 
 
-func add_step_labels(step_types: Dictionary, steps: Array) -> void:
-	var step_names := step_types.keys()
+func set_step_labels(steps: Array) -> void:
+	Util.deferred_free_children(step_labels)
+	var step_names := Constants.StepTypes.keys()
 	for step in steps:
 		var step_name: String = step_names[step].to_lower()
 		var label: Label = STEP_LABEL_SCENE.instance()

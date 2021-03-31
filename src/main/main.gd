@@ -4,11 +4,12 @@ const FORMAT_LEVEL_LABEL := "level: %s"
 
 export var level_num := 1
 
-var num_enemies_left: int
-
 var _level_data: LevelData
+var _num_enemies_left: int
+var _num_enemy_spawn_attempts := 0
 var _num_enemies_dead := 0 setget _set_num_enemies_dead
 var _step_index := 0
+var _turn_num := 0
 
 onready var level: Level = $Level
 onready var enemies: Enemies = $Level/Enemies
@@ -62,12 +63,13 @@ func _stop() -> void:
 
 func _reset() -> void:
 	_step_index = 0
+	_turn_num = 0
 	hud.highlight_step_labels(-1)
 	if not _level_data:
 		push_warning("Attempted to reset but the level data is invalid")
 		return
 	lives.num_lives = _level_data.num_lives
-	num_enemies_left = _level_data.num_enemies
+	_num_enemies_left = _level_data.num_enemies
 	_num_enemies_dead = 0
 
 
@@ -78,6 +80,7 @@ func _force_stop() -> void:
 
 
 func _go_to_next_level() -> void:
+	print("Turns Taken to Complete the Level: ", _turn_num)
 	level_num += 1
 	_go_to_level(level_num)
 
@@ -133,7 +136,7 @@ func _get_valid_step() -> int:
 		step = _level_data.steps[_step_index]
 		match step:
 			Constants.StepTypes.ENEMY_SPAWN:
-				is_valid = num_enemies_left > 0
+				is_valid = _num_enemies_left > 0
 			Constants.StepTypes.ENEMY_MOVE:
 				is_valid = enemies.get_child_count() > 0
 			Constants.StepTypes.BULLET_MOVE:
@@ -150,7 +153,8 @@ func _on_StepDelay_timeout() -> void:
 	hud.highlight_step_labels(_step_index)
 	match step:
 		Constants.StepTypes.ENEMY_SPAWN:
-			num_enemies_left -= 1
+			_num_enemy_spawn_attempts += 1
+			_num_enemies_left -= 1
 			enemies.spawn_enemy()
 		Constants.StepTypes.ENEMY_MOVE:
 			enemies.move_enemies()
@@ -159,3 +163,4 @@ func _on_StepDelay_timeout() -> void:
 		Constants.StepTypes.TURRET_SHOOT:
 			turrets.shoot_turrets(bullets, level.cell_size)
 	_step_index += 1
+	_turn_num += 1

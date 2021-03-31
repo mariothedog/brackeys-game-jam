@@ -29,7 +29,7 @@ func move_to(global_pos: Vector2) -> void:
 
 
 func move() -> void:
-	move_to(global_position + velocity)
+	move_to(_target_pos + velocity)
 
 
 func explode() -> void:

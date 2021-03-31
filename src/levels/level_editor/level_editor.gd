@@ -169,4 +169,5 @@ func _load_level(value: bool) -> void:
 	num_turrets = level_data.num_turrets
 	num_enemies = level_data.num_enemies
 	steps = level_data.steps
+	property_list_changed_notify()
 	_build_level(level_data)

@@ -9,6 +9,7 @@ var friendly_turrets := []  # Turrets the bullet won't hurt
 var velocity: Vector2
 
 var _target_pos: Vector2
+var _is_moving := false
 
 
 func _ready() -> void:
@@ -18,18 +19,28 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if Util.is_vec2_equal_with_threshold(global_position, _target_pos, AT_TARGET_THRESHOLD):
 		set_physics_process(false)
+		_is_moving = false
 		global_position = _target_pos
 		return
 	global_position = global_position.linear_interpolate(_target_pos, MOVEMENT_RATE * delta)
 
 
-func move_to(global_pos: Vector2) -> void:
+func move_to(global_pos: Vector2, is_instant := false) -> void:
+	if is_instant:
+		_target_pos = global_pos
+		global_position = _target_pos
+		return
+	# At a very high step rate, bullets may move again before they have finished moving
+	# Snapping them to their previous target pos prevents them from going off track
+	if _is_moving:
+		global_position = _target_pos
 	_target_pos = global_pos
+	_is_moving = true
 	set_physics_process(true)
 
 
-func move() -> void:
-	move_to(global_position + velocity)
+func move(num: int) -> void:
+	move_to(_target_pos + velocity * num)
 
 
 func explode() -> void:

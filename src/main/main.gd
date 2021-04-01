@@ -136,6 +136,10 @@ func _get_valid_step() -> int:
 		_step_index %= _level_data.steps.size()
 		step = _level_data.steps[_step_index]
 		match step:
+			Constants.StepTypes.BULLET_MOVE:
+				is_valid = bullets.get_child_count() > 0
+			Constants.StepTypes.TURRET_SHOOT:
+				is_valid = placed_turrets.get_child_count() > 0
 			Constants.StepTypes.ENEMY_SPAWN:
 				if _num_enemies_spawned_in_group == _level_data.enemy_group_size:
 					is_valid = false
@@ -144,10 +148,6 @@ func _get_valid_step() -> int:
 					is_valid = _num_enemies_left > 0
 			Constants.StepTypes.ENEMY_MOVE:
 				is_valid = enemies.get_child_count() > 0
-			Constants.StepTypes.BULLET_MOVE:
-				is_valid = bullets.get_child_count() > 0
-			Constants.StepTypes.TURRET_SHOOT:
-				is_valid = placed_turrets.get_child_count() > 0
 		if not is_valid:
 			_step_index += 1
 	return step

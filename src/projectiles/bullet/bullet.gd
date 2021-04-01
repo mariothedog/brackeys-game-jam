@@ -35,8 +35,8 @@ func move_to(global_pos: Vector2) -> void:
 	set_physics_process(true)
 
 
-func move() -> void:
-	move_to(_target_pos + velocity)
+func move(num: int) -> void:
+	move_to(_target_pos + velocity * num)
 
 
 func explode() -> void:

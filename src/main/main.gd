@@ -153,6 +153,18 @@ func _get_valid_step() -> int:
 	return step
 
 
+func _get_num_step() -> int:
+	var step: int = _level_data.steps[_step_index]
+	var num := 1
+	var is_consecutive := true
+	while is_consecutive:
+		is_consecutive = _level_data.steps[_step_index + 1] == step
+		if is_consecutive:
+			_step_index += 1
+			num += 1
+	return num
+
+
 func _on_StepDelay_timeout() -> void:
 	var step := _get_valid_step()
 	hud.highlight_step_labels(_step_index)
@@ -164,7 +176,8 @@ func _on_StepDelay_timeout() -> void:
 		Constants.StepTypes.ENEMY_MOVE:
 			enemies.move_enemies()
 		Constants.StepTypes.BULLET_MOVE:
-			bullets.move_bullets()
+			var num := _get_num_step()
+			bullets.move_bullets(num)
 		Constants.StepTypes.TURRET_SHOOT:
 			turrets.shoot_turrets(bullets, level.cell_size)
 	_step_index += 1

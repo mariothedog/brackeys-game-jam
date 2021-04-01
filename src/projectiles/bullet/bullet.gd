@@ -25,7 +25,11 @@ func _physics_process(delta: float) -> void:
 	global_position = global_position.linear_interpolate(_target_pos, MOVEMENT_RATE * delta)
 
 
-func move_to(global_pos: Vector2) -> void:
+func move_to(global_pos: Vector2, is_instant := false) -> void:
+	if is_instant:
+		_target_pos = global_pos
+		global_position = _target_pos
+		return
 	# At a very high step rate, bullets may move again before they have finished moving
 	# Snapping them to their previous target pos prevents them from going off track
 	if _is_moving:

@@ -12,6 +12,7 @@
 
 [node name="Main" type="Node"]
 script = ExtResource( 3 )
+level_num = 0
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
@@ -49,6 +50,7 @@ texture = ExtResource( 8 )
 
 [node name="Gun" type="Sprite" parent="Turrets/DraggingTurretLayer/DraggingTurret"]
 texture = ExtResource( 7 )
+vframes = 3
 hframes = 8
 
 [node name="HUDLayer" parent="." instance=ExtResource( 5 )]

@@ -53,6 +53,7 @@ func _start() -> void:
 func _stop() -> void:
 	step_timer.stop()
 	level.stop()
+	turrets.stop_turret_shooting_anims()
 	Util.queue_free_children(enemies)
 	Util.queue_free_children(bullets)
 	for turret in placed_turrets.get_children():
@@ -179,10 +180,21 @@ func _on_StepDelay_timeout() -> void:
 			var num := _get_num_step()
 			bullets.move_bullets(num)
 		Constants.StepTypes.TURRET_SHOOT:
+			# If there are bullet move turns after this one they should all
+			# be executed in one turn
+			# However, the bullets should only move after *all* the bullets
+			# have been shot
+			# To ensure that all the bullets have been shot, only the last
+			# turret (i.e. the one that shoots last) has its shot signal
+			# connected to bullets.move_bullets
+			var num_turrets := placed_turrets.get_child_count()
+			var last_turret := placed_turrets.get_child(num_turrets - 1)
+			Util.disconnect_safe(last_turret, "shot", bullets, "move_bullets")
 			turrets.shoot_turrets(bullets, level.cell_size)
 			if _level_data.steps[_step_index + 1] == Constants.StepTypes.BULLET_MOVE:
 				_step_index += 1
 				var num := _get_num_step()
-				bullets.move_bullets(num)
+# warning-ignore:return_value_discarded
+				last_turret.connect("shot", bullets, "move_bullets", [num], CONNECT_ONESHOT)
 	_step_index += 1
 	_turn_num += 1

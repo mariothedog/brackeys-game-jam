@@ -2,6 +2,7 @@ class_name Turret
 extends Area2D
 
 signal mouse_down
+signal shot
 
 const SIGHT_LINE_SCENE := preload("res://turrets/sight_line/sight_line.tscn")
 const BULLET_SCENE := preload("res://projectiles/bullet/bullet.tscn")
@@ -29,12 +30,15 @@ var is_enabled := true
 var level := 1 setget _set_level
 
 var _target_rotation: float
+var _bullets_node: Node
+var _tile_size: Vector2
 
 onready var gun: Sprite = $Gun
 onready var sight_lines: Node2D = $Gun/SightLines
 onready var barrel: Position2D = $Barrel
 onready var collider: CollisionShape2D = $CollisionShape2D
 onready var sight_blocker_collider: CollisionShape2D = $SightBlocker/CollisionShape2D
+onready var anim_player: AnimationPlayer = $AnimationPlayer
 
 
 func _ready() -> void:
@@ -71,15 +75,27 @@ func set_rotation(radians: float) -> void:
 
 
 func shoot(bullets_node: Node, tile_size: Vector2) -> void:
+	_bullets_node = bullets_node
+	_tile_size = tile_size
+	anim_player.play("shoot")
+
+
+func _shoot_without_animation() -> void:
 	for i in level:
 		var shoot_pos := barrel.position.rotated(_target_rotation).rotated(GUN_ROTATIONS[i])
 		var dir := Util.sign_vec2(shoot_pos, SHOOT_POS_SIGN_DIRECTION_THRESHOLD)
 		var bullet: Bullet = BULLET_SCENE.instance()
 		bullet.move_to(global_position, true)
-		bullet.velocity = dir * tile_size
+		bullet.velocity = dir * _tile_size
 		bullet.rotation = dir.angle()
 		bullet.friendly_turrets.append(self)
-		bullets_node.add_child(bullet)
+		_bullets_node.add_child(bullet)
+	emit_signal("shot")
+
+
+func stop_shooting_anim() -> void:
+	anim_player.stop()
+	gun.frame_coords.y = 0
 
 
 func explode() -> void:

@@ -180,5 +180,9 @@ func _on_StepDelay_timeout() -> void:
 			bullets.move_bullets(num)
 		Constants.StepTypes.TURRET_SHOOT:
 			turrets.shoot_turrets(bullets, level.cell_size)
+			if _level_data.steps[_step_index + 1] == Constants.StepTypes.BULLET_MOVE:
+				_step_index += 1
+				var num := _get_num_step()
+				bullets.move_bullets(num)
 	_step_index += 1
 	_turn_num += 1

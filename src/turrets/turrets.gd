@@ -1,6 +1,8 @@
 class_name Turrets
 extends Node2D
 
+signal placed(turret)
+
 const TURRET_SCENE := preload("res://turrets/turret.tscn")
 
 const TURRET_AIMING_ANGLE_SNAP := deg2rad(45)
@@ -102,6 +104,7 @@ func _release_turret(turret: Turret) -> void:
 	turret.enable()
 	Global.is_aiming = true
 	_update_overlapping_turrets(turret.position)
+	emit_signal("placed", turret)
 
 
 func _can_place_at_tile(tile_pos: Vector2) -> bool:

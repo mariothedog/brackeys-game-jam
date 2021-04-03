@@ -55,3 +55,10 @@ static func sign_vec2(vec: Vector2, threshold: float) -> Vector2:
 static func disconnect_safe(object: Object, object_signal: String, target: Object, method: String) -> void:
 	if object.is_connected(object_signal, target, method):
 		object.disconnect(object_signal, target, method)
+
+static func connect_safe(
+	object: Object, object_signal: String, target: Object, method: String, binds: Array, flags := 0
+) -> void:
+	if not object.is_connected(object_signal, target, method):
+# warning-ignore:return_value_discarded
+		object.connect(object_signal, target, method, binds, flags)

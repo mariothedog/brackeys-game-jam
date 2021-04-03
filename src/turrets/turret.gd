@@ -77,6 +77,8 @@ func set_rotation(radians: float) -> void:
 func shoot(bullets_node: Node, tile_size: Vector2) -> void:
 	_bullets_node = bullets_node
 	_tile_size = tile_size
+	if anim_player.is_playing():
+		push_warning("Attempted to shoot but the shoot animation was already playing")
 	anim_player.play("shoot")
 
 

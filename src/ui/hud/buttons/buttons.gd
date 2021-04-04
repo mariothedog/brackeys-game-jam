@@ -14,3 +14,7 @@ func _on_Stop_pressed() -> void:
 	start.disabled = false
 	stop.disabled = true
 	Signals.emit_signal("stop_pressed")
+
+
+func _on_Speed_toggled(button_pressed):
+	Signals.emit_signal("speed_pressed", button_pressed)

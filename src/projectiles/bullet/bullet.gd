@@ -23,7 +23,8 @@ func _physics_process(delta: float) -> void:
 		global_position = _target_pos
 		emit_signal("stopped_moving")
 		return
-	global_position = global_position.linear_interpolate(_target_pos, MOVEMENT_RATE * delta)
+	var weight := min(MOVEMENT_RATE * delta * Global.step_speed, 1)
+	global_position = global_position.linear_interpolate(_target_pos, weight)
 
 
 func move_to(global_pos: Vector2, is_instant := false) -> void:

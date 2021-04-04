@@ -3,6 +3,7 @@ extends Node
 const FORMAT_LEVEL_LABEL := "level: %s"
 
 export var level_num := 1
+export var min_step_delay_ms := 1000
 
 var _level_data: LevelData
 var _num_enemies_left: int
@@ -11,6 +12,7 @@ var _num_enemies_dead := 0 setget _set_num_enemies_dead
 var _step_index := 0
 var _turn_num := 0
 var _last_turret: Turret
+var _last_step_start_time: int
 
 onready var level: Level = $Level
 onready var enemies: Enemies = $Level/Enemies
@@ -144,10 +146,10 @@ func _get_valid_step() -> int:
 		_step_index %= _level_data.steps.size()
 		step = _level_data.steps[_step_index]
 		match step:
-			Constants.StepTypes.BULLET_MOVE:
-				is_valid = bullets.get_child_count() > 0
 			Constants.StepTypes.TURRET_SHOOT:
 				is_valid = placed_turrets.get_child_count() > 0
+			Constants.StepTypes.BULLET_MOVE:
+				is_valid = bullets.get_child_count() > 0
 			Constants.StepTypes.ENEMY_SPAWN:
 				if _num_enemies_spawned_in_group == _level_data.enemy_group_size:
 					is_valid = false
@@ -176,23 +178,10 @@ func _get_num_step() -> int:
 
 
 func _start_step() -> void:
+	_last_step_start_time = OS.get_ticks_msec()
 	var step := _get_valid_step()
 	hud.highlight_step_labels(_step_index)
 	match step:
-		Constants.StepTypes.ENEMY_SPAWN:
-			_num_enemies_spawned_in_group += 1
-			_num_enemies_left -= 1
-			enemies.spawn_enemy()
-			step_delay_timer.start()
-		Constants.StepTypes.ENEMY_MOVE:
-			enemies.move_enemies()
-			var num_enemies := enemies.get_child_count()
-			var last_enemy := enemies.get_child(num_enemies - 1)
-# warning-ignore:return_value_discarded
-			last_enemy.connect("stopped_moving", step_delay_timer, "start", [], CONNECT_ONESHOT)
-		Constants.StepTypes.BULLET_MOVE:
-			var num := _get_num_step()
-			_move_bullets_step(num)
 		Constants.StepTypes.TURRET_SHOOT:
 			# If there are bullet move turns after this one they should all
 			# be executed in one turn
@@ -211,6 +200,20 @@ func _start_step() -> void:
 				_last_turret.connect(
 					"shot", self, "_move_bullets_step", [num], CONNECT_ONESHOT
 				)
+		Constants.StepTypes.BULLET_MOVE:
+			var num := _get_num_step()
+			_move_bullets_step(num)
+		Constants.StepTypes.ENEMY_SPAWN:
+			_num_enemies_spawned_in_group += 1
+			_num_enemies_left -= 1
+			enemies.spawn_enemy()
+			_start_step_delay()
+		Constants.StepTypes.ENEMY_MOVE:
+			enemies.move_enemies()
+			var num_enemies := enemies.get_child_count()
+			var last_enemy := enemies.get_child(num_enemies - 1)
+# warning-ignore:return_value_discarded
+			last_enemy.connect("stopped_moving", self, "_start_step_delay", [], CONNECT_ONESHOT)
 	_step_index = _get_next_step_index()
 	_turn_num += 1
 
@@ -230,7 +233,14 @@ func _move_bullets_step(bullet_move_tile_num: int) -> void:
 	var num_bullets := bullets.get_child_count()
 	var last_bullet := bullets.get_child(num_bullets - 1)
 # warning-ignore:return_value_discarded
-	last_bullet.connect("stopped_moving", step_delay_timer, "start", [], CONNECT_ONESHOT)
+	last_bullet.connect("stopped_moving", self, "_start_step_delay", [], CONNECT_ONESHOT)
+
+
+func _start_step_delay() -> void:
+	var time_since_last_step := OS.get_ticks_msec() - _last_step_start_time
+	var delay := max(min_step_delay_ms - time_since_last_step, 0)
+	var delay_sec := delay / 1000.0
+	step_delay_timer.start(delay_sec)
 
 
 func _on_StepDelay_timeout() -> void:

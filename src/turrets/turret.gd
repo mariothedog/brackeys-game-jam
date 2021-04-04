@@ -79,6 +79,7 @@ func shoot(bullets_node: Node, tile_size: Vector2) -> void:
 	_tile_size = tile_size
 	if anim_player.is_playing():
 		push_warning("Attempted to shoot but the shoot animation was already playing")
+	anim_player.playback_speed = Global.step_speed
 	anim_player.play("shoot")
 
 

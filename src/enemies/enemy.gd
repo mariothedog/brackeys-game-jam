@@ -29,7 +29,8 @@ func _physics_process(delta: float) -> void:
 		if _path_current_index + 1 == _path_length:
 			emit_signal("reached_end_of_path")
 		return
-	global_position = global_position.linear_interpolate(_target_pos, MOVEMENT_RATE * delta)
+	var weight := min(MOVEMENT_RATE * delta * Global.step_speed, 1)
+	global_position = global_position.linear_interpolate(_target_pos, weight)
 
 
 func update_position_along_path() -> void:

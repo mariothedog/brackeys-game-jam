@@ -3,7 +3,12 @@ extends Node
 const FORMAT_LEVEL_LABEL := "level: %s"
 
 export var level_num := 1
-export var min_step_delay_ms := 1000
+export var initial_min_step_delay_ms := 1000.0
+export var normal_min_step_delay_ms := 1000.0
+export var sped_up_min_step_delay_ms := 500.0
+export var initial_step_speed := 1.0
+export var normal_step_speed := 1.0
+export var sped_up_step_speed := 2.0
 
 var _level_data: LevelData
 var _num_enemies_left: int
@@ -30,11 +35,15 @@ onready var step_delay_timer: Timer = $StepDelay
 
 
 func _ready() -> void:
+	Global.min_step_delay_ms = initial_min_step_delay_ms
+	Global.step_speed = initial_step_speed
 	_go_to_level(level_num)
 # warning-ignore:return_value_discarded
 	Signals.connect("start_pressed", self, "_start")
 # warning-ignore:return_value_discarded
 	Signals.connect("stop_pressed", self, "_on_stop_pressed")
+# warning-ignore:return_value_discarded
+	Signals.connect("speed_pressed", self, "_on_speed_pressed")
 
 
 func _start() -> void:
@@ -238,10 +247,19 @@ func _move_bullets_step(bullet_move_tile_num: int) -> void:
 
 func _start_step_delay() -> void:
 	var time_since_last_step := OS.get_ticks_msec() - _last_step_start_time
-	var delay := max(min_step_delay_ms - time_since_last_step, 0)
+	var delay := max(Global.min_step_delay_ms - time_since_last_step, 0)
 	var delay_sec := delay / 1000.0
 	step_delay_timer.start(delay_sec)
 
 
 func _on_StepDelay_timeout() -> void:
 	_start_step()
+
+
+func _on_speed_pressed(button_pressed: bool) -> void:
+	if button_pressed:
+		Global.min_step_delay_ms = sped_up_min_step_delay_ms
+		Global.step_speed = sped_up_step_speed
+	else:
+		Global.min_step_delay_ms = normal_min_step_delay_ms
+		Global.step_speed = normal_step_speed

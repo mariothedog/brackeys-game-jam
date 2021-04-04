@@ -1,6 +1,7 @@
 class_name Enemy
 extends Area2D
 
+signal stopped_moving
 signal reached_end_of_path
 signal exploded
 
@@ -14,7 +15,6 @@ var path: PoolVector2Array setget _set_path
 var _path_length: int
 var _path_current_index := 0
 var _target_pos: Vector2
-var _is_moving := false
 
 
 func _ready() -> void:
@@ -24,8 +24,8 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if Util.is_vec2_equal_with_threshold(global_position, _target_pos, AT_TARGET_THRESHOLD):
 		set_physics_process(false)
-		_is_moving = false
 		global_position = _target_pos
+		emit_signal("stopped_moving")
 		if _path_current_index + 1 == _path_length:
 			emit_signal("reached_end_of_path")
 		return
@@ -36,20 +36,16 @@ func update_position_along_path() -> void:
 	if _path_current_index + 1 == _path_length:
 		return
 	_path_current_index += 1
-	# At a very high step rate, enemies may move again before they have finished moving
-	# Snapping them to their previous target pos prevents them from going off track
-	if _is_moving:
-		global_position = _target_pos
 	_target_pos = path[_path_current_index]
-	_is_moving = true
 	set_physics_process(true)
 
 
 func explode() -> void:
 	if is_queued_for_deletion():
 		return
-	queue_free()
+	emit_signal("stopped_moving")
 	emit_signal("exploded")
+	queue_free()
 
 
 func _set_path(value: PoolVector2Array) -> void:

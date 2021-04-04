@@ -1,6 +1,8 @@
 class_name Turrets
 extends Node2D
 
+signal placed(turret)
+
 const TURRET_SCENE := preload("res://turrets/turret.tscn")
 
 const TURRET_AIMING_ANGLE_SNAP := deg2rad(45)
@@ -60,6 +62,11 @@ func shoot_turrets(bullets_node: Node, tile_size: Vector2) -> void:
 			turret.shoot(bullets_node, tile_size)
 
 
+func stop_turret_shooting_anims() -> void:
+	for turret in placed_turrets.get_children():
+		turret.stop_shooting_anim()
+
+
 func _get_snapped_angle_to(pos: Vector2) -> float:
 	var angle_snapped := stepify(pos.angle(), TURRET_AIMING_ANGLE_SNAP)
 	return wrapf(angle_snapped, 0, Constants.FULL_ROTATION)
@@ -97,6 +104,7 @@ func _release_turret(turret: Turret) -> void:
 	turret.enable()
 	Global.is_aiming = true
 	_update_overlapping_turrets(turret.position)
+	emit_signal("placed", turret)
 
 
 func _can_place_at_tile(tile_pos: Vector2) -> bool:

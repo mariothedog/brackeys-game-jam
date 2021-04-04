@@ -12,6 +12,7 @@
 
 [node name="Main" type="Node"]
 script = ExtResource( 3 )
+min_step_delay_ms = 500
 
 [node name="Camera2D" type="Camera2D" parent="."]
 anchor_mode = 0
@@ -49,13 +50,15 @@ texture = ExtResource( 8 )
 
 [node name="Gun" type="Sprite" parent="Turrets/DraggingTurretLayer/DraggingTurret"]
 texture = ExtResource( 7 )
+vframes = 3
 hframes = 8
 
 [node name="HUDLayer" parent="." instance=ExtResource( 5 )]
 layer = 0
 
-[node name="Step" type="Timer" parent="."]
-wait_time = 0.5
+[node name="StepDelay" type="Timer" parent="."]
+one_shot = true
 [connection signal="enemy_exploded" from="Level/Enemies" to="." method="_on_Enemies_enemy_exploded"]
 [connection signal="enemy_reached_end_of_path" from="Level/Enemies" to="." method="_on_Enemies_enemy_reached_end_of_path"]
-[connection signal="timeout" from="Step" to="." method="_on_StepDelay_timeout"]
+[connection signal="placed" from="Turrets" to="." method="_on_Turrets_placed"]
+[connection signal="timeout" from="StepDelay" to="." method="_on_StepDelay_timeout"]

@@ -3,6 +3,7 @@ extends Node
 const FORMAT_LEVEL_LABEL := "level: %s"
 
 export var level_num := 1
+export var min_step_delay_ms := 1000
 
 var _level_data: LevelData
 var _num_enemies_left: int
@@ -10,6 +11,8 @@ var _num_enemies_spawned_in_group := 0
 var _num_enemies_dead := 0 setget _set_num_enemies_dead
 var _step_index := 0
 var _turn_num := 0
+var _last_turret: Turret
+var _last_step_start_time: int
 
 onready var level: Level = $Level
 onready var enemies: Enemies = $Level/Enemies
@@ -23,7 +26,7 @@ onready var lives: Lives = $HUDLayer/HUD/VBoxContainer/Lives
 onready var item: Item = $HUDLayer/HUD/Inventory/ItemsMargin/Items/Item
 onready var start_button: TextureButton = $HUDLayer/HUD/Buttons/Start
 onready var stop_button: TextureButton = $HUDLayer/HUD/Buttons/Stop
-onready var step_timer: Timer = $Step
+onready var step_delay_timer: Timer = $StepDelay
 
 
 func _ready() -> void:
@@ -39,20 +42,27 @@ func _start() -> void:
 	level.start()
 	for turret in placed_turrets.get_children():
 		turret.toggle_sight_lines(false)
-	if not Signals.is_connected("ran_out_of_lives", self, "_on_ran_out_of_lives"):
-		# Signal is deferred so the force stop happens after the lives have been set to 0
-		# Signal is oneshot so there is no chance of two enemies trigerring force stop simultaneously
-# warning-ignore:return_value_discarded
-		Signals.connect(
-			"ran_out_of_lives", self, "_on_ran_out_of_lives", [], CONNECT_DEFERRED + CONNECT_ONESHOT
-		)
+	# Signal is deferred so the force stop happens after the lives have been set to 0
+	# Signal is oneshot so there is no chance of two enemies trigerring force stop simultaneously
+	Util.connect_safe(
+		Signals,
+		"ran_out_of_lives",
+		self,
+		"_on_ran_out_of_lives",
+		[],
+		CONNECT_DEFERRED + CONNECT_ONESHOT
+	)
 	Global.is_running = true
-	step_timer.start()
+	step_delay_timer.start()
 
 
 func _stop() -> void:
-	step_timer.stop()
+	step_delay_timer.stop()
 	level.stop()
+	turrets.stop_turret_shooting_anims()
+	if _last_turret:
+#		Util.disconnect_safe(_last_turret, "shot", bullets, "move_bullets")
+		Util.disconnect_safe(_last_turret, "shot", self, "_move_bullets_step")
 	Util.queue_free_children(enemies)
 	Util.queue_free_children(bullets)
 	for turret in placed_turrets.get_children():
@@ -136,16 +146,16 @@ func _get_valid_step() -> int:
 		_step_index %= _level_data.steps.size()
 		step = _level_data.steps[_step_index]
 		match step:
-			Constants.StepTypes.BULLET_MOVE:
-				is_valid = bullets.get_child_count() > 0
 			Constants.StepTypes.TURRET_SHOOT:
 				is_valid = placed_turrets.get_child_count() > 0
+			Constants.StepTypes.BULLET_MOVE:
+				is_valid = bullets.get_child_count() > 0
 			Constants.StepTypes.ENEMY_SPAWN:
 				if _num_enemies_spawned_in_group == _level_data.enemy_group_size:
 					is_valid = false
 					_num_enemies_spawned_in_group = 0
 				else:
-					is_valid = _num_enemies_left > 0
+					is_valid = _num_enemies_left > 0 and enemies.paths
 			Constants.StepTypes.ENEMY_MOVE:
 				is_valid = enemies.get_child_count() > 0
 		if not is_valid:
@@ -158,27 +168,80 @@ func _get_num_step() -> int:
 	var num := 1
 	var is_consecutive := true
 	while is_consecutive:
-		is_consecutive = _level_data.steps[_step_index + 1] == step
+		var next_step_index := _get_next_step_index()
+		var next_step: int = _level_data.steps[next_step_index]
+		is_consecutive = next_step == step
 		if is_consecutive:
-			_step_index += 1
+			_step_index = next_step_index
 			num += 1
 	return num
 
 
-func _on_StepDelay_timeout() -> void:
+func _start_step() -> void:
+	_last_step_start_time = OS.get_ticks_msec()
 	var step := _get_valid_step()
 	hud.highlight_step_labels(_step_index)
 	match step:
+		Constants.StepTypes.TURRET_SHOOT:
+			# If there are bullet move turns after this one they should all
+			# be executed in one turn
+			turrets.shoot_turrets(bullets, level.cell_size)
+			var next_step_index := _get_next_step_index()
+			var next_step: int = _level_data.steps[next_step_index]
+			if next_step == Constants.StepTypes.BULLET_MOVE:
+				_step_index = next_step_index
+				var num := _get_num_step()
+				# The bullets should only move after *all* the bullets
+				# have been shot
+				# To ensure that all the bullets have been shot, only the last
+				# turret (i.e. the one that shoots last) has its shot signal
+				# connected to bullets.move_bullets
+# warning-ignore:return_value_discarded
+				_last_turret.connect(
+					"shot", self, "_move_bullets_step", [num], CONNECT_ONESHOT
+				)
+		Constants.StepTypes.BULLET_MOVE:
+			var num := _get_num_step()
+			_move_bullets_step(num)
 		Constants.StepTypes.ENEMY_SPAWN:
 			_num_enemies_spawned_in_group += 1
 			_num_enemies_left -= 1
 			enemies.spawn_enemy()
+			_start_step_delay()
 		Constants.StepTypes.ENEMY_MOVE:
 			enemies.move_enemies()
-		Constants.StepTypes.BULLET_MOVE:
-			var num := _get_num_step()
-			bullets.move_bullets(num)
-		Constants.StepTypes.TURRET_SHOOT:
-			turrets.shoot_turrets(bullets, level.cell_size)
-	_step_index += 1
+			var num_enemies := enemies.get_child_count()
+			var last_enemy := enemies.get_child(num_enemies - 1)
+# warning-ignore:return_value_discarded
+			last_enemy.connect("stopped_moving", self, "_start_step_delay", [], CONNECT_ONESHOT)
+	_step_index = _get_next_step_index()
 	_turn_num += 1
+
+
+func _get_next_step_index() -> int:
+	return (_step_index + 1) % _level_data.steps.size()
+
+
+func _on_Turrets_placed(_turret: Turret) -> void:
+	var num_turrets := placed_turrets.get_child_count()
+	var last_turret := placed_turrets.get_child(num_turrets - 1)
+	_last_turret = last_turret
+
+
+func _move_bullets_step(bullet_move_tile_num: int) -> void:
+	bullets.move_bullets(bullet_move_tile_num)
+	var num_bullets := bullets.get_child_count()
+	var last_bullet := bullets.get_child(num_bullets - 1)
+# warning-ignore:return_value_discarded
+	last_bullet.connect("stopped_moving", self, "_start_step_delay", [], CONNECT_ONESHOT)
+
+
+func _start_step_delay() -> void:
+	var time_since_last_step := OS.get_ticks_msec() - _last_step_start_time
+	var delay := max(min_step_delay_ms - time_since_last_step, 0)
+	var delay_sec := delay / 1000.0
+	step_delay_timer.start(delay_sec)
+
+
+func _on_StepDelay_timeout() -> void:
+	_start_step()

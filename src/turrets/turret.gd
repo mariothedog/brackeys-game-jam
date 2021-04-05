@@ -2,7 +2,6 @@ class_name Turret
 extends Area2D
 
 signal mouse_down
-signal shot
 
 const SIGHT_LINE_SCENE := preload("res://turrets/sight_line/sight_line.tscn")
 const BULLET_SCENE := preload("res://projectiles/bullet/bullet.tscn")
@@ -77,13 +76,7 @@ func set_rotation(radians: float) -> void:
 func shoot(bullets_node: Node, tile_size: Vector2) -> void:
 	_bullets_node = bullets_node
 	_tile_size = tile_size
-	if anim_player.is_playing():
-		push_warning("Attempted to shoot but the shoot animation was already playing")
-	anim_player.playback_speed = Global.step_speed
-	anim_player.play("shoot")
-
-
-func _shoot_without_animation() -> void:
+	gun.frame_coords.y = 0
 	for i in level:
 		var shoot_pos := barrel.position.rotated(_target_rotation).rotated(GUN_ROTATIONS[i])
 		var dir := Util.sign_vec2(shoot_pos, SHOOT_POS_SIGN_DIRECTION_THRESHOLD)
@@ -93,10 +86,16 @@ func _shoot_without_animation() -> void:
 		bullet.rotation = dir.angle()
 		bullet.friendly_turrets.append(self)
 		_bullets_node.add_child(bullet)
-	emit_signal("shot")
 
 
-func stop_shooting_anim() -> void:
+func charge_up_gun() -> void:
+	if anim_player.is_playing():
+		push_warning("Attempted to start the charge up gun animation but it was already playing")
+	anim_player.playback_speed = Global.step_speed
+	anim_player.play("charge_gun")
+
+
+func stop_charge_up_anim() -> void:
 	anim_player.stop()
 	gun.frame_coords.y = 0
 

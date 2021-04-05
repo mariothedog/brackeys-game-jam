@@ -62,5 +62,4 @@ layer = 0
 one_shot = true
 [connection signal="enemy_exploded" from="Level/Enemies" to="." method="_on_Enemies_enemy_exploded"]
 [connection signal="enemy_reached_end_of_path" from="Level/Enemies" to="." method="_on_Enemies_enemy_reached_end_of_path"]
-[connection signal="placed" from="Turrets" to="." method="_on_Turrets_placed"]
 [connection signal="timeout" from="StepDelay" to="." method="_on_StepDelay_timeout"]

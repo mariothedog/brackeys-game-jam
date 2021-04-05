@@ -16,7 +16,6 @@ var _num_enemies_spawned_in_group := 0
 var _num_enemies_dead := 0 setget _set_num_enemies_dead
 var _step_index := 0
 var _turn_num := 0
-var _last_turret: Turret
 var _last_step_start_time: int
 
 onready var level: Level = $Level
@@ -62,16 +61,16 @@ func _start() -> void:
 		CONNECT_DEFERRED + CONNECT_ONESHOT
 	)
 	Global.is_running = true
-	step_delay_timer.start()
+	if _is_valid_step_turret_shoot(_step_index):
+		turrets.charge_up_guns()
+	_last_step_start_time = OS.get_ticks_msec()
+	_start_step_delay()
 
 
 func _stop() -> void:
 	step_delay_timer.stop()
 	level.stop()
-	turrets.stop_turret_shooting_anims()
-	if _last_turret:
-#		Util.disconnect_safe(_last_turret, "shot", bullets, "move_bullets")
-		Util.disconnect_safe(_last_turret, "shot", self, "_move_bullets_step")
+	turrets.stop_charge_up_anim_anims()
 	Util.queue_free_children(enemies)
 	Util.queue_free_children(bullets)
 	for turret in placed_turrets.get_children():
@@ -148,12 +147,11 @@ func _on_Enemies_enemy_exploded(_enemy: Enemy) -> void:
 	self._num_enemies_dead += 1
 
 
-func _get_valid_step() -> int:
-	var step: int
+func _get_valid_step_index(step_index: int, should_simulate: bool) -> int:
 	var is_valid := false
 	while not is_valid:
-		_step_index %= _level_data.steps.size()
-		step = _level_data.steps[_step_index]
+		step_index %= _level_data.steps.size()
+		var step: int = _level_data.steps[step_index]
 		match step:
 			Constants.StepTypes.TURRET_SHOOT:
 				is_valid = placed_turrets.get_child_count() > 0
@@ -162,14 +160,24 @@ func _get_valid_step() -> int:
 			Constants.StepTypes.ENEMY_SPAWN:
 				if _num_enemies_spawned_in_group == _level_data.enemy_group_size:
 					is_valid = false
-					_num_enemies_spawned_in_group = 0
+					if not should_simulate:
+						_num_enemies_spawned_in_group = 0  # Remove?
 				else:
 					is_valid = _num_enemies_left > 0 and enemies.paths
 			Constants.StepTypes.ENEMY_MOVE:
 				is_valid = enemies.get_child_count() > 0
 		if not is_valid:
-			_step_index += 1
-	return step
+			step_index += 1
+	return step_index
+
+
+func _get_next_valid_step_index(step_index: int, should_simulate: bool) -> int:
+	return _get_valid_step_index(step_index + 1, should_simulate)
+
+
+func _is_valid_step_turret_shoot(step_index: int) -> bool:
+	var next_step_index := _get_valid_step_index(step_index, true)
+	return _level_data.steps[next_step_index] == Constants.StepTypes.TURRET_SHOOT
 
 
 func _get_num_step() -> int:
@@ -177,7 +185,7 @@ func _get_num_step() -> int:
 	var num := 1
 	var is_consecutive := true
 	while is_consecutive:
-		var next_step_index := _get_next_step_index()
+		var next_step_index := _get_next_valid_step_index(_step_index, true)
 		var next_step: int = _level_data.steps[next_step_index]
 		is_consecutive = next_step == step
 		if is_consecutive:
@@ -188,27 +196,22 @@ func _get_num_step() -> int:
 
 func _start_step() -> void:
 	_last_step_start_time = OS.get_ticks_msec()
-	var step := _get_valid_step()
+	_step_index = _get_valid_step_index(_step_index, false)
+	var step: int = _level_data.steps[_step_index]
 	hud.highlight_step_labels(_step_index)
 	match step:
 		Constants.StepTypes.TURRET_SHOOT:
 			# If there are bullet move turns after this one they should all
 			# be executed in one turn
 			turrets.shoot_turrets(bullets, level.cell_size)
-			var next_step_index := _get_next_step_index()
+			var next_step_index := _get_next_valid_step_index(_step_index, false)
 			var next_step: int = _level_data.steps[next_step_index]
 			if next_step == Constants.StepTypes.BULLET_MOVE:
 				_step_index = next_step_index
 				var num := _get_num_step()
-				# The bullets should only move after *all* the bullets
-				# have been shot
-				# To ensure that all the bullets have been shot, only the last
-				# turret (i.e. the one that shoots last) has its shot signal
-				# connected to bullets.move_bullets
-# warning-ignore:return_value_discarded
-				_last_turret.connect(
-					"shot", self, "_move_bullets_step", [num], CONNECT_ONESHOT
-				)
+				_move_bullets_step(num)
+			else:
+				_start_step_delay()
 		Constants.StepTypes.BULLET_MOVE:
 			var num := _get_num_step()
 			_move_bullets_step(num)
@@ -223,18 +226,10 @@ func _start_step() -> void:
 			var last_enemy := enemies.get_child(num_enemies - 1)
 # warning-ignore:return_value_discarded
 			last_enemy.connect("stopped_moving", self, "_start_step_delay", [], CONNECT_ONESHOT)
-	_step_index = _get_next_step_index()
+	_step_index += 1
 	_turn_num += 1
-
-
-func _get_next_step_index() -> int:
-	return (_step_index + 1) % _level_data.steps.size()
-
-
-func _on_Turrets_placed(_turret: Turret) -> void:
-	var num_turrets := placed_turrets.get_child_count()
-	var last_turret := placed_turrets.get_child(num_turrets - 1)
-	_last_turret = last_turret
+	if _is_valid_step_turret_shoot(_step_index):
+		turrets.charge_up_guns()
 
 
 func _move_bullets_step(bullet_move_tile_num: int) -> void:

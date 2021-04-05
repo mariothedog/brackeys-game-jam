@@ -11,8 +11,8 @@ radius = 6.0
 radius = 3.0
 
 [sub_resource type="Animation" id=3]
-resource_name = "shoot"
-length = 0.3
+resource_name = "charge_gun"
+length = 0.15
 step = 0.05
 tracks/0/type = "value"
 tracks/0/path = NodePath("Gun:frame_coords:y")
@@ -21,24 +21,10 @@ tracks/0/loop_wrap = true
 tracks/0/imported = false
 tracks/0/enabled = true
 tracks/0/keys = {
-"times": PoolRealArray( 0, 0.1, 0.15, 0.3 ),
-"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"times": PoolRealArray( 0, 0.1, 0.15 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
 "update": 1,
-"values": [ 0.0, 1.0, 2.0, 0.0 ]
-}
-tracks/1/type = "method"
-tracks/1/path = NodePath(".")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/keys = {
-"times": PoolRealArray( 0.3 ),
-"transitions": PoolRealArray( 1 ),
-"values": [ {
-"args": [  ],
-"method": "_shoot_without_animation"
-} ]
+"values": [ 0.0, 1.0, 2.0 ]
 }
 
 [node name="Turret" type="Area2D"]
@@ -74,5 +60,5 @@ z_index = 2
 shape = SubResource( 2 )
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
-anims/shoot = SubResource( 3 )
+anims/charge_gun = SubResource( 3 )
 [connection signal="input_event" from="." to="." method="_on_Turret_input_event"]

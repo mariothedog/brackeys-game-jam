@@ -27,7 +27,8 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	if Global.is_aiming:
-		var mouse_pos := Global.selected_turret.get_local_mouse_position()
+		# Todo: what?
+		var mouse_pos: Vector2 = Global.selected_turret.get_local_mouse_position()
 		if mouse_pos.length() >= TURRET_AIMING_MOUSE_DIST_THRESHOLD:
 			var angle_snapped := _get_snapped_angle_to(mouse_pos)
 			if angle_snapped == _prev_angle_snapped:
@@ -54,7 +55,7 @@ func _input(event: InputEvent) -> void:
 		Global.is_aiming = false
 
 
-func shoot_turrets(bullets_node: Node, tile_size: Vector2) -> void:
+func shoot(bullets_node: Node, tile_size: Vector2) -> void:
 	for turret in placed_turrets.get_children():
 		if turret.is_enabled:
 			turret.shoot(bullets_node, tile_size)

@@ -11,11 +11,3 @@ var WINDOW_WIDTH: int = ProjectSettings.get_setting("display/window/size/width")
 
 # Format paths
 const FORMAT_LEVEL_PATH := "res://levels/resources/level_%s.tres"
-
-# Enums
-enum StepTypes {
-	TURRET_SHOOT,
-	BULLET_MOVE,
-	ENEMY_SPAWN,
-	ENEMY_MOVE,
-}

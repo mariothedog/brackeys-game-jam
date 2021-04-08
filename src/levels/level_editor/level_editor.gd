@@ -8,7 +8,7 @@ export (int, 1, 100) var num_lives := 1
 export (int, 1, 100) var num_turrets := 1
 export (int, 0, 1000) var num_enemies := 1
 export (int, -1, 1000) var enemy_group_size := -1
-export (Array, Constants.StepTypes) var steps
+export (Array, StepManager.StepTypes) var step_types
 # warning-ignore:unused_class_variable
 export var create_level := false setget _create_level
 # warning-ignore:unused_class_variable
@@ -111,7 +111,7 @@ func _create_level(value: bool) -> void:
 	data.num_turrets = num_turrets
 	data.num_enemies = num_enemies
 	data.enemy_group_size = enemy_group_size
-	data.steps = steps
+	data.step_types = step_types
 # warning-ignore:return_value_discarded
 	ResourceSaver.save(FORMAT_PATH % level_num, data)
 
@@ -167,6 +167,6 @@ func _load_level(value: bool) -> void:
 	num_turrets = level_data.num_turrets
 	num_enemies = level_data.num_enemies
 	enemy_group_size = level_data.enemy_group_size
-	steps = level_data.steps
+	step_types = level_data.step_types
 	property_list_changed_notify()
 	_build_level(level_data)

@@ -28,6 +28,10 @@ func spawn_enemy() -> void:
 	add_child(enemy)
 
 
+func get_last() -> Enemy:
+	return get_child(get_child_count() - 1) as Enemy
+
+
 func _set_paths(value: Array) -> void:
 	paths = value
 	_num_paths = len(paths)

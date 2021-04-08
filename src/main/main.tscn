@@ -12,6 +12,7 @@
 
 [node name="Main" type="Node"]
 script = ExtResource( 3 )
+level_num = 3
 initial_min_step_delay_ms = 500.0
 normal_min_step_delay_ms = 500.0
 sped_up_min_step_delay_ms = 250.0

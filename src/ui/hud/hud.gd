@@ -23,7 +23,7 @@ func _ready() -> void:
 
 func set_step_labels(steps: Array) -> void:
 	Util.deferred_free_children(step_labels)
-	var step_names := Constants.StepTypes.keys()
+	var step_names := StepManager.StepTypes.keys()
 	for step in steps:
 		var step_name: String = step_names[step].to_lower()
 		var label: Label = STEP_LABEL_SCENE.instance()

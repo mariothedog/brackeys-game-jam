@@ -59,6 +59,31 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://turrets/sight_line/sight_line.gd"
 }, {
+"base": "Reference",
+"class": "Step",
+"language": "GDScript",
+"path": "res://main/steps/step.gd"
+}, {
+"base": "Step",
+"class": "StepBulletMove",
+"language": "GDScript",
+"path": "res://main/steps/step_bullet_move.gd"
+}, {
+"base": "Step",
+"class": "StepEnemyMove",
+"language": "GDScript",
+"path": "res://main/steps/step_enemy_move.gd"
+}, {
+"base": "Step",
+"class": "StepEnemySpawn",
+"language": "GDScript",
+"path": "res://main/steps/step_enemy_spawn.gd"
+}, {
+"base": "Step",
+"class": "StepTurretShoot",
+"language": "GDScript",
+"path": "res://main/steps/step_turret_shoot.gd"
+}, {
 "base": "Object",
 "class": "TilesManager",
 "language": "GDScript",
@@ -90,6 +115,11 @@ _global_script_class_icons={
 "LevelData": "",
 "Lives": "",
 "SightLine": "",
+"Step": "",
+"StepBulletMove": "",
+"StepEnemyMove": "",
+"StepEnemySpawn": "",
+"StepTurretShoot": "",
 "TilesManager": "",
 "Turret": "",
 "Turrets": "",
@@ -107,6 +137,7 @@ config/icon="res://icon.png"
 Constants="*res://autoload/constants.gd"
 Signals="*res://autoload/signals.gd"
 Global="*res://autoload/global.gd"
+StepManager="*res://autoload/step_manager.gd"
 
 [debug]
 

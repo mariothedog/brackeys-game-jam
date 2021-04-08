@@ -81,11 +81,11 @@ func shoot(bullets_node: Node, tile_size: Vector2) -> void:
 		var shoot_pos := barrel.position.rotated(_target_rotation).rotated(GUN_ROTATIONS[i])
 		var dir := Util.sign_vec2(shoot_pos, SHOOT_POS_SIGN_DIRECTION_THRESHOLD)
 		var bullet: Bullet = BULLET_SCENE.instance()
-		bullet.move_to(global_position, true)
 		bullet.velocity = dir * _tile_size
-		bullet.rotation = dir.angle()
 		bullet.friendly_turrets.append(self)
 		_bullets_node.add_child(bullet)
+		bullet.move_to(global_position, true)
+		bullet.sprite.rotation = dir.angle()
 
 
 func charge_up_gun() -> void:

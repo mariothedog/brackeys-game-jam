@@ -8,12 +8,13 @@ var num_lives := 0 setget _set_num_lives
 onready var vbox: VBoxContainer = $VBoxContainer
 
 
-func damage(damage: int) -> void:
+func damage(damage: int) -> bool:  # Returns true if out of lives
 	var new_num_lives := self.num_lives - damage
 	if new_num_lives <= 0:
 		new_num_lives = 0
 		Signals.emit_signal("ran_out_of_lives")
 	self.num_lives = new_num_lives
+	return new_num_lives <= 0
 
 
 func _set_num_lives(value: int) -> void:

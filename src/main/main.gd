@@ -93,6 +93,11 @@ func _reset() -> void:
 	lives.num_lives = _level_data.num_lives
 
 
+func _on_stop_pressed() -> void:
+	_stop()
+	_reset()
+
+
 func _force_stop() -> void:
 	start_button.disabled = false
 	stop_button.disabled = true
@@ -125,22 +130,17 @@ func _go_to_level(num: int) -> void:
 	level_label.text = FORMAT_LEVEL_LABEL % num
 
 
-func _on_stop_pressed() -> void:
-	_stop()
-	_reset()
+func _on_Enemies_enemy_reached_end_of_path(enemy: Enemy) -> void:
+	var is_out_of_lives := lives.damage(enemy.DAMAGE)
+	enemy.queue_free()
+	Global.num_enemies_dead += 1
+	if Global.num_enemies_dead == _level_data.num_enemies and not is_out_of_lives:
+		_go_to_next_level()
 
 
 func _on_ran_out_of_lives() -> void:
 	_force_stop()
 	_reset()
-
-
-func _on_Enemies_enemy_reached_end_of_path(enemy: Enemy) -> void:
-	lives.damage(enemy.DAMAGE)
-	enemy.queue_free()
-	Global.num_enemies_dead += 1
-	if Global.num_enemies_dead == _level_data.num_enemies:
-		_go_to_next_level()
 
 
 func _on_Enemies_enemy_exploded(_enemy: Enemy) -> void:

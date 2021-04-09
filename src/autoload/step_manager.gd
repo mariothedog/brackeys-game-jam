@@ -42,6 +42,8 @@ func merge_steps(steps: Array, step_index: int) -> Array:
 	while is_consecutive:
 		var next_step_index := get_valid_step_index(steps, step_index + 1, false)
 		var next_step: Step = steps[next_step_index]
+		if step == next_step:
+			break
 		is_consecutive = _are_steps_equal(step, next_step)
 		if is_consecutive:
 			step_index = next_step_index

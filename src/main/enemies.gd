@@ -12,9 +12,9 @@ var path_index := 0
 var _num_paths: int
 
 
-func move_enemies() -> void:
+func move(num: int) -> void:
 	for enemy in get_children():
-		enemy.update_position_along_path()
+		enemy.update_position_along_path(num)
 
 
 func spawn_enemy() -> void:

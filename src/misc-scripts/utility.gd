@@ -62,3 +62,25 @@ static func connect_safe(
 	if not object.is_connected(object_signal, target, method):
 # warning-ignore:return_value_discarded
 		object.connect(object_signal, target, method, binds, flags)
+
+static func distance_between_manhattan(a: Vector2, b: Vector2) -> float:
+	return abs(b.x - a.x) + abs(b.y - a.y)
+
+static func lerp_through_points(from: Vector2, to: Vector2, points: PoolVector2Array, weight: float) -> Array:
+	# Returns [new position, points left over]
+	var new_pos := from
+	var dist := distance_between_manhattan(from, to)
+	var dist_to_move := dist * weight
+	var next_point := points[0]
+	var dist_to_next_point := distance_between_manhattan(from, next_point)
+	var ratio_to_next_point := dist_to_move / dist_to_next_point
+	while ratio_to_next_point >= 1:
+		dist_to_move -= dist_to_next_point
+		new_pos = next_point
+		points.remove(0)
+		next_point = points[0]
+		dist_to_next_point = distance_between_manhattan(new_pos, next_point)
+		ratio_to_next_point = dist_to_move / dist_to_next_point
+	if ratio_to_next_point < 1:
+		new_pos += ratio_to_next_point * (next_point - new_pos)
+	return [new_pos, points]

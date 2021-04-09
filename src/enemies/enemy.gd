@@ -10,11 +10,12 @@ var MOVEMENT_RATE := MOVEMENT_WEIGHT * Constants.PHYSICS_FPS
 const AT_TARGET_THRESHOLD := 0.1
 const DAMAGE := 1
 
-var path: PoolVector2Array setget _set_path
+var path: Array setget _set_path
 
 var _path_length: int
 var _path_current_index := 0
 var _target_pos: Vector2
+var _target_points: PoolVector2Array
 
 
 func _ready() -> void:
@@ -30,14 +31,29 @@ func _physics_process(delta: float) -> void:
 			emit_signal("reached_end_of_path")
 		return
 	var weight := min(MOVEMENT_RATE * delta * Global.step_speed, 1)
-	global_position = global_position.linear_interpolate(_target_pos, weight)
+	var new_pos_and_points = Util.lerp_through_points(
+		global_position, _target_pos, _target_points, weight
+	)
+	global_position = new_pos_and_points[0]
+	_target_points = new_pos_and_points[1]
 
 
-func update_position_along_path() -> void:
+func lerp_vec(a: Vector2, b: Vector2, w: float):
+	a.x += w * (b.x - a.x)
+	a.y += w * (b.y - a.y)
+	return a
+
+
+func update_position_along_path(num: int) -> void:
+	var old_path_index := _path_current_index
 	if _path_current_index + 1 == _path_length:
 		return
-	_path_current_index += 1
+	elif _path_current_index + num >= _path_length:
+		_path_current_index = _path_length - 1
+	else:
+		_path_current_index += num
 	_target_pos = path[_path_current_index]
+	_target_points = path.slice(old_path_index + 1, _path_current_index)
 	set_physics_process(true)
 
 
@@ -49,7 +65,7 @@ func explode() -> void:
 	queue_free()
 
 
-func _set_path(value: PoolVector2Array) -> void:
+func _set_path(value: Array) -> void:
 	path = value
 	_path_length = len(path)
 	global_position = path[0]

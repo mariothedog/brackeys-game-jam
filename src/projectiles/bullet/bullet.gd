@@ -18,7 +18,9 @@ onready var sprite: Sprite = $Sprite
 
 func _physics_process(delta: float) -> void:
 	if _is_moving:
-		if Util.is_vec2_equal_with_threshold(sprite.global_position, _target_pos, AT_TARGET_THRESHOLD):
+		if Util.is_vec2_equal_with_threshold(
+			sprite.global_position, _target_pos, AT_TARGET_THRESHOLD
+		):
 			_is_moving = false
 			cast_to = Vector2.ZERO
 			global_position = _target_pos

@@ -14,4 +14,21 @@ func execute() -> void:
 	Global.num_enemies_left -= 1
 	Global.current_enemy_group_size += 1
 	Global.enemies.spawn_enemy()
-	emit_signal("finished")
+
+	var next_step_index: int = StepManager.get_valid_step_index(
+		Global.steps, Global.step_index + 1, false
+	)
+	var next_step: Step = Global.steps[next_step_index]
+	if next_step is StepEnemyMove:
+		var step_index_and_num_skipped: Array = StepManager.merge_steps(
+			Global.steps, next_step_index
+		)
+		var num_merged: int = step_index_and_num_skipped[1]
+		Global.step_index = step_index_and_num_skipped[0]
+		Global.enemies.move(num_merged + 1)
+
+		var last_enemy := Global.enemies.get_last()
+# warning-ignore:return_value_discarded
+		last_enemy.connect("stopped_moving", self, "emit_signal", ["finished"], CONNECT_ONESHOT)
+	else:
+		emit_signal("finished")

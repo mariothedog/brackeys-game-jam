@@ -150,7 +150,11 @@ func _on_Enemies_enemy_exploded(_enemy: Enemy) -> void:
 
 
 func _execute_step() -> void:
-	Global.step_index = StepManager.get_valid_step_index(Global.steps, Global.step_index, false)
+	var step_index := StepManager.get_valid_step_index(Global.steps, Global.step_index, false)
+	if step_index == -1:
+		push_warning("Attempted to execute the step but no valid step was found")
+		return
+	Global.step_index = step_index
 	hud.highlight_step_labels(Global.step_index)
 	var step: Step = Global.steps[Global.step_index]
 	step.execute()

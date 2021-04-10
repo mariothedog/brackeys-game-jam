@@ -55,6 +55,10 @@ func _input(event: InputEvent) -> void:
 		Global.is_aiming = false
 
 
+func reset() -> void:
+	stop_charge_up_anim_anims()
+
+
 func shoot(bullets_node: Node, tile_size: Vector2) -> void:
 	for turret in placed_turrets.get_children():
 		if turret.is_enabled:

@@ -24,13 +24,18 @@ func get_steps_from_step_types(step_types: Array) -> Array:
 
 
 func get_valid_step_index(steps: Array, step_index: int, should_simulate: bool) -> int:
+	var num_steps := steps.size()
 	var is_valid := false
+	var num_iterations := 0
 	while not is_valid:
-		step_index %= steps.size()
+		step_index %= num_steps
+		if num_iterations > num_steps:
+			return -1
 		var step: Step = steps[step_index]
 		is_valid = step.is_valid(should_simulate)
 		if not is_valid:
 			step_index += 1
+		num_iterations += 1
 	return step_index
 
 
@@ -42,6 +47,8 @@ func merge_steps(steps: Array, step_index: int) -> Array:
 	while is_consecutive:
 		var next_step_index := get_valid_step_index(steps, step_index + 1, false)
 		var next_step: Step = steps[next_step_index]
+		if step == next_step:
+			break
 		is_consecutive = _are_steps_equal(step, next_step)
 		if is_consecutive:
 			step_index = next_step_index

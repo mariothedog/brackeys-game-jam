@@ -74,9 +74,6 @@ func _start() -> void:
 func _stop() -> void:
 	step_delay_timer.stop()
 	level.stop()
-	turrets.stop_charge_up_anim_anims()
-	Util.queue_free_children(enemies)
-	Util.queue_free_children(bullets)
 	for turret in placed_turrets.get_children():
 		if turret.level > 0:
 			turret.enable()
@@ -85,6 +82,9 @@ func _stop() -> void:
 
 func _reset() -> void:
 	_turn_num = 0
+	turrets.reset()
+	enemies.reset()
+	bullets.reset()
 	hud.highlight_step_labels(-1)
 	if not _level_data:
 		push_warning("Attempted to reset but the level data is invalid")
@@ -150,7 +150,11 @@ func _on_Enemies_enemy_exploded(_enemy: Enemy) -> void:
 
 
 func _execute_step() -> void:
-	Global.step_index = StepManager.get_valid_step_index(Global.steps, Global.step_index, false)
+	var step_index := StepManager.get_valid_step_index(Global.steps, Global.step_index, false)
+	if step_index == -1:
+		push_warning("Attempted to execute the step but no valid step was found")
+		return
+	Global.step_index = step_index
 	hud.highlight_step_labels(Global.step_index)
 	var step: Step = Global.steps[Global.step_index]
 	step.execute()

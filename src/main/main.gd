@@ -74,9 +74,6 @@ func _start() -> void:
 func _stop() -> void:
 	step_delay_timer.stop()
 	level.stop()
-	turrets.stop_charge_up_anim_anims()
-	Util.queue_free_children(enemies)
-	Util.queue_free_children(bullets)
 	for turret in placed_turrets.get_children():
 		if turret.level > 0:
 			turret.enable()
@@ -85,6 +82,9 @@ func _stop() -> void:
 
 func _reset() -> void:
 	_turn_num = 0
+	turrets.reset()
+	enemies.reset()
+	bullets.reset()
 	hud.highlight_step_labels(-1)
 	if not _level_data:
 		push_warning("Attempted to reset but the level data is invalid")

@@ -34,7 +34,7 @@ func _physics_process(delta: float) -> void:
 		return
 	force_raycast_update()
 	var collider := get_collider()
-	if not collider or collider in friendly_turrets:
+	if not collider or collider in friendly_turrets or collider.is_queued_for_deletion():
 		return
 	explode()
 	if collider is Area2D:

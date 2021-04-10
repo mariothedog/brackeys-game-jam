@@ -74,13 +74,12 @@ static func lerp_through_points(from: Vector2, to: Vector2, points: PoolVector2A
 	var next_point := points[0]
 	var dist_to_next_point := distance_between_manhattan(from, next_point)
 	var ratio_to_next_point := dist_to_move / dist_to_next_point
-	while ratio_to_next_point >= 1:
+	while ratio_to_next_point >= 1 and points.size() > 1:
 		dist_to_move -= dist_to_next_point
 		new_pos = next_point
 		points.remove(0)
 		next_point = points[0]
 		dist_to_next_point = distance_between_manhattan(new_pos, next_point)
 		ratio_to_next_point = dist_to_move / dist_to_next_point
-	if ratio_to_next_point < 1:
-		new_pos += ratio_to_next_point * (next_point - new_pos)
+	new_pos += ratio_to_next_point * (next_point - new_pos)
 	return [new_pos, points]

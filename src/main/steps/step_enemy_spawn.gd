@@ -26,9 +26,9 @@ func execute() -> void:
 		var num_merged: int = step_index_and_num_skipped[1]
 		Global.step_index = step_index_and_num_skipped[0]
 		Global.enemies.move(num_merged + 1)
-
-		var last_enemy := Global.enemies.get_last()
 # warning-ignore:return_value_discarded
-		last_enemy.connect("stopped_moving", self, "emit_signal", ["finished"], CONNECT_ONESHOT)
+		Global.enemies.connect(
+			"all_stopped_moving", self, "emit_signal", ["finished"], CONNECT_ONESHOT
+		)
 	else:
 		emit_signal("finished")

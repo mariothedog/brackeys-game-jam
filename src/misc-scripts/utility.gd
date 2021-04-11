@@ -66,11 +66,12 @@ static func connect_safe(
 static func distance_between_manhattan(a: Vector2, b: Vector2) -> float:
 	return abs(b.x - a.x) + abs(b.y - a.y)
 
-static func lerp_through_points(from: Vector2, to: Vector2, points: PoolVector2Array, weight: float) -> Array:
+static func move_through_points(from: Vector2, to: Vector2, points: PoolVector2Array, dist_to_move: float) -> Array:
 	# Returns [new position, points left over]
-	var new_pos := from
 	var dist := distance_between_manhattan(from, to)
-	var dist_to_move := dist * weight
+	if dist_to_move > dist:
+		dist_to_move = dist
+	var new_pos := from
 	var next_point := points[0]
 	var dist_to_next_point := distance_between_manhattan(from, next_point)
 	var ratio_to_next_point := dist_to_move / dist_to_next_point

@@ -5,17 +5,21 @@ signal stopped_moving
 signal reached_end_of_path
 signal exploded
 
-const MOVEMENT_WEIGHT := 0.3
-var MOVEMENT_RATE := MOVEMENT_WEIGHT * Constants.PHYSICS_FPS
 const AT_TARGET_THRESHOLD := 0.1
 const DAMAGE := 1
 
 const TEMP_COLLIDER_GROUP_NAME := "temp_collider"
 
+export var move_speed := 50.0
+export (float, EASE) var move_speed_curve := 1.0
+export (float, EASE) var accel_curve := 1.0
+export (float, EASE) var decel_curve := 1.0
+
 var path: Array setget _set_path
 
 var _path_length: int
 var _path_current_index := 0
+var _start_pos: Vector2
 var _target_pos: Vector2
 var _target_points: PoolVector2Array
 
@@ -41,9 +45,13 @@ func _physics_process(delta: float) -> void:
 		if _path_current_index + 1 == _path_length:
 			emit_signal("reached_end_of_path")
 		return
-	var weight := min(MOVEMENT_RATE * delta * Global.step_speed, 1)
-	var new_pos_and_points = Util.lerp_through_points(
-		sprite.global_position, _target_pos, _target_points, weight
+	var initial_dist := Util.distance_between_manhattan(_start_pos, _target_pos)
+	var dist := Util.distance_between_manhattan(sprite.global_position, _target_pos)
+	var dist_left := dist / initial_dist
+	print(ease(dist_left, move_speed_curve))
+	var dist_to_move := move_speed * ease(dist_left, move_speed_curve) * delta
+	var new_pos_and_points = Util.move_through_points(
+		sprite.global_position, _target_pos, _target_points, dist_to_move
 	)
 	var new_pos: Vector2 = new_pos_and_points[0]
 	for child in movable_children:
@@ -83,6 +91,7 @@ func update_position_along_path(num: int) -> void:
 		_path_current_index = _path_length - 1
 	else:
 		_path_current_index += num
+	_start_pos = global_position
 	_target_pos = path[_path_current_index]
 	_target_points = path.slice(old_path_index + 1, _path_current_index)
 	_add_temp_collider(global_position)
